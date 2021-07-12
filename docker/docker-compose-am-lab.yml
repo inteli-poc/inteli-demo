@@ -1,0 +1,87 @@
+version: '3'
+
+networks:
+  am:
+    ipam:
+      driver: default
+
+services:
+  node-eve:
+    image: ghcr.io/digicatapult/vitalam-node:v1.0.0
+    container_name: node-eve
+    hostname: node-eve
+    ports:
+      - 30336:30333
+      - 9947:9944
+      - 9936:9933
+    volumes:
+      - ../data/am-lab/node:/data
+    restart: on-failure
+    command: ./run.sh
+    environment:
+      - IDENTITY=${IDENTITY_EVE}
+      - RPC=${RPC}
+      - CORS=${CORS}
+      - WS=${WS}
+      - NODEKEY=${NODE_EVE_KEY}
+      - BOOTNODES=/dns4/node-bob/tcp/30333/p2p/${NODE_BOB_PEERID}
+    networks: ['am']
+
+  ipfs-eve:
+    image: vitalam-alpine-ipfs:latest
+    container_name: ipfs-eve
+    hostname: ipfs-eve
+    build: { 'context': './', 'dockerfile': 'Dockerfile-ipfs', 'args': { 'VER': 'v0.4.23' } }
+    ports:
+      - 5004:5001
+      - 4004:4001
+      - 8083:8080
+    environment:
+      - PEERID=${IPFS_EVE_PEERID}
+      - PRIVKEY=${IPFS_EVE_PRIVKEY}
+      - BOOTNODES=/dns4/ipfs-bob/tcp/4001/ipfs/${IPFS_BOB_PEERID}
+    volumes:
+      - ../data/am-lab/ipfs:/data
+    restart: on-failure
+    command: ./run.sh
+    networks: ['am']
+
+  api-eve:
+    image: ghcr.io/digicatapult/vitalam-api:v1.0.0
+    container_name: api-eve
+    hostname: api-eve
+    ports:
+      - 3004:3001
+    environment:
+      - PORT=3001
+      - API_HOST=${NODE_EVE_HOST}
+      - API_PORT=9944
+      - USER_URI=${API_EVE_WALLET_USER_URI}
+      - IPFS_HOST=${IPFS_EVE_HOST}
+      - IPFS_PORT=5001
+      - LOG_LEVEL=debug
+      - AUTH_JWKS_URI=${API_JWKS_URI}
+      - AUTH_AUDIENCE=${API_AUTH_AUDIENCE}
+      - AUTH_ISSUER=${API_AUTH_ISSUER}
+      - AUTH_TOKEN_URL=${API_AUTH_TOKEN_URL}
+    restart: on-failure
+    networks: ['am']
+
+  react-eve:
+    container_name: react-eve
+    hostname: react-eve
+    build:
+      context: '../'
+      dockerfile: 'Dockerfile'
+      args:
+        - REACT_APP_VITALAM_DEMO_PERSONA=amlab
+        - REACT_APP_API_HOST=${REACT_API_EVE_HOST}
+        - REACT_APP_API_PORT=${REACT_API_EVE_PORT}
+        - REACT_APP_SUBSTRATE_HOST=${REACT_API_EVE_SUBSTRATE_HOST}
+        - REACT_APP_SUBSTRATE_PORT=${REACT_API_EVE_SUBSTRATE_PORT}
+        - REACT_APP_AUTH_CLIENT_ID=${REACT_API_AUTH_CLIENT_ID}
+        - REACT_APP_AUTH_CLIENT_SECRET=${REACT_API_AUTH_CLIENT_SECRET}
+    ports:
+      - 8004:3000
+    restart: on-failure
+    networks: ['am']
