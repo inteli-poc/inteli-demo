@@ -112,8 +112,8 @@ const useStyles = makeStyles({
   rightColumnBottom: {
     marginTop: '96px',
   },
-  partName: {
-    fontSize: '1.3rem',
+  partTitle: {
+    fontSize: '1.4rem',
     fontWeight: '600',
     marginBottom: '32px',
   },
@@ -299,7 +299,7 @@ const CustomerPart = () => {
             className={classes.contentDetails}
           >
             <CardContent>
-              <Typography gutterBottom className={classes.partName}>
+              <Typography gutterBottom className={classes.partTitle}>
                 {name}
               </Typography>
               <DetailRow title="Part name" value={name}></DetailRow>
