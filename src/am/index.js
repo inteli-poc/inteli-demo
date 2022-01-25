@@ -10,8 +10,9 @@ import Router from './router'
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#718c9f',
-      dark: '#3a617e',
+      main: '#8ec8c4',
+      dark: '#0c75bb',
+      contrastText: '#fff',
     },
     highlight: {
       main: '#ff9900',
