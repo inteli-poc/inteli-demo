@@ -202,12 +202,11 @@ const CustomerPart = () => {
         orderDetails: selectedCustomerPart,
         customerDetails: {},
       }
+      fileData.quantity = quantity
+      fileData.deliverBy = deliveryBy
 
       const file = new Blob([JSON.stringify(fileData)])
       const formData = createFormData([], file)
-      formData.append('quantity', `${quantity}`)
-      formData.append('deliveryBy', deliveryBy)
-
       const response = await api.runProcess(formData)
       const token = { id: response[0], latestId: response[0], ...fileData }
 
