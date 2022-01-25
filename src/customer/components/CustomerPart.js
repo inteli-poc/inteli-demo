@@ -22,7 +22,7 @@ import { addOrder } from '../../features/ordersSlice'
 import { useApi, identities } from '../../utils'
 import Attachment from '../../laboratory/components/Attachment'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   card: {
     padding: '24px',
     width: '100%',
@@ -34,6 +34,7 @@ const useStyles = makeStyles({
   },
   backButton: {
     textDecoration: 'none',
+    color: theme.palette.primary.main,
   },
   issuePurchaseOrderButton: {
     width: 230,
@@ -127,7 +128,7 @@ const useStyles = makeStyles({
     margin: '12px 0px',
     fontSize: '1rem',
   },
-})
+}))
 
 const DetailRow = ({ title, value }) => {
   const classes = useStyles()

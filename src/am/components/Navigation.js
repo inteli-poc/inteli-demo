@@ -4,7 +4,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Toolbar, Typography, Box } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 
-import images from '../../images'
+import logo from '../../images/maher.png'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,18 +20,18 @@ const useStyles = makeStyles((theme) => ({
     display: 'grid',
     alignContent: 'center',
     textDecoration: 'none',
-    color: 'white',
-  },
-  navActive: {
-    '& div': {
-      background: theme.palette.primary.dark,
-    },
+    color: '#ffffff',
   },
   navButton: {
     marginBottom: '16px',
     textDecoration: 'none',
-    color: 'white',
+    color: '#ffffff',
     width: '100%',
+    '&.active': {
+      '& div': {
+        background: theme.palette.primary.dark,
+      },
+    },
   },
   navButtonWrapping: {
     width: '100%',
@@ -84,7 +84,7 @@ const Navigation = () => {
   return (
     <Toolbar className={classes.root}>
       <div className={classes.logo}>
-        <img src={images.logoAM}></img>
+        <img src={logo}></img>
       </div>
       <NavLink
         to="/app/orders"
