@@ -335,7 +335,7 @@ const CustomerPart = () => {
               <CardContent className={classes.contentForm}>
                 <Attachment name="Materials.pdf" />
                 <Attachment name="Requirements.pdf" />
-                <Attachment name="CAD.pdf" />
+                <Attachment name="CAD" />
               </CardContent>
             </Grid>
           </Grid>
