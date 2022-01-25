@@ -203,7 +203,7 @@ const CustomerPart = () => {
         customerDetails: {},
       }
       fileData.quantity = quantity
-      fileData.deliverBy = deliveryBy
+      fileData.deliveryBy = deliveryBy
 
       const file = new Blob([JSON.stringify(fileData)])
       const formData = createFormData([], file)
