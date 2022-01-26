@@ -156,7 +156,6 @@ const CustomerPart = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [isOrdering, setIsOrdering] = useState(false)
-  const [totalCost, setTotalCost] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [quantityError, setQuantityError] = useState('')
   const [deliveryBy, setDeliveryBy] = useState('')
@@ -169,10 +168,7 @@ const CustomerPart = () => {
   const api = useApi()
 
   const { image, name, material, alloy, price } = selectedCustomerPart
-  if (totalCost === 0) {
-    setTotalCost(price)
-  }
-
+  const totalCost = price * quantity
   const classes = useStyles()
 
   const createFormData = (inputs, file) => {
@@ -229,7 +225,6 @@ const CustomerPart = () => {
     const quantityValue = value.replace(/\D/g, '')
 
     if (isQuantityValid(quantityValue)) {
-      setTotalCost(price * quantityValue)
       setQuantityError('')
     } else {
       setQuantityError('Must be greater than 0')
