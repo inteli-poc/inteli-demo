@@ -50,6 +50,7 @@ export const partsSlice = createSlice({
       image: images.parts[5],
       material: 'Nickel',
       alloy: 'C-276',
+      price: '552',
     },
     {
       partId: '14-143463-1',
