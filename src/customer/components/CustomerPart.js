@@ -149,7 +149,6 @@ const DetailRow = ({ title, value }) => {
   )
 }
 
-const COST_PER_UNIT_DEFAULT = 1200
 const DATE_FORMAT = 'DD/MM/YYYY'
 
 const CustomerPart = () => {
@@ -157,8 +156,8 @@ const CustomerPart = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [isOrdering, setIsOrdering] = useState(false)
-  const [totalCost, setTotalCost] = useState(COST_PER_UNIT_DEFAULT)
-  const [quantity, setQuantity] = useState(0)
+  const [totalCost, setTotalCost] = useState(0)
+  const [quantity, setQuantity] = useState(1)
   const [quantityError, setQuantityError] = useState('')
   const [deliveryBy, setDeliveryBy] = useState('')
   const [deliveryByError, setDeliveryByError] = useState('')
@@ -166,9 +165,12 @@ const CustomerPart = () => {
   const selectedCustomerPart = useSelector((state) =>
     state.customerParts.find(({ partId }) => partId === id)
   )
+
   const api = useApi()
 
-  const { image, name, material, alloy } = selectedCustomerPart
+  const { image, name, material, alloy, price } = selectedCustomerPart
+  if (totalCost === 0) setTotalCost(price)
+
   const classes = useStyles()
 
   const createFormData = (inputs, file) => {
@@ -204,6 +206,7 @@ const CustomerPart = () => {
         customerDetails: {},
         quantity,
         deliveryBy,
+        price,
       }
 
       const file = new Blob([JSON.stringify(fileData)])
@@ -226,11 +229,10 @@ const CustomerPart = () => {
 
     if (isQuantityValid(quantityValue)) {
       setQuantity(parseInt(quantityValue, 10))
-      setTotalCost(COST_PER_UNIT_DEFAULT * quantityValue)
+      setTotalCost(price * quantityValue)
       setQuantityError('')
     } else {
       setQuantity(quantityValue)
-      setTotalCost(COST_PER_UNIT_DEFAULT)
       setQuantityError('Must be greater than 0')
     }
   }
