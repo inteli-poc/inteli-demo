@@ -157,7 +157,7 @@ const CustomerPart = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [isOrdering, setIsOrdering] = useState(false)
-  const [costPerUnit, setCostPerUnit] = useState(COST_PER_UNIT_DEFAULT)
+  const [totalCost, setTotalCost] = useState(COST_PER_UNIT_DEFAULT)
   const [quantity, setQuantity] = useState(0)
   const [quantityError, setQuantityError] = useState('')
   const [deliveryBy, setDeliveryBy] = useState('')
@@ -202,9 +202,9 @@ const CustomerPart = () => {
         orderReference: `#${Math.floor(Math.random() * 100000000)}`,
         orderDetails: selectedCustomerPart,
         customerDetails: {},
+        quantity,
+        deliveryBy,
       }
-      fileData.quantity = quantity
-      fileData.deliveryBy = deliveryBy
 
       const file = new Blob([JSON.stringify(fileData)])
       const formData = createFormData([], file)
@@ -226,11 +226,11 @@ const CustomerPart = () => {
 
     if (isQuantityValid(quantityValue)) {
       setQuantity(parseInt(quantityValue, 10))
-      setCostPerUnit(COST_PER_UNIT_DEFAULT * quantityValue)
+      setTotalCost(COST_PER_UNIT_DEFAULT * quantityValue)
       setQuantityError('')
     } else {
       setQuantity(quantityValue)
-      setCostPerUnit(COST_PER_UNIT_DEFAULT)
+      setTotalCost(COST_PER_UNIT_DEFAULT)
       setQuantityError('Must be greater than 0')
     }
   }
@@ -347,7 +347,7 @@ const CustomerPart = () => {
             justify="space-between"
             className={classes.rightColumn}
           >
-            <Typography variant="h6">&#163;{costPerUnit}</Typography>
+            <Typography variant="h6">&#163;{totalCost}</Typography>
             <Box className={classes.rightColumnBottom}>
               <Typography className={classes.shippingAddress}>
                 Shipping Address:
