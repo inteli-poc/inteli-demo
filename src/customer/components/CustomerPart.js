@@ -169,7 +169,9 @@ const CustomerPart = () => {
   const api = useApi()
 
   const { image, name, material, alloy, price } = selectedCustomerPart
-  if (totalCost === 0) setTotalCost(price)
+  if (totalCost === 0) {
+    setTotalCost(price)
+  }
 
   const classes = useStyles()
 
@@ -227,7 +229,6 @@ const CustomerPart = () => {
     const quantityValue = value.replace(/\D/g, '')
 
     if (isQuantityValid(quantityValue)) {
-      // setQuantity(parseInt(quantityValue, 10))
       setTotalCost(price * quantityValue)
       setQuantityError('')
     } else {
