@@ -206,7 +206,6 @@ const CustomerPart = () => {
         customerDetails: {},
         quantity,
         deliveryBy,
-        price,
       }
 
       const file = new Blob([JSON.stringify(fileData)])
@@ -228,13 +227,14 @@ const CustomerPart = () => {
     const quantityValue = value.replace(/\D/g, '')
 
     if (isQuantityValid(quantityValue)) {
-      setQuantity(parseInt(quantityValue, 10))
+      // setQuantity(parseInt(quantityValue, 10))
       setTotalCost(price * quantityValue)
       setQuantityError('')
     } else {
-      setQuantity(quantityValue)
       setQuantityError('Must be greater than 0')
     }
+
+    setQuantity(quantityValue)
   }
 
   const isDeliveryByValid = (value) => {
