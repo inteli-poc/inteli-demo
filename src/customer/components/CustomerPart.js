@@ -198,7 +198,7 @@ const CustomerPart = () => {
       setIsOrdering(true)
 
       const fileData = {
-        type: 'IssuePurchaseOrder',
+        type: 'SubmittedOrder',
         orderReference: `#${Math.floor(Math.random() * 100000000)}`,
         orderDetails: selectedCustomerPart,
         customerDetails: {},
