@@ -5,7 +5,7 @@ import { Container, Grid, Typography } from '@material-ui/core'
 
 const useStyles = makeStyles({
   navRequestsAndTestedBtn: {
-    color: '#80FFFFF',
+    color: '#80FFFFFF',
     textAlign: 'center',
     textDecoration: 'none',
     display: 'block',
