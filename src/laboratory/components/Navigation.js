@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     },
   },
   navRequestsAndTestedActive: {
-    color: '#80FFFFFF',
+    color: '#FFFFFF',
     borderBottomColor: 'white',
     borderBottomStyle: 'solid',
     borderBottomWidth: '4px',
