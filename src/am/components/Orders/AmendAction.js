@@ -14,13 +14,15 @@ const useStyles = makeStyles({
     display: 'grid',
     justifyContent: 'right',
   },
-  acceptButton: {
+  amendButton: {
     width: 250,
     height: 42,
+    backgroundColor: '#484D54FF',
+    color: '#fff',
   },
 })
 
-const AcceptOrderAction = ({ order, buttonText }) => {
+const AmendAction = ({ order, buttonText }) => {
   const classes = useStyles()
   const [isAccepting, setIsAccepting] = useState(false)
   const dispatch = useDispatch()
@@ -69,8 +71,7 @@ const AcceptOrderAction = ({ order, buttonText }) => {
       <Button
         size="medium"
         variant="contained"
-        color="primary"
-        className={classes.acceptButton}
+        className={classes.amendButton}
         onClick={isAccepting ? null : onChange}
       >
         {isAccepting ? (
@@ -83,4 +84,4 @@ const AcceptOrderAction = ({ order, buttonText }) => {
   )
 }
 
-export default AcceptOrderAction
+export default AmendAction

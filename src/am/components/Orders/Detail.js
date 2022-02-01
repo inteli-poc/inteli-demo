@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react'
+/* eslint-disable */
+import React, { useEffect, useState } from 'react'
 import {
   CardMedia,
   Container,
@@ -6,25 +7,33 @@ import {
   Grid,
   Paper,
   Typography,
+  InputLabel,
+  Input,
+  CircularProgress,
 } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { markOrderRead } from '../../../features/readOrdersSlice'
 import OrderStatus from './Status'
 import AcceptOrderAction from './AcceptAction'
-import RejectAction from './RejectAction'
+import AmendOrderAction from './AmendAction'
 import ManufactureOrderAction from './ManufactureAction'
 import Attachment from '../Attachment'
+import moment from 'moment'
+import Button from '@material-ui/core/Button'
 
 const useStyles = makeStyles({
   root: {
     marginLeft: '32px',
-    border: 'solid 2px #ccc',
+    // border: 'solid 2px #ccc',
   },
   row: {
     padding: '16px 0px',
-    borderBottom: '1px lightgrey solid',
+    // borderBottom: '1px lightgrey solid',
+  },
+  acceptRow: {
+    padding: '16px 0px',
   },
   header: {
     padding: '16px 48px 12px 18px',
@@ -44,7 +53,140 @@ const useStyles = makeStyles({
   attachment: {
     width: '100%',
   },
+  acceptOrderButton: {
+    width: '100%',
+  },
+  buttonWrapper: {
+    padding: '16px 16px',
+    // width: '100%',
+    // display: 'grid',
+    // justifyContent: 'right',
+  },
+  rejectAndNegotiateFieldsContainer: {
+    margin: '32px 24px',
+  },
+  quantityContainer: {
+    // width: '100%',
+    margin: '0px 0px',
+    // padding: '8px 16px',
+    // height: '18px',
+    padding: '0px',
+    display: 'grid',
+    gridTemplateColumns: '1fr',
+  },
+  quantityLabel: {
+    margin: '12px 0px 12px 0px',
+    padding: '0px',
+    // margin: '0px 16px',
+    color: '#000',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+  },
+  quantityInput: {
+    // margin: '0px 16px',
+    width: '120px',
+    border: '1px #d3d3d3 solid',
+    borderRadius: '10px',
+    height: '40px',
+    fontSize: '0.9rem',
+    padding: '16px',
+    '&&&:before': {
+      borderBottom: 'none',
+    },
+    '&&:after': {
+      borderBottom: 'none',
+    },
+  },
+  deliveryByContainer: {
+    // width: '100%',
+    // margin: '0px 32px 8px 8px',
+    // margin: '0px 16px',
+    padding: '0px',
+    // height: '18px',
+    display: 'grid',
+    gridTemplateColumns: '4fr',
+  },
+  deliveryByLabel: {
+    // width: '90px',
+    margin: '12px 0px 12px 0px',
+    padding: '0px',
+    color: '#000',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+  },
+  deliveryByInput: {
+    width: '120px',
+    // margin: '0px 16px',
+    border: '1px #d3d3d3 solid',
+    borderRadius: '10px',
+    height: '40px',
+    fontSize: '0.8rem',
+    padding: '16px',
+    '&&&:before': {
+      borderBottom: 'none',
+    },
+    '&&:after': {
+      borderBottom: 'none',
+    },
+  },
+  rejectAndNegotiateTitle: {
+    textDecoration: 'underline',
+    margin: '0px 0px 0px 16px',
+    fontSize: '1rem',
+    fontWeight: '600',
+  },
+  rejectAndNegotiateArrow: {
+    margin: '0px 0px 0px 16px',
+    fontSize: '1rem',
+  },
+  rejectAndNegotiateClose: {
+    margin: '0px 16px',
+  },
+  rejectAndNegotiateText: {
+    margin: '32px 16px',
+    fontSize: '0.9rem',
+  },
+  contentForm: {
+    margin: '0px 64px 0px -8px',
+    padding: '0px',
+  },
+  rightColumn: {
+    padding: '64px 0px 112px 16px',
+  },
+  rightColumnBottom: {
+    marginTop: '96px',
+  },
+  partTitle: {
+    // fontSize: '1.4rem',
+    fontWeight: '600',
+    marginBottom: '32px',
+  },
+  shippingAddress: {
+    fontSize: '1rem',
+    fontWeight: '600',
+    marginBottom: '16px',
+  },
+  amendPurchaseOrderButton: {
+    width: 230,
+    height: 42,
+    backgroundColor: '#484D54FF',
+    margin: '24px',
+  },
+  errorText: {
+    color: '#ff0000',
+    fontSize: '1rem',
+  },
+  negotiationContainer: {
+    padding: '0px',
+    margin: '0px 32px',
+  },
+  negotiationButtonWrapper: {
+    padding: '16px 16px',
+    margin: '16px 24px 0px 24px',
+  },
 })
+
+const DATE_FORMAT = 'DD/MM/YYYY'
 
 const DetailRow = ({ title, value }) => {
   const classes = useStyles()
@@ -83,10 +225,15 @@ const getTotalCost = (price, quantity) => {
 const OrderDetail = ({ order }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const [isAmendingOrder, setIsAmendingOrder] = useState(false)
+  const [quantity, setQuantity] = useState(1)
+  const [quantityError, setQuantityError] = useState('')
+  const [deliveryBy, setDeliveryBy] = useState('')
+  const [deliveryByError, setDeliveryByError] = useState('')
 
   const { partId, image, name, material, alloy, price } = order.orderDetails
-  const quantity = order.quantity
-  const deliveryBy = order.deliveryBy
+  const quantityOrdered = order.quantity
+  const deliveryByOrdered = order.deliveryBy
 
   useEffect(() => {
     dispatch(markOrderRead(order.id))
@@ -96,6 +243,9 @@ const OrderDetail = ({ order }) => {
   switch (order.type) {
     case 'SubmittedOrder':
       Action = AcceptOrderAction
+      break
+    case 'AmendedOrder':
+      Action = AmendOrderAction
       break
     case 'AcceptedOrder':
       Action = ManufactureOrderAction
@@ -109,6 +259,72 @@ const OrderDetail = ({ order }) => {
     default:
       Action = EmptyAction
       break
+  }
+
+  const onChange = async () => {
+    if (isFormReady()) {
+      setIsAmendingOrder(true)
+    }
+  }
+
+  const isQuantityInvalid = (value, maxValue = 0) => {
+    if (!isNaN(value) && value > 0 && maxValue && value > maxValue) {
+      return 'Not more than ordered'
+    } else if (!isNaN(value) && value < 1) {
+      return 'More than 0'
+    } else {
+      return ''
+    }
+  }
+
+  const setQuantityValue = (value) => {
+    const quantityValue = value.replace(/\D/g, '')
+
+    setQuantityError(isQuantityInvalid(quantityValue, quantityOrdered))
+    setQuantity(quantityValue)
+  }
+
+  const isDeliveryByInvalid = (value, maxDate = '') => {
+    if (value && value.length === 10) {
+      const date = moment(value, DATE_FORMAT)
+
+      if (!date.isValid()) {
+        return `Invalid date (${DATE_FORMAT})`
+      } else if (
+        date.isValid() &&
+        maxDate &&
+        date.isBefore(moment(maxDate, DATE_FORMAT))
+      ) {
+        return 'Not before order date'
+      } else if (
+        date.isValid() &&
+        date.isSameOrAfter(moment().startOf('day'))
+      ) {
+        return 'Not before today'
+      } else {
+        return ''
+      }
+    }
+  }
+
+  const setDeliveryByValue = (value) => {
+    setDeliveryByError(isDeliveryByInvalid(value))
+    setDeliveryBy(value)
+  }
+
+  const handleChange = (name) => (event) => {
+    switch (name) {
+      case 'quantity':
+        setQuantityValue(event.target.value)
+        break
+      case 'deliveryBy':
+        setDeliveryByValue(event.target.value)
+        break
+    }
+  }
+
+  const isFormReady = () => {
+    return !isQuantityInvalid(quantity) && !isDeliveryByInvalid(deliveryBy)
   }
 
   return (
@@ -198,24 +414,78 @@ const OrderDetail = ({ order }) => {
           <Attachment name="CAD" />
         </Box>
       </Grid>
-      <Grid
-        container
-        alignItems="left"
-        className={`${classes.row} ${classes.header}`}
-      >
-        <Grid item xs={6}>
-          <Container
-            className={`${classes.buttonWrapper} ${classes.rejectButton}`}
-          >
-            <RejectAction />
-          </Container>
-        </Grid>
-        <Grid item xs={6}>
+      <Grid container className={`${classes.acceptRow}`}>
+        <Grid item xs={12}>
           <Container className={classes.buttonWrapper}>
-            <Action order={order} />
+            <Action order={order} buttonText="ACCEPT ORDER" />
           </Container>
         </Grid>
       </Grid>
+      <Box container className={classes.row}>
+        <Grid item xs={12}>
+          <Box className={classes.attachment}>
+            <Grid container>
+              <div item className={classes.rejectAndNegotiateTitle}>
+                Reject &amp; negotiate
+              </div>
+              <div item className={classes.rejectAndNegotiateArrow}>
+                ARROW
+              </div>
+              <div item className={classes.rejectAndNegotiateClose}>
+                X
+              </div>
+            </Grid>
+            <Grid item className={classes.rejectAndNegotiateText}>
+              <Typography item variant="subtitle1" color="textSecondary">
+                In the case you can't meet the requirements of the purchase
+                order, you may negotiate the quantity and set a delivery date of
+                the remaining items.
+              </Typography>
+            </Grid>
+          </Box>
+          <Grid container className={classes.rejectAndNegotiateFieldsContainer}>
+            <Grid xs={4} className={classes.quantityContainer}>
+              <InputLabel item className={classes.quantityLabel}>
+                *Processed Quantity:
+              </InputLabel>
+              <Input
+                item
+                className={classes.quantityInput}
+                name="quantity"
+                onChange={handleChange('quantity')}
+                value={quantity}
+              />
+              <div className={classes.errorText}>{quantityError}</div>
+            </Grid>
+            <Grid className={classes.deliveryByContainer}>
+              <InputLabel className={classes.deliveryByLabel}>
+                *Delivery date of remaining items:
+              </InputLabel>
+              <Input
+                className={classes.deliveryByInput}
+                name="deliveryBy"
+                placeholder={DATE_FORMAT}
+                onChange={handleChange('deliveryBy')}
+              />
+              <div className={classes.errorText}>{deliveryByError}</div>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Button
+          size="medium"
+          variant="contained"
+          color="primary"
+          className={classes.amendPurchaseOrderButton}
+          onClick={isAmendingOrder ? null : onChange}
+          disabled={!isFormReady()}
+        >
+          {isAmendingOrder ? (
+            <CircularProgress color="secondary" size="30px" />
+          ) : (
+            'SEND NEGOTIATION'
+          )}
+        </Button>
+      </Box>
     </Paper>
   )
 }
