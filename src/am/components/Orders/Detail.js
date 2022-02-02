@@ -22,6 +22,7 @@ import ManufactureOrderAction from './ManufactureAction'
 import Attachment from '../Attachment'
 import moment from 'moment'
 import Button from '@material-ui/core/Button'
+import rejectAndNegotiateCloseX from '../../../images/close-x-black-icon.svg'
 
 const useStyles = makeStyles({
   root: {
@@ -129,15 +130,42 @@ const useStyles = makeStyles({
       borderBottom: 'none',
     },
   },
+  rejectAndNegotiateToggle: {
+    '&&:hover': {
+      cursor: 'pointer',
+    },
+  },
+  rejectAndNegotiateXAlign: {
+    // width: '100%',
+    // alignItems: 'right',
+  },
+  rejectAndNegotiateX: {
+    width: '16px',
+    height: '16px',
+    '&&:hover': {
+      cursor: 'pointer',
+    },
+  },
   rejectAndNegotiateTitle: {
     textDecoration: 'underline',
     margin: '0px 0px 0px 16px',
-    fontSize: '1rem',
     fontWeight: '600',
   },
-  rejectAndNegotiateArrow: {
-    margin: '0px 0px 0px 16px',
-    fontSize: '1rem',
+  rejectAndNegotiateDownArrow: {
+    margin: '6px 0px 0px 12px',
+    width: '0px',
+    height: '0px',
+    borderLeft: '6px solid transparent',
+    borderRight: '6px solid transparent',
+    borderTop: '6px solid #000',
+  },
+  rejectAndNegotiateUpArrow: {
+    margin: '6px 0px 0px 12px',
+    width: '0px',
+    height: '0px',
+    borderLeft: '6px solid transparent',
+    borderRight: '6px solid transparent',
+    borderBottom: '6px solid #000',
   },
   rejectAndNegotiateClose: {
     margin: '0px 16px',
@@ -170,11 +198,12 @@ const useStyles = makeStyles({
     width: 230,
     height: 42,
     backgroundColor: '#484D54FF',
-    margin: '24px',
+    margin: '12px 24px',
   },
   errorText: {
     color: '#ff0000',
     fontSize: '1rem',
+    margin: '8px 0px',
   },
   negotiationContainer: {
     padding: '0px',
@@ -182,7 +211,7 @@ const useStyles = makeStyles({
   },
   negotiationButtonWrapper: {
     padding: '16px 16px',
-    margin: '16px 24px 0px 24px',
+    margin: '0px 24px 0px 24px',
   },
 })
 
@@ -222,18 +251,21 @@ const getTotalCost = (price, quantity) => {
   return cost
 }
 
+// TODO move
+import images from '../../../images'
+
 const OrderDetail = ({ order }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [isAmendingOrder, setIsAmendingOrder] = useState(false)
+
+  const { partId, image, name, material, alloy, price } = order.orderDetails
+
   const [quantity, setQuantity] = useState(1)
   const [quantityError, setQuantityError] = useState('')
   const [deliveryBy, setDeliveryBy] = useState('')
   const [deliveryByError, setDeliveryByError] = useState('')
-
-  const { partId, image, name, material, alloy, price } = order.orderDetails
-  const quantityOrdered = order.quantity
-  const deliveryByOrdered = order.deliveryBy
+  const [displayNegotiation, setDisplayNegotiation] = useState(true)
 
   useEffect(() => {
     dispatch(markOrderRead(order.id))
@@ -261,6 +293,10 @@ const OrderDetail = ({ order }) => {
       break
   }
 
+  const toggleNegotiationDisplay = () => {
+    setDisplayNegotiation(!displayNegotiation)
+  }
+
   const onChange = async () => {
     if (isFormReady()) {
       setIsAmendingOrder(true)
@@ -280,35 +316,32 @@ const OrderDetail = ({ order }) => {
   const setQuantityValue = (value) => {
     const quantityValue = value.replace(/\D/g, '')
 
-    setQuantityError(isQuantityInvalid(quantityValue, quantityOrdered))
+    setQuantityError(isQuantityInvalid(quantityValue, order.quantity))
     setQuantity(quantityValue)
   }
 
   const isDeliveryByInvalid = (value, maxDate = '') => {
-    if (value && value.length === 10) {
-      const date = moment(value, DATE_FORMAT)
+    // if (value && value.length === 10) {
+    const date = moment(value, DATE_FORMAT)
 
-      if (!date.isValid()) {
-        return `Invalid date (${DATE_FORMAT})`
-      } else if (
-        date.isValid() &&
-        maxDate &&
-        date.isBefore(moment(maxDate, DATE_FORMAT))
-      ) {
-        return 'Not before order date'
-      } else if (
-        date.isValid() &&
-        date.isSameOrAfter(moment().startOf('day'))
-      ) {
-        return 'Not before today'
-      } else {
-        return ''
-      }
+    if (!date.isValid()) {
+      return `Invalid date (${DATE_FORMAT})`
+    } else if (
+      date.isValid() &&
+      maxDate &&
+      date.isBefore(moment(maxDate, DATE_FORMAT))
+    ) {
+      return 'Not before order date'
+    } else if (date.isValid() && date.isSameOrBefore(moment().startOf('day'))) {
+      return 'Not before today'
+    } else {
+      return ''
     }
+    // }
   }
 
   const setDeliveryByValue = (value) => {
-    setDeliveryByError(isDeliveryByInvalid(value))
+    setDeliveryByError(isDeliveryByInvalid(value, order.deliveryBy))
     setDeliveryBy(value)
   }
 
@@ -369,11 +402,14 @@ const OrderDetail = ({ order }) => {
                 <DetailRow title="Quantity" value={quantity}></DetailRow>
                 <DetailRow title="Material" value={material}></DetailRow>
                 <DetailRow title="Alloy" value={alloy}></DetailRow>
-                <DetailRow title="Delivery By" value={deliveryBy}></DetailRow>
+                <DetailRow
+                  title="Delivery By"
+                  value={order.deliveryBy}
+                ></DetailRow>
                 <DetailRow title="Unit Price" value={price}></DetailRow>
                 <DetailRow
                   title="Total Cost"
-                  value={getTotalCost(price, quantity)}
+                  value={getTotalCost(price, order.quantity)}
                 ></DetailRow>
               </Box>
             </Grid>
@@ -423,68 +459,87 @@ const OrderDetail = ({ order }) => {
       </Grid>
       <Box container className={classes.row}>
         <Grid item xs={12}>
-          <Box className={classes.attachment}>
-            <Grid container>
-              <div item className={classes.rejectAndNegotiateTitle}>
-                Reject &amp; negotiate
-              </div>
-              <div item className={classes.rejectAndNegotiateArrow}>
-                ARROW
-              </div>
-              <div item className={classes.rejectAndNegotiateClose}>
-                X
-              </div>
-            </Grid>
-            <Grid item className={classes.rejectAndNegotiateText}>
-              <Typography item variant="subtitle1" color="textSecondary">
-                In the case you can't meet the requirements of the purchase
-                order, you may negotiate the quantity and set a delivery date of
-                the remaining items.
-              </Typography>
-            </Grid>
-          </Box>
-          <Grid container className={classes.rejectAndNegotiateFieldsContainer}>
-            <Grid xs={4} className={classes.quantityContainer}>
-              <InputLabel item className={classes.quantityLabel}>
-                *Processed Quantity:
-              </InputLabel>
-              <Input
-                item
-                className={classes.quantityInput}
-                name="quantity"
-                onChange={handleChange('quantity')}
-                value={quantity}
+          {/*<Box >*/}
+          <Grid container className={classes.rejectAndNegotiateToggle}>
+            <div
+              item
+              className={classes.rejectAndNegotiateTitle}
+              onClick={toggleNegotiationDisplay}
+            >
+              Reject &amp; negotiate
+            </div>
+            <div
+              item
+              className={
+                displayNegotiation
+                  ? classes.rejectAndNegotiateDownArrow
+                  : classes.rejectAndNegotiateUpArrow
+              }
+            ></div>
+            <div className={classes.rejectAndNegotiateXAlign}>
+              <CardMedia
+                image={rejectAndNegotiateCloseX}
+                className={`${classes.rejectAndNegotiateX} ${classes.rejectAndNegotiateToggle}`}
+                onClick={toggleNegotiationDisplay}
               />
-              <div className={classes.errorText}>{quantityError}</div>
-            </Grid>
-            <Grid className={classes.deliveryByContainer}>
-              <InputLabel className={classes.deliveryByLabel}>
-                *Delivery date of remaining items:
-              </InputLabel>
-              <Input
-                className={classes.deliveryByInput}
-                name="deliveryBy"
-                placeholder={DATE_FORMAT}
-                onChange={handleChange('deliveryBy')}
-              />
-              <div className={classes.errorText}>{deliveryByError}</div>
-            </Grid>
+            </div>
           </Grid>
-        </Grid>
-        <Button
-          size="medium"
-          variant="contained"
-          color="primary"
-          className={classes.amendPurchaseOrderButton}
-          onClick={isAmendingOrder ? null : onChange}
-          disabled={!isFormReady()}
-        >
-          {isAmendingOrder ? (
-            <CircularProgress color="secondary" size="30px" />
-          ) : (
-            'SEND NEGOTIATION'
+          {/*</Box>*/}
+          {displayNegotiation && (
+            <Grid
+              container
+              className={classes.rejectAndNegotiateFieldsContainer}
+            >
+              <Grid item className={classes.rejectAndNegotiateText}>
+                <Typography item variant="subtitle1" color="textSecondary">
+                  In the case you can't meet the requirements of the purchase
+                  order, you may negotiate the quantity and set a delivery date
+                  of the remaining items.
+                </Typography>
+              </Grid>
+              <Grid item xs={4} className={classes.quantityContainer}>
+                <InputLabel item className={classes.quantityLabel}>
+                  *Processed Quantity:
+                </InputLabel>
+                <Input
+                  item
+                  className={classes.quantityInput}
+                  name="quantity"
+                  onChange={handleChange('quantity')}
+                  value={quantity}
+                />
+                <div className={classes.errorText}>{quantityError}</div>
+              </Grid>
+              <Grid className={classes.deliveryByContainer}>
+                <InputLabel className={classes.deliveryByLabel}>
+                  *Delivery date of remaining items:
+                </InputLabel>
+                <Input
+                  className={classes.deliveryByInput}
+                  name="deliveryBy"
+                  placeholder={DATE_FORMAT}
+                  onChange={handleChange('deliveryBy')}
+                  value={deliveryBy}
+                />
+                <div className={classes.errorText}>{deliveryByError}</div>
+              </Grid>
+              <Button
+                size="medium"
+                variant="contained"
+                color="primary"
+                className={classes.amendPurchaseOrderButton}
+                onClick={isAmendingOrder ? null : onChange}
+                disabled={!isFormReady()}
+              >
+                {isAmendingOrder ? (
+                  <CircularProgress color="secondary" size="30px" />
+                ) : (
+                  'SEND NEGOTIATION'
+                )}
+              </Button>
+            </Grid>
           )}
-        </Button>
+        </Grid>
       </Box>
     </Paper>
   )
