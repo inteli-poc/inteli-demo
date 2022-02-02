@@ -11,6 +11,7 @@ import BackButton from './BackButton'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useSelector } from 'react-redux'
 import OrderStatusProgressBar from './OrderStatusProgressBar'
+import OrderSummary from './OrderComponents/OrderSummary'
 
 const useStyles = makeStyles((theme) => ({
   backButton: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '20px',
   },
   details: {
-    marginRight: 24,
+    // marginRight: 24,
   },
 }))
 
@@ -62,7 +63,7 @@ const MyOrders = () => {
       <BackButton
         buttonClass={classes.backButton}
         backToLocation="/app/customer-parts"
-        value="< Back"
+        value="< Test"
       />
       <Container>
         {customerOrders.length ? (
@@ -70,13 +71,40 @@ const MyOrders = () => {
             const { image, name, partId, material, alloy } = order.orderDetails
 
             return (
-              <Paper
-                elevation={0}
-                key={order.orderReference}
-                className={classes.order}
-              >
-                <Grid container item direction="row" alignItems="center">
-                  <Grid item xs={2}>
+              <div key={'container'}>
+                <Paper
+                  elevation={0}
+                  key={order.orderReference}
+                  className={classes.order}
+                >
+                  <Grid container item direction="row" alignItems="center">
+                    <Grid item xs={2}>
+                      <CardMedia
+                        component="img"
+                        alt={name}
+                        image={image}
+                        title={name}
+                      />
+                    </Grid>
+                    <Grid item xs={2} className={classes.details}>
+                      <Typography variant="h6" className={classes.name}>
+                        {name}
+                      </Typography>
+                      <DetailRow title="Part Number" value={partId} />
+                      <DetailRow title="Material" value={material} />
+                      <DetailRow title="Alloy" value={alloy} />
+                    </Grid>
+                    <Grid item>
+                      <OrderStatusProgressBar
+                        orderType={order.type}
+                        orderPowderId={order.powderId}
+                      />
+                    </Grid>
+                  </Grid>
+                </Paper>
+
+                <Grid container item>
+                  <Grid item xs={1}>
                     <CardMedia
                       component="img"
                       alt={name}
@@ -88,18 +116,18 @@ const MyOrders = () => {
                     <Typography variant="h6" className={classes.name}>
                       {name}
                     </Typography>
-                    <DetailRow title="Part Number" value={partId} />
-                    <DetailRow title="Material" value={material} />
-                    <DetailRow title="Alloy" value={alloy} />
                   </Grid>
-                  <Grid item>
-                    <OrderStatusProgressBar
-                      orderType={order.type}
-                      orderPowderId={order.powderId}
+                  <Grid item xs={9}>
+                    <OrderSummary
+                      image={image}
+                      alloy={alloy}
+                      material={material}
+                      partName={name}
+                      partNumber={order.partId}
                     />
                   </Grid>
                 </Grid>
-              </Paper>
+              </div>
             )
           })
         ) : (
