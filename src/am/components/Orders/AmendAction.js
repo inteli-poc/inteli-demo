@@ -54,7 +54,7 @@ const AmendAction = ({ order, buttonText }) => {
     setIsAccepting(true)
 
     const fileData = {
-      type: 'AcceptedOrder',
+      type: 'AmendedOrder',
       orderReference: order.orderReference,
     }
 
@@ -77,7 +77,7 @@ const AmendAction = ({ order, buttonText }) => {
         {isAccepting ? (
           <CircularProgress color="secondary" size="30px" />
         ) : (
-          buttonText || 'Accept'
+          'ACCEPT ORDER'
         )}
       </Button>
     </Container>

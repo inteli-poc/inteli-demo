@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
 import Button from '@material-ui/core/Button'
 
@@ -63,13 +63,11 @@ const useStyles = makeStyles({
   quantityLabel: {
     margin: '12px 0px 12px 0px',
     padding: '0px',
-    // margin: '0px 16px',
     color: '#000',
     fontSize: '0.9rem',
     fontWeight: '600',
   },
   quantityInput: {
-    // margin: '0px 16px',
     width: '120px',
     border: '1px #d3d3d3 solid',
     borderRadius: '10px',
@@ -85,7 +83,6 @@ const useStyles = makeStyles({
   },
   deliveryByContainer: {
     padding: '0px',
-    // height: '18px',
     display: 'grid',
     gridTemplateColumns: '4fr',
   },
@@ -220,7 +217,7 @@ const getTotalCost = (price, quantity) => {
 const OrderDetail = ({ order }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const [isAmendingOrder, setIsAmendingOrder] = useState(false)
   const [quantity, setQuantity] = useState(1)
@@ -269,7 +266,6 @@ const OrderDetail = ({ order }) => {
       {
         owner: identities.am,
         metadataFile: 'file',
-        metadataLiteral: 'literal',
       },
     ]
 
@@ -290,25 +286,6 @@ const OrderDetail = ({ order }) => {
     if (isFormReady()) {
       setIsAmendingOrder(true)
 
-      // const file = new Blob([JSON.stringify(fileData)])
-
-      //   [{
-      //   roles: [
-      //     { 'Assignee': 'SupplierT1' },
-      //   ],
-      //   metadata: {
-      //     typeLiteral: {
-      //       type: 'PO',
-      //     },
-      //     statusLiteral: {
-      //       status: 'amended',
-      //     },
-      //     recipeFile: {
-      //       type: 'FILE', value: 'recipe.pdf',
-      //     }
-      //   }
-      // }]
-
       const fileData = {
         type: 'AmendedOrder',
         orderReference: `#${Math.floor(Math.random() * 100000000)}`,
@@ -318,31 +295,13 @@ const OrderDetail = ({ order }) => {
         deliveryBy,
       }
       const file = new Blob([JSON.stringify(fileData)])
-      const literalData = {
-        type: 'AmendedOrder',
-        orderReference: `#${Math.floor(Math.random() * 100000000)}`,
-        orderDetails: order.orderDetails,
-        metadata: {
-          typeLiteral: {
-            type: 'PO',
-          },
-          statusLiteral: {
-            status: 'amended',
-          },
-        },
-        quantity,
-        deliveryBy,
-      }
-      const formData = createFormData(
-        [],
-        [JSON.stringify(literalData), JSON.stringify(fileData)]
-      )
+      const formData = createFormData([order.latestId], file)
       const response = await api.runProcess(formData)
-      const token = { id: response[0], latestId: response[0], ...file }
+      const token = { id: order.latestId, latestId: response[0], ...fileData }
 
       dispatch(updateOrder(token))
 
-      navigate('/app/orders')
+      // navigate('/app/orders')
     }
   }
 
@@ -492,7 +451,7 @@ const OrderDetail = ({ order }) => {
       </Grid>
       <Grid container>
         <Grid item xs={12}>
-          <Action order={order} buttonText="ACCEPT ORDER" />
+          <Action order={order} />
         </Grid>
       </Grid>
       <Grid

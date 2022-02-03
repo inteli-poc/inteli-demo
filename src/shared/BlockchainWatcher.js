@@ -74,6 +74,16 @@ const BlockchainWatcher = ({ children }) => {
                 })
               )
               break
+            case 'AmendedOrder':
+              dispatch(
+                updateOrder({
+                  id: findOriginalId(orders, token),
+                  latestId: token.id,
+                  latestOwner: token.roles.Owner,
+                  ...token.metadata,
+                })
+              )
+              break
             case 'AcceptedOrder':
               dispatch(
                 updateOrder({
