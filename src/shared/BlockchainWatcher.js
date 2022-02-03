@@ -74,7 +74,7 @@ const BlockchainWatcher = ({ children }) => {
                 })
               )
               break
-            case 'AmendedOrder':
+            case 'AcceptedOrder':
               dispatch(
                 updateOrder({
                   id: findOriginalId(orders, token),
@@ -84,7 +84,7 @@ const BlockchainWatcher = ({ children }) => {
                 })
               )
               break
-            case 'AcceptedOrder':
+            case 'RejectedOrder':
               dispatch(
                 updateOrder({
                   id: findOriginalId(orders, token),

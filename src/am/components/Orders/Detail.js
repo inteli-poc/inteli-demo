@@ -7,24 +7,18 @@ import {
   Typography,
   InputLabel,
   Input,
-  CircularProgress,
   TextField,
 } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useDispatch } from 'react-redux'
-// import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
-import Button from '@material-ui/core/Button'
 
 import { markOrderRead } from '../../../features/readOrdersSlice'
 import OrderStatus from './Status'
 import AcceptOrderAction from './AcceptAction'
-import AmendOrderAction from './AmendAction'
-import ManufactureOrderAction from './ManufactureAction'
+import RejectOrderAction from './RejectAction'
 import Attachment from '../Attachment'
 import rejectAndNegotiateCloseX from '../../../images/close-x-black-icon.svg'
-import { updateOrder } from '../../../features/ordersSlice'
-import { identities, useApi } from '../../../utils'
 
 const useStyles = makeStyles({
   root: {
@@ -161,19 +155,12 @@ const useStyles = makeStyles({
     fontWeight: '600',
     marginBottom: '16px',
   },
-
   errorText: {
     color: '#ff0000',
     fontSize: '1rem',
     margin: '8px 0px',
   },
-  amendPurchaseOrderButton: {
-    width: '230px',
-    height: '42px',
-    backgroundColor: '#484D54FF',
-  },
   negotiationButtonWrapper: {
-    width: '100%',
     margin: '24px 0px 8px 0px',
   },
 })
@@ -199,10 +186,6 @@ const DetailRow = ({ title, value }) => {
   )
 }
 
-const EmptyAction = () => {
-  return <></>
-}
-
 const getTotalCost = (price, quantity) => {
   let cost = '0.00'
 
@@ -217,9 +200,7 @@ const getTotalCost = (price, quantity) => {
 const OrderDetail = ({ order }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  // const navigate = useNavigate()
 
-  const [isAmendingOrder, setIsAmendingOrder] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const [quantityError, setQuantityError] = useState('')
   const [deliveryBy, setDeliveryBy] = useState('')
@@ -228,81 +209,12 @@ const OrderDetail = ({ order }) => {
 
   const { partId, image, name, material, alloy, price } = order.orderDetails
 
-  const api = useApi()
-
   useEffect(() => {
     dispatch(markOrderRead(order.id))
   }, [order, dispatch])
 
-  let Action = null
-  switch (order.type) {
-    case 'SubmittedOrder':
-      Action = AcceptOrderAction
-      break
-    case 'AmendedOrder':
-      Action = AmendOrderAction
-      break
-    case 'AcceptedOrder':
-      Action = ManufactureOrderAction
-      break
-    case 'ManufacturedOrder':
-      Action = EmptyAction
-      break
-    case 'ManufacturingOrder':
-      Action = EmptyAction
-      break
-    default:
-      Action = EmptyAction
-      break
-  }
-
   const toggleNegotiationDisplay = () => {
     setDisplayNegotiation(!displayNegotiation)
-  }
-
-  const createFormData = (inputs, file) => {
-    const formData = new FormData()
-    const outputs = [
-      {
-        owner: identities.am,
-        metadataFile: 'file',
-      },
-    ]
-
-    formData.set(
-      'request',
-      JSON.stringify({
-        inputs,
-        outputs,
-      })
-    )
-
-    formData.set('file', file, 'file')
-
-    return formData
-  }
-
-  const onChange = async () => {
-    if (isFormReady()) {
-      setIsAmendingOrder(true)
-
-      const fileData = {
-        type: 'AmendedOrder',
-        orderReference: `#${Math.floor(Math.random() * 100000000)}`,
-        orderDetails: order.orderDetails,
-        customerDetails: {},
-        quantity,
-        deliveryBy,
-      }
-      const file = new Blob([JSON.stringify(fileData)])
-      const formData = createFormData([order.latestId], file)
-      const response = await api.runProcess(formData)
-      const token = { id: order.latestId, latestId: response[0], ...fileData }
-
-      dispatch(updateOrder(token))
-
-      // navigate('/app/orders')
-    }
   }
 
   const isQuantityInvalid = (value, maxValue = 0) => {
@@ -451,7 +363,7 @@ const OrderDetail = ({ order }) => {
       </Grid>
       <Grid container>
         <Grid item xs={12}>
-          <Action order={order} />
+          <AcceptOrderAction order={order} />
         </Grid>
       </Grid>
       <Grid
@@ -525,20 +437,7 @@ const OrderDetail = ({ order }) => {
               <div className={classes.errorText}>{deliveryByError}</div>
             </Grid>
             <Grid className={classes.negotiationButtonWrapper}>
-              <Button
-                size="medium"
-                variant="contained"
-                color="primary"
-                className={classes.amendPurchaseOrderButton}
-                onClick={isAmendingOrder ? null : onChange}
-                disabled={!isFormReady()}
-              >
-                {isAmendingOrder ? (
-                  <CircularProgress color="secondary" size="30px" />
-                ) : (
-                  'SEND NEGOTIATION'
-                )}
-              </Button>
+              <RejectOrderAction order={order} formReady={isFormReady} />
             </Grid>
           </Grid>
         )}
