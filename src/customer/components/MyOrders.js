@@ -91,6 +91,12 @@ const MyOrders = () => {
                       partName={name}
                       partNumber={order.partId}
                     />
+                    <Grid item>
+                      <OrderStatusProgressBar
+                        orderType={order.type}
+                        orderPowderId={order.powderId}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
 

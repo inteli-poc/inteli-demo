@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     width: '32px',
     height: '32px',
-    color: theme.palette.primary.main,
+    color: '#f03',
     background: theme.palette.primary.contrastText,
     borderRadius: '50%',
     fontSize: '1.2rem',

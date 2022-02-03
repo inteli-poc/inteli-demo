@@ -30,7 +30,6 @@ const OrderSummary = ({ partNumber, material, partName, alloy, image }) => {
             <p>{material}</p>
             <p>{alloy}</p>
             <br />
-            <a href="#">View Details</a>
           </Grid>
           <Grid item xs={3}>
             <Typography variant="h6">Shipping Address</Typography>
