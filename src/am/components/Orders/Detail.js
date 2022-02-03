@@ -437,7 +437,12 @@ const OrderDetail = ({ order }) => {
               <div className={classes.errorText}>{deliveryByError}</div>
             </Grid>
             <Grid className={classes.negotiationButtonWrapper}>
-              <RejectOrderAction order={order} formReady={isFormReady} />
+              <RejectOrderAction
+                order={order}
+                quantity={quantity}
+                deliveryBy={deliveryBy}
+                formReady={isFormReady()}
+              />
             </Grid>
           </Grid>
         )}
