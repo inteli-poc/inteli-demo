@@ -17,8 +17,11 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles({
   content: {
-    margin: '20px auto',
-    maxWidth: '1350px',
+    marginTop: '130px',
+    marginRight: '187px',
+    marginLeft: '187px',
+    marginBottom: '87px',
+    //maxWidth: '1350px',
   },
 })
 

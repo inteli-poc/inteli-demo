@@ -7,7 +7,7 @@ import {
   Box,
   Container,
 } from '@material-ui/core'
-import BackButton from './BackButton'
+//import BackButton from './BackButton'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useSelector } from 'react-redux'
 import OrderStatusProgressBar from './OrderStatusProgressBar'
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   order: {
     width: '100%',
     border: 'solid #ccc 1px',
-    padding: '20px 20px 20px 0px',
+    paddingTop: '20px 20px 20px 0px',
     marginBottom: '8px',
   },
   detailText: {
@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
   },
   details: {
     // marginRight: 24,
+  },
+  mainPadding: {
+    paddingTop: '130px',
   },
 }))
 
@@ -61,11 +64,13 @@ const MyOrders = () => {
 
   return (
     <Container>
-      <BackButton
+      {/* Back button not in new design
+      
+        <BackButton
         buttonClass={classes.backButton}
         backToLocation="/app/customer-parts"
-        value="< Test"
-      />
+        value="< Back"
+      /> */}
       <Container>
         {customerOrders.length ? (
           [...customerOrders].reverse().map((order) => {
@@ -73,6 +78,14 @@ const MyOrders = () => {
 
             return (
               <div key={'container'}>
+                <OrderSummary
+                  image={image}
+                  alloy={alloy}
+                  material={material}
+                  name={name}
+                  partNumber={partId}
+                />
+
                 <Grid container direction="row">
                   <Grid container direction="column" item xs={3}>
                     <SummaryRow
@@ -80,17 +93,10 @@ const MyOrders = () => {
                       alloy={alloy}
                       material={material}
                       partName={name}
-                      partNumber={order.partId}
+                      partNumber={partId}
                     />
                   </Grid>
                   <Grid item xs={9}>
-                    <OrderSummary
-                      image={image}
-                      alloy={alloy}
-                      material={material}
-                      partName={name}
-                      partNumber={order.partId}
-                    />
                     <Grid item>
                       <OrderStatusProgressBar
                         orderType={order.type}
@@ -100,6 +106,8 @@ const MyOrders = () => {
                   </Grid>
                 </Grid>
 
+                <br />
+                <br />
                 <Paper
                   elevation={0}
                   key={order.orderReference}
@@ -130,31 +138,6 @@ const MyOrders = () => {
                     </Grid>
                   </Grid>
                 </Paper>
-
-                <Grid container item>
-                  <Grid item xs={1}>
-                    <CardMedia
-                      component="img"
-                      alt={name}
-                      image={image}
-                      title={name}
-                    />
-                  </Grid>
-                  <Grid item xs={2} className={classes.details}>
-                    <Typography variant="h6" className={classes.name}>
-                      {name}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <OrderSummary
-                      image={image}
-                      alloy={alloy}
-                      material={material}
-                      partName={name}
-                      partNumber={order.partId}
-                    />
-                  </Grid>
-                </Grid>
               </div>
             )
           })
