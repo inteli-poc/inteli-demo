@@ -1,8 +1,6 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import {
   CardMedia,
-  Container,
   Box,
   Grid,
   Paper,
@@ -10,9 +8,13 @@ import {
   InputLabel,
   Input,
   CircularProgress,
+  TextField,
 } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import moment from 'moment'
+import Button from '@material-ui/core/Button'
 
 import { markOrderRead } from '../../../features/readOrdersSlice'
 import OrderStatus from './Status'
@@ -20,24 +22,22 @@ import AcceptOrderAction from './AcceptAction'
 import AmendOrderAction from './AmendAction'
 import ManufactureOrderAction from './ManufactureAction'
 import Attachment from '../Attachment'
-import moment from 'moment'
-import Button from '@material-ui/core/Button'
 import rejectAndNegotiateCloseX from '../../../images/close-x-black-icon.svg'
+import { updateOrder } from '../../../features/ordersSlice'
+import { identities, useApi } from '../../../utils'
 
 const useStyles = makeStyles({
   root: {
     marginLeft: '32px',
-    // border: 'solid 2px #ccc',
   },
   row: {
     padding: '16px 0px',
-    // borderBottom: '1px lightgrey solid',
   },
   acceptRow: {
     padding: '16px 0px',
   },
   header: {
-    padding: '16px 48px 12px 18px',
+    padding: '24px 28px',
     '& h6': {
       marginRight: 'auto',
     },
@@ -54,23 +54,8 @@ const useStyles = makeStyles({
   attachment: {
     width: '100%',
   },
-  acceptOrderButton: {
-    width: '100%',
-  },
-  buttonWrapper: {
-    padding: '16px 16px',
-    // width: '100%',
-    // display: 'grid',
-    // justifyContent: 'right',
-  },
-  rejectAndNegotiateFieldsContainer: {
-    margin: '32px 24px',
-  },
   quantityContainer: {
-    // width: '100%',
     margin: '0px 0px',
-    // padding: '8px 16px',
-    // height: '18px',
     padding: '0px',
     display: 'grid',
     gridTemplateColumns: '1fr',
@@ -99,16 +84,12 @@ const useStyles = makeStyles({
     },
   },
   deliveryByContainer: {
-    // width: '100%',
-    // margin: '0px 32px 8px 8px',
-    // margin: '0px 16px',
     padding: '0px',
     // height: '18px',
     display: 'grid',
     gridTemplateColumns: '4fr',
   },
   deliveryByLabel: {
-    // width: '90px',
     margin: '12px 0px 12px 0px',
     padding: '0px',
     color: '#000',
@@ -116,28 +97,22 @@ const useStyles = makeStyles({
     fontWeight: '600',
   },
   deliveryByInput: {
-    width: '120px',
-    // margin: '0px 16px',
     border: '1px #d3d3d3 solid',
     borderRadius: '10px',
-    height: '40px',
+    height: '32px',
     fontSize: '0.8rem',
-    padding: '16px',
-    '&&&:before': {
-      borderBottom: 'none',
-    },
-    '&&:after': {
-      borderBottom: 'none',
-    },
+    padding: '4px 16px',
+    textDecoration: 'none',
+  },
+  rejectAndNegotiateContainer: {
+    padding: '24px 28px',
+    margin: '32px 0px',
+    width: '100%',
   },
   rejectAndNegotiateToggle: {
     '&&:hover': {
       cursor: 'pointer',
     },
-  },
-  rejectAndNegotiateXAlign: {
-    // width: '100%',
-    // alignItems: 'right',
   },
   rejectAndNegotiateX: {
     width: '16px',
@@ -148,11 +123,10 @@ const useStyles = makeStyles({
   },
   rejectAndNegotiateTitle: {
     textDecoration: 'underline',
-    margin: '0px 0px 0px 16px',
     fontWeight: '600',
   },
   rejectAndNegotiateDownArrow: {
-    margin: '6px 0px 0px 12px',
+    margin: '6px',
     width: '0px',
     height: '0px',
     borderLeft: '6px solid transparent',
@@ -160,18 +134,15 @@ const useStyles = makeStyles({
     borderTop: '6px solid #000',
   },
   rejectAndNegotiateUpArrow: {
-    margin: '6px 0px 0px 12px',
+    margin: '6px',
     width: '0px',
     height: '0px',
     borderLeft: '6px solid transparent',
     borderRight: '6px solid transparent',
     borderBottom: '6px solid #000',
   },
-  rejectAndNegotiateClose: {
-    margin: '0px 16px',
-  },
   rejectAndNegotiateText: {
-    margin: '32px 16px',
+    margin: '32px 0px',
     fontSize: '0.9rem',
   },
   contentForm: {
@@ -185,7 +156,6 @@ const useStyles = makeStyles({
     marginTop: '96px',
   },
   partTitle: {
-    // fontSize: '1.4rem',
     fontWeight: '600',
     marginBottom: '32px',
   },
@@ -194,28 +164,24 @@ const useStyles = makeStyles({
     fontWeight: '600',
     marginBottom: '16px',
   },
-  amendPurchaseOrderButton: {
-    width: 230,
-    height: 42,
-    backgroundColor: '#484D54FF',
-    margin: '12px 24px',
-  },
+
   errorText: {
     color: '#ff0000',
     fontSize: '1rem',
     margin: '8px 0px',
   },
-  negotiationContainer: {
-    padding: '0px',
-    margin: '0px 32px',
+  amendPurchaseOrderButton: {
+    width: '230px',
+    height: '42px',
+    backgroundColor: '#484D54FF',
   },
   negotiationButtonWrapper: {
-    padding: '16px 16px',
-    margin: '0px 24px 0px 24px',
+    width: '100%',
+    margin: '24px 0px 8px 0px',
   },
 })
 
-const DATE_FORMAT = 'DD/MM/YYYY'
+const DATE_FORMAT = 'YYYY-MM-DD'
 
 const DetailRow = ({ title, value }) => {
   const classes = useStyles()
@@ -251,21 +217,21 @@ const getTotalCost = (price, quantity) => {
   return cost
 }
 
-// TODO move
-import images from '../../../images'
-
 const OrderDetail = ({ order }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const [isAmendingOrder, setIsAmendingOrder] = useState(false)
-
-  const { partId, image, name, material, alloy, price } = order.orderDetails
-
   const [quantity, setQuantity] = useState(1)
   const [quantityError, setQuantityError] = useState('')
   const [deliveryBy, setDeliveryBy] = useState('')
   const [deliveryByError, setDeliveryByError] = useState('')
   const [displayNegotiation, setDisplayNegotiation] = useState(true)
+
+  const { partId, image, name, material, alloy, price } = order.orderDetails
+
+  const api = useApi()
 
   useEffect(() => {
     dispatch(markOrderRead(order.id))
@@ -297,17 +263,96 @@ const OrderDetail = ({ order }) => {
     setDisplayNegotiation(!displayNegotiation)
   }
 
+  const createFormData = (inputs, file) => {
+    const formData = new FormData()
+    const outputs = [
+      {
+        owner: identities.am,
+        metadataFile: 'file',
+        metadataLiteral: 'literal',
+      },
+    ]
+
+    formData.set(
+      'request',
+      JSON.stringify({
+        inputs,
+        outputs,
+      })
+    )
+
+    formData.set('file', file, 'file')
+
+    return formData
+  }
+
   const onChange = async () => {
     if (isFormReady()) {
       setIsAmendingOrder(true)
+
+      // const file = new Blob([JSON.stringify(fileData)])
+
+      //   [{
+      //   roles: [
+      //     { 'Assignee': 'SupplierT1' },
+      //   ],
+      //   metadata: {
+      //     typeLiteral: {
+      //       type: 'PO',
+      //     },
+      //     statusLiteral: {
+      //       status: 'amended',
+      //     },
+      //     recipeFile: {
+      //       type: 'FILE', value: 'recipe.pdf',
+      //     }
+      //   }
+      // }]
+
+      const fileData = {
+        type: 'AmendedOrder',
+        orderReference: `#${Math.floor(Math.random() * 100000000)}`,
+        orderDetails: order.orderDetails,
+        customerDetails: {},
+        quantity,
+        deliveryBy,
+      }
+      const file = new Blob([JSON.stringify(fileData)])
+      const literalData = {
+        type: 'AmendedOrder',
+        orderReference: `#${Math.floor(Math.random() * 100000000)}`,
+        orderDetails: order.orderDetails,
+        metadata: {
+          typeLiteral: {
+            type: 'PO',
+          },
+          statusLiteral: {
+            status: 'amended',
+          },
+        },
+        quantity,
+        deliveryBy,
+      }
+      const formData = createFormData(
+        [],
+        [JSON.stringify(literalData), JSON.stringify(fileData)]
+      )
+      const response = await api.runProcess(formData)
+      const token = { id: response[0], latestId: response[0], ...file }
+
+      dispatch(updateOrder(token))
+
+      navigate('/app/orders')
     }
   }
 
   const isQuantityInvalid = (value, maxValue = 0) => {
-    if (!isNaN(value) && value > 0 && maxValue && value > maxValue) {
-      return 'Not more than ordered'
-    } else if (!isNaN(value) && value < 1) {
+    if (!isNaN(value) && parseInt(value, 10) > maxValue) {
+      return 'Must be less than order'
+    } else if (!isNaN(value) && parseInt(value, 10) < 1) {
       return 'More than 0'
+    } else if (value === '') {
+      return 'Must be a number'
     } else {
       return ''
     }
@@ -317,31 +362,23 @@ const OrderDetail = ({ order }) => {
     const quantityValue = value.replace(/\D/g, '')
 
     setQuantityError(isQuantityInvalid(quantityValue, order.quantity))
-    setQuantity(quantityValue)
+    setQuantity(parseInt(quantityValue, 10) || quantityValue)
   }
 
-  const isDeliveryByInvalid = (value, maxDate = '') => {
-    // if (value && value.length === 10) {
+  const isDeliveryByInvalid = (value) => {
     const date = moment(value, DATE_FORMAT)
 
     if (!date.isValid()) {
-      return `Invalid date (${DATE_FORMAT})`
-    } else if (
-      date.isValid() &&
-      maxDate &&
-      date.isBefore(moment(maxDate, DATE_FORMAT))
-    ) {
-      return 'Not before order date'
-    } else if (date.isValid() && date.isSameOrBefore(moment().startOf('day'))) {
+      return 'Invalid date (dd/mm/yyyy)'
+    } else if (date.isValid() && date.isBefore(moment().startOf('day'))) {
       return 'Not before today'
     } else {
       return ''
     }
-    // }
   }
 
   const setDeliveryByValue = (value) => {
-    setDeliveryByError(isDeliveryByInvalid(value, order.deliveryBy))
+    setDeliveryByError(isDeliveryByInvalid(value))
     setDeliveryBy(value)
   }
 
@@ -357,7 +394,10 @@ const OrderDetail = ({ order }) => {
   }
 
   const isFormReady = () => {
-    return !isQuantityInvalid(quantity) && !isDeliveryByInvalid(deliveryBy)
+    return (
+      !isQuantityInvalid(quantity, order.quantity) &&
+      !isDeliveryByInvalid(deliveryBy)
+    )
   }
 
   return (
@@ -399,7 +439,7 @@ const OrderDetail = ({ order }) => {
               <Box>
                 <DetailRow title="Part name" value={name}></DetailRow>
                 <DetailRow title="Part Number" value={partId}></DetailRow>
-                <DetailRow title="Quantity" value={quantity}></DetailRow>
+                <DetailRow title="Quantity" value={order.quantity}></DetailRow>
                 <DetailRow title="Material" value={material}></DetailRow>
                 <DetailRow title="Alloy" value={alloy}></DetailRow>
                 <DetailRow
@@ -450,79 +490,82 @@ const OrderDetail = ({ order }) => {
           <Attachment name="CAD" />
         </Box>
       </Grid>
-      <Grid container className={`${classes.acceptRow}`}>
+      <Grid container>
         <Grid item xs={12}>
-          <Container className={classes.buttonWrapper}>
-            <Action order={order} buttonText="ACCEPT ORDER" />
-          </Container>
+          <Action order={order} buttonText="ACCEPT ORDER" />
         </Grid>
       </Grid>
-      <Box container className={classes.row}>
-        <Grid item xs={12}>
-          {/*<Box >*/}
-          <Grid container className={classes.rejectAndNegotiateToggle}>
-            <div
+      <Grid
+        container
+        justify="space-between"
+        className={classes.rejectAndNegotiateContainer}
+      >
+        <Grid item>
+          <Grid container>
+            <Grid
               item
-              className={classes.rejectAndNegotiateTitle}
+              className={`${classes.rejectAndNegotiateTitle} ${classes.rejectAndNegotiateToggle}`}
               onClick={toggleNegotiationDisplay}
             >
               Reject &amp; negotiate
-            </div>
-            <div
+            </Grid>
+            <Grid
               item
               className={
                 displayNegotiation
                   ? classes.rejectAndNegotiateDownArrow
                   : classes.rejectAndNegotiateUpArrow
               }
-            ></div>
-            <div className={classes.rejectAndNegotiateXAlign}>
-              <CardMedia
-                image={rejectAndNegotiateCloseX}
-                className={`${classes.rejectAndNegotiateX} ${classes.rejectAndNegotiateToggle}`}
-                onClick={toggleNegotiationDisplay}
-              />
-            </div>
+            ></Grid>
           </Grid>
-          {/*</Box>*/}
-          {displayNegotiation && (
-            <Grid
-              container
-              className={classes.rejectAndNegotiateFieldsContainer}
-            >
-              <Grid item className={classes.rejectAndNegotiateText}>
-                <Typography item variant="subtitle1" color="textSecondary">
-                  In the case you can't meet the requirements of the purchase
-                  order, you may negotiate the quantity and set a delivery date
-                  of the remaining items.
-                </Typography>
-              </Grid>
-              <Grid item xs={4} className={classes.quantityContainer}>
-                <InputLabel item className={classes.quantityLabel}>
-                  *Processed Quantity:
-                </InputLabel>
-                <Input
-                  item
-                  className={classes.quantityInput}
-                  name="quantity"
-                  onChange={handleChange('quantity')}
-                  value={quantity}
-                />
-                <div className={classes.errorText}>{quantityError}</div>
-              </Grid>
-              <Grid className={classes.deliveryByContainer}>
-                <InputLabel className={classes.deliveryByLabel}>
-                  *Delivery date of remaining items:
-                </InputLabel>
-                <Input
-                  className={classes.deliveryByInput}
-                  name="deliveryBy"
-                  placeholder={DATE_FORMAT}
-                  onChange={handleChange('deliveryBy')}
-                  value={deliveryBy}
-                />
-                <div className={classes.errorText}>{deliveryByError}</div>
-              </Grid>
+        </Grid>
+        {displayNegotiation && (
+          <Grid item>
+            <CardMedia
+              image={rejectAndNegotiateCloseX}
+              className={`${classes.rejectAndNegotiateX} ${classes.rejectAndNegotiateToggle}`}
+              onClick={toggleNegotiationDisplay}
+            />
+          </Grid>
+        )}
+        {displayNegotiation && (
+          <Grid container>
+            <Grid item className={classes.rejectAndNegotiateText}>
+              <Typography item variant="subtitle1" color="textSecondary">
+                In the case you can&apos;t meet the requirements of the purchase
+                order, you may negotiate the quantity and set a delivery date of
+                the remaining items.
+              </Typography>
+            </Grid>
+            <Grid item xs={4} className={classes.quantityContainer}>
+              <InputLabel item className={classes.quantityLabel}>
+                *Processed Quantity:
+              </InputLabel>
+              <Input
+                item
+                className={classes.quantityInput}
+                name="quantity"
+                onChange={handleChange('quantity')}
+                value={quantity}
+              />
+              <div className={classes.errorText}>{quantityError}</div>
+            </Grid>
+            <Grid className={classes.deliveryByContainer}>
+              <InputLabel className={classes.deliveryByLabel}>
+                *Delivery date of remaining items:
+              </InputLabel>
+              <TextField
+                id="date"
+                type="date"
+                onChange={handleChange('deliveryBy')}
+                className={classes.deliveryByInput}
+                InputProps={{
+                  disableUnderline: true,
+                }}
+              />
+              <div className={classes.errorText}>{deliveryByError}</div>
+            </Grid>
+            <Grid className={classes.negotiationButtonWrapper}>
               <Button
                 size="medium"
                 variant="contained"
@@ -538,9 +581,9 @@ const OrderDetail = ({ order }) => {
                 )}
               </Button>
             </Grid>
-          )}
-        </Grid>
-      </Box>
+          </Grid>
+        )}
+      </Grid>
     </Paper>
   )
 }
