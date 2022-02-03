@@ -21,6 +21,8 @@ const useStyles = makeStyles({
 })
 
 const AcceptOrderAction = ({ order, buttonText }) => {
+  console.log('AOA order', order)
+
   const classes = useStyles()
   const [isAccepting, setIsAccepting] = useState(false)
   const dispatch = useDispatch()
@@ -34,6 +36,8 @@ const AcceptOrderAction = ({ order, buttonText }) => {
         metadataFile: 'file',
       },
     ]
+    console.log('AOA inputs', inputs)
+    console.log('AOA outputs', outputs)
 
     formData.set(
       'request',

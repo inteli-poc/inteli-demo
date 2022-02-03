@@ -100,6 +100,8 @@ const ManufactureOrderAction = ({ order }) => {
       owner,
       file: new Blob([JSON.stringify(obj)]),
     }))
+
+    console.log('MO ACTION', order)
     const formData = createFormData([order.latestId], outputs)
 
     setTimeout(async () => {
