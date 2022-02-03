@@ -9,16 +9,19 @@ import LabTestsItem from './LabTestsItem'
 import LabTestsItemsWrapper from './LabTestsItemsWrapper'
 import LabTestsSearch from './LabTestsSearch'
 import LabTestsWrapper from './LabTestsWrapper'
-import { identities } from '../../utils'
+import { identities, tokenTypes, powderTestStatus } from '../../utils'
 
 const Tested = () => {
   const selectedId = useParams().testId * 1 || null
   const laboratoryTests = useSelector((state) =>
     state.labTests.filter(
-      (o) => o.type === 'PowderTestResult' && o.owner === identities.current
+      ({ roles, metadata: { type, status } }) =>
+        type === tokenTypes.powderTest &&
+        status === powderTestStatus.result &&
+        roles.Owner === identities.am // temp, change to roles.lab === identities.current when PowderTestRequest updated with new roles
     )
   )
-  const selectedTest = laboratoryTests.find((o) => o.id === selectedId)
+  const selectedTest = laboratoryTests.find((l) => l.original_id === selectedId)
   return (
     <>
       {laboratoryTests.length ? (
@@ -33,7 +36,7 @@ const Tested = () => {
             </LabTestsItemsWrapper>
           </Grid>
           <Grid item xs={6} xs-offset={1} spacing={1}>
-            {selectedId ? <LabTestDetails {...selectedTest} /> : null}
+            {selectedTest ? <LabTestDetails {...selectedTest} /> : null}
           </Grid>
           <Grid item xs={1} />
         </LabTestsWrapper>

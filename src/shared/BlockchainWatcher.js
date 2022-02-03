@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addOrder, updateOrder } from '../features/ordersSlice'
 import { upsertPowder } from '../features/powdersSlice'
-import { addLabTest, updateLabTest } from '../features/labTestsSlice'
+import { upsertLabTest } from '../features/labTestsSlice'
 
-import { useApi } from '../utils'
+import { useApi, tokenTypes } from '../utils'
 
 // will search for the equivalent token that exists in the list `items`
 // to the passed `token`
@@ -68,8 +68,8 @@ const BlockchainWatcher = ({ children }) => {
                 addOrder({
                   id: token.id,
                   latestId: token.id,
-                  owner: token.roles.Admin,
-                  latestOwner: token.roles.Admin,
+                  owner: token.roles.Owner,
+                  latestOwner: token.roles.Owner,
                   ...token.metadata,
                 })
               )
@@ -79,7 +79,7 @@ const BlockchainWatcher = ({ children }) => {
                 updateOrder({
                   id: findOriginalId(orders, token),
                   latestId: token.id,
-                  latestOwner: token.roles.Admin,
+                  latestOwner: token.roles.Owner,
                   ...token.metadata,
                 })
               )
@@ -89,7 +89,7 @@ const BlockchainWatcher = ({ children }) => {
                 updateOrder({
                   id: findOriginalId(orders, token),
                   latestId: token.id,
-                  latestOwner: token.roles.Admin,
+                  latestOwner: token.roles.Owner,
                   ...token.metadata,
                 })
               )
@@ -101,31 +101,21 @@ const BlockchainWatcher = ({ children }) => {
                   latestId: token.id,
                   owner:
                     findOriginalId(powders, token) === token.id
-                      ? token.roles.Admin
+                      ? token.roles.Owner
                       : undefined,
-                  latestOwner: token.roles.Admin,
+                  latestOwner: token.roles.Owner,
                   ...token.metadata,
                 })
               )
               break
             case 'PowderTestRequest':
+            case tokenTypes.powderTest:
               dispatch(
-                addLabTest({
+                upsertLabTest({
                   id: token.id,
-                  latestId: token.id,
-                  owner: token.roles.Admin,
-                  latestOwner: token.roles.Admin,
-                  ...token.metadata,
-                })
-              )
-              break
-            case 'PowderTestResult':
-              dispatch(
-                updateLabTest({
-                  id: findOriginalId(labTests, token),
-                  latestId: token.id,
-                  latestOwner: token.roles.Admin,
-                  ...token.metadata,
+                  original_id: token.original_id,
+                  roles: token.roles,
+                  metadata: token.metadata,
                 })
               )
               break

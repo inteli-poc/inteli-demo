@@ -8,10 +8,15 @@ import TestRow from './Row'
 import TestDetail from './Detail'
 import Header from '../Header'
 
+import { tokenTypes, powderTestStatus } from '../../../utils'
+
 const LabTests = () => {
   const params = useParams()
   const labTests = useSelector((state) =>
-    state.labTests.filter(({ type }) => type === 'PowderTestResult')
+    state.labTests.filter(
+      ({ metadata: { type, status } }) =>
+        type === tokenTypes.powderTest && status === powderTestStatus.result
+    )
   )
 
   const selectedTest = params.testId

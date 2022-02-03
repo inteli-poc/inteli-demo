@@ -73,14 +73,21 @@ const LabTestDetailsOverview = ({
             <Grid container className={classes.border}>
               <LabTestRow title={'Test Results'} value={''} bold={true} />
               <LabTestRow title={'Passed/Failed'} value={overallResult} />
-              <LabTestRow title={'Reason'} value={testReason} />
-              {testReport ? (
+              {testReason ? (
                 <Attachment
-                  name="PowderTestingResults.pdf"
-                  downloadData={testReport}
+                  name={testReason.fileName}
+                  downloadData={testReason.url}
                 />
               ) : (
-                <></>
+                <LabTestRow title={'Reason'} value="No reason given" />
+              )}
+              {testReport ? (
+                <Attachment
+                  name={testReport.fileName}
+                  downloadData={testReport.url}
+                />
+              ) : (
+                <LabTestRow title={'Report'} value="No report" />
               )}
             </Grid>
           ) : (

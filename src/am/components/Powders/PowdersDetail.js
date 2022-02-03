@@ -24,7 +24,7 @@ import Header from '../Header'
 import { markPowderRead } from '../../../features/readPowdersSlice'
 import { identities, useApi } from '../../../utils'
 import { upsertPowder } from '../../../features/powdersSlice'
-import { addLabTest } from '../../../features/labTestsSlice'
+import { upsertLabTest } from '../../../features/labTestsSlice'
 
 const useStyles = makeStyles({
   header: {
@@ -87,7 +87,8 @@ const PowdersDetail = () => {
   const classes = useStyles()
   const { powder, labTest } = useSelector((state) => ({
     powder: state.powders.find(({ id: powderId }) => id === powderId) || {},
-    labTest: state.labTests.find(({ powderId }) => id === powderId) || null,
+    labTest:
+      state.labTests.find(({ metadata }) => id === metadata.powderId) || null,
   }))
   const api = useApi()
 
@@ -164,11 +165,12 @@ const PowdersDetail = () => {
     }
     const labTestToken = {
       id: response[0],
-      latestId: response[0],
-      ...outputData[0],
+      original_id: response[0],
+      roles: { Owner: outputData[0].owner },
+      metadata: outputData[0],
     }
 
-    dispatch(addLabTest(labTestToken))
+    dispatch(upsertLabTest(labTestToken))
     dispatch(upsertPowder(powderToken))
 
     navigate('/app/powders')
