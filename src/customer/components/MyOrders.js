@@ -12,6 +12,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useSelector } from 'react-redux'
 import OrderStatusProgressBar from './OrderStatusProgressBar'
 import OrderSummary from './OrderComponents/OrderSummary'
+import SummaryRow from './OrderComponents/summaryRow'
 
 const useStyles = makeStyles((theme) => ({
   backButton: {
@@ -72,6 +73,27 @@ const MyOrders = () => {
 
             return (
               <div key={'container'}>
+                <Grid container direction="row">
+                  <Grid container direction="column" item xs={3}>
+                    <SummaryRow
+                      image={image}
+                      alloy={alloy}
+                      material={material}
+                      partName={name}
+                      partNumber={order.partId}
+                    />
+                  </Grid>
+                  <Grid item xs={9}>
+                    <OrderSummary
+                      image={image}
+                      alloy={alloy}
+                      material={material}
+                      partName={name}
+                      partNumber={order.partId}
+                    />
+                  </Grid>
+                </Grid>
+
                 <Paper
                   elevation={0}
                   key={order.orderReference}
