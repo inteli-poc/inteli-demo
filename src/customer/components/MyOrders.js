@@ -7,6 +7,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useParams } from 'react-router-dom'
 
 import { useSelector } from 'react-redux'
+import SummaryRow from './OrderComponents/summaryRow'
+import OrderSummary from './OrderComponents/OrderSummary'
 
 const useStyles = makeStyles((theme) => ({
   backButton: {
@@ -106,115 +108,15 @@ const MyOrders = () => {
     <Grid container className={classes.containerWidth}>
       <Grid item className={classes.leftColumn}>
         {[...customerOrders].reverse().map((order) => (
-          <div key={order.id}>
-            <Grid container xs={12} className={classes.listItemMargin}>
-              <Grid item xs={3}>
-                <CardMedia
-                  component="img"
-                  alt={order.orderDetails.name}
-                  width="160"
-                  image={order.orderDetails.image}
-                  title={order.orderDetails.name}
-                />
-              </Grid>
-              <Grid item xs={8}>
-                <Typography
-                  variant="h6"
-                  component="h6"
-                  className={classes.listPadding}
-                >
-                  {order.orderDetails.name}
-                </Typography>
-                <Typography
-                  variant="subtitle2"
-                  component="h6"
-                  display="inline"
-                  className={classes.maherStyle}
-                >
-                  MAHER
-                </Typography>
-                <Typography variant="subtitle1" component="h6" display="inline">
-                  Qnt: {order.quantity}
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  component="h6"
-                  className={classes.datePadding}
-                >
-                  {order.deliveryBy}
-                </Typography>
-              </Grid>
-            </Grid>
-          </div>
+          <SummaryRow order={order} />
         ))}
       </Grid>
       <Grid item className={classes.rightColumn}>
-        <Paper className={classes.root} elevation={0} xs={12}>
-          <Grid container className={classes.row}>
-            <Grid item xs={2}>
-              {/* <CardMedia
-                component="img"
-                alt={selectedOrder.image}
-                width="160"
-                image={selectedOrder.image}
-                title={selectedOrder.image}
-              /> */}
-            </Grid>
-            <Grid container item xs={4}>
-              <Typography
-                gutterBottom
-                variant="body1"
-                className={classes.orderDetailsHeading}
-              >
-                Order Details
-              </Typography>
-              <Grid container>
-                <Grid item className={classes.content}>
-                  <Box>
-                    {/* <DetailRow title="Part name" value={name}></DetailRow>
-                    <DetailRow title="Part Number" value={partId}></DetailRow>
-                    <DetailRow title="Quantity" value={quantity}></DetailRow>
-                    <DetailRow title="Material" value={material}></DetailRow>
-                    <DetailRow title="Alloy" value={alloy}></DetailRow>
-
-                    <DetailRow title="Unit Price" value={price}></DetailRow>
-                    <DetailRow
-                      title="Total Cost"
-                      value={getTotalCost(price, quantity)}
-                    ></DetailRow> */}
-                  </Box>
-                </Grid>
-                <Grid item xs={4}>
-                  <Box>
-                    {/* <DetailRow
-                      title="Customer name"
-                      value={
-                        order.CustomerDetails
-                          ? 'not empty'
-                          : 'no customer details'
-                      }
-                    ></DetailRow> */}
-                    <Typography variant="subtitle2">
-                      Shipping Address:
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                      Digital Catapult
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                      101 Euston Road
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                      London
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                      NW1 2RA
-                    </Typography>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Paper>
+        {selectedOrder ? (
+          <OrderSummary order={selectedOrder} />
+        ) : (
+          <OrderSummary order={initialOrder} />
+        )}
       </Grid>
     </Grid>
   )
