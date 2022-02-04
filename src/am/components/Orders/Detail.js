@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  CardMedia,
-  Box,
-  Grid,
-  Paper,
-  Typography,
-  InputLabel,
-  Input,
-  TextField,
-} from '@material-ui/core'
+import { CardMedia, Box, Grid, Paper, Typography } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useDispatch } from 'react-redux'
 import moment from 'moment'
@@ -20,6 +11,9 @@ import RejectOrderAction from './RejectAction'
 import ManufactureOrderAction from './ManufactureAction'
 import Attachment from '../Attachment'
 import rejectAndNegotiateCloseX from '../../../images/close-x-black-icon.svg'
+import OrderQuantityInput from '../../../shared/OrderQuantityInput'
+import OrderDeliveryByDatePicker from '../../../shared/OrderDeliveryByDatePicker'
+import { DATE_PICKER_DATE_FORMAT } from '../../../utils/forms'
 
 const useStyles = makeStyles({
   root: {
@@ -48,53 +42,6 @@ const useStyles = makeStyles({
   },
   attachment: {
     width: '100%',
-  },
-  quantityContainer: {
-    margin: '0px 0px',
-    padding: '0px',
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-  },
-  quantityLabel: {
-    margin: '12px 0px 12px 0px',
-    padding: '0px',
-    color: '#000',
-    fontSize: '0.9rem',
-    fontWeight: '600',
-  },
-  quantityInput: {
-    width: '120px',
-    border: '1px #d3d3d3 solid',
-    borderRadius: '10px',
-    height: '40px',
-    fontSize: '0.9rem',
-    padding: '16px',
-    '&&&:before': {
-      borderBottom: 'none',
-    },
-    '&&:after': {
-      borderBottom: 'none',
-    },
-  },
-  deliveryByContainer: {
-    padding: '0px',
-    display: 'grid',
-    gridTemplateColumns: '4fr',
-  },
-  deliveryByLabel: {
-    margin: '12px 0px 12px 0px',
-    padding: '0px',
-    color: '#000',
-    fontSize: '0.9rem',
-    fontWeight: '600',
-  },
-  deliveryByInput: {
-    border: '1px #d3d3d3 solid',
-    borderRadius: '10px',
-    height: '32px',
-    fontSize: '0.8rem',
-    padding: '4px 16px',
-    textDecoration: 'none',
   },
   rejectAndNegotiateContainer: {
     padding: '24px 28px',
@@ -166,8 +113,6 @@ const useStyles = makeStyles({
   },
 })
 
-const DATE_FORMAT = 'YYYY-MM-DD'
-
 const DetailRow = ({ title, value }) => {
   const classes = useStyles()
   return (
@@ -238,7 +183,7 @@ const OrderDetail = ({ order }) => {
   }
 
   const isDeliveryByInvalid = (value) => {
-    const date = moment(value, DATE_FORMAT)
+    const date = moment(value, DATE_PICKER_DATE_FORMAT)
 
     if (!date.isValid()) {
       return 'Invalid date (dd/mm/yyyy)'
@@ -432,34 +377,17 @@ const OrderDetail = ({ order }) => {
                 the remaining items.
               </Typography>
             </Grid>
-            <Grid item xs={4} className={classes.quantityContainer}>
-              <InputLabel item className={classes.quantityLabel}>
-                *Processed Quantity:
-              </InputLabel>
-              <Input
-                item
-                className={classes.quantityInput}
-                name="quantity"
-                onChange={handleChange('quantity')}
-                value={quantity}
-              />
-              <div className={classes.errorText}>{quantityError}</div>
-            </Grid>
-            <Grid className={classes.deliveryByContainer}>
-              <InputLabel className={classes.deliveryByLabel}>
-                *Delivery date of remaining items:
-              </InputLabel>
-              <TextField
-                id="date"
-                type="date"
-                onChange={handleChange('deliveryBy')}
-                className={classes.deliveryByInput}
-                InputProps={{
-                  disableUnderline: true,
-                }}
-              />
-              <div className={classes.errorText}>{deliveryByError}</div>
-            </Grid>
+            <OrderQuantityInput
+              handleChange={handleChange}
+              quantityLabel="*Processed Quantity:"
+              quantity={quantity}
+              quantityError={quantityError}
+            />
+            <OrderDeliveryByDatePicker
+              handleChange={handleChange}
+              deliveryByLabel="*Delivery date of remaining items:"
+              deliveryByError={deliveryByError}
+            />
             <Grid className={classes.negotiationButtonWrapper}>
               <RejectOrderAction
                 order={order}
