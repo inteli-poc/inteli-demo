@@ -94,21 +94,16 @@ const BlockchainWatcher = ({ children }) => {
                 })
               )
               break
-            case 'Powder':
+            case tokenTypes.powder:
               dispatch(
                 upsertPowder({
-                  id: findOriginalId(powders, token),
-                  latestId: token.id,
-                  owner:
-                    findOriginalId(powders, token) === token.id
-                      ? token.roles.Owner
-                      : undefined,
-                  latestOwner: token.roles.Owner,
-                  ...token.metadata,
+                  id: token.id,
+                  original_id: token.original_id,
+                  roles: token.roles,
+                  metadata: token.metadata,
                 })
               )
               break
-            case 'PowderTestRequest':
             case tokenTypes.powderTest:
               dispatch(
                 upsertLabTest({

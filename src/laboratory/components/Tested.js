@@ -18,7 +18,7 @@ const Tested = () => {
       ({ roles, metadata: { type, status } }) =>
         type === tokenTypes.powderTest &&
         status === powderTestStatus.result &&
-        roles.Owner === identities.am // temp, change to roles.lab === identities.current when PowderTestRequest updated with new roles
+        roles.Laboratory === identities.current
     )
   )
   const selectedTest = laboratoryTests.find((l) => l.original_id === selectedId)

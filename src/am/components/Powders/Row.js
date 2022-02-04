@@ -41,12 +41,15 @@ const useStyles = makeStyles((theme) => ({
 const PowderRow = ({ powder, labTest }) => {
   const {
     id: powderId,
-    powderReference,
-    material,
-    alloy,
-    quantityKg,
-    particleSizeUm,
-    location,
+    original_id,
+    metadata: {
+      powderReference,
+      material,
+      alloy,
+      quantityKg,
+      particleSizeUm,
+      location,
+    },
   } = powder
 
   const classes = useStyles()
@@ -58,7 +61,7 @@ const PowderRow = ({ powder, labTest }) => {
   return (
     <Paper
       component={RouterLink}
-      to={`/app/powders/${powderId}`}
+      to={`/app/powders/${original_id}`}
       elevation={0}
       className={classes.root}
     >

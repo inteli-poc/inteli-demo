@@ -1,23 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-export const ordersSlice = createSlice({
+export const powdersSlice = createSlice({
   name: 'powders',
   initialState: [],
   reducers: {
     upsertPowder: {
       reducer(state, action) {
-        const order = state.find(({ id }) => id === action.payload.id)
-        if (!order) {
+        const powder = state.find(
+          ({ original_id }) => original_id === action.payload.original_id
+        )
+        if (!powder) {
           state.push(action.payload)
         } else {
-          Object.assign(order, action.payload)
+          powder.id = action.payload.id
+          Object.assign(powder.roles, action.payload.roles)
+          Object.assign(powder.metadata, action.payload.metadata)
         }
       },
     },
   },
 })
 
-export const { actions, reducer } = ordersSlice
+export const { actions, reducer } = powdersSlice
 
 export const { upsertPowder } = actions
 
