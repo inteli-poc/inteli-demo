@@ -30,18 +30,12 @@ const useStyles = makeStyles({
   },
 })
 
-const OrderDeliveryByDatePicker = ({
-  handleChange,
-  deliveryByLabel,
-  deliveryByError,
-}) => {
+const OrderDeliveryByDatePicker = ({ handleChange, label, errorMessage }) => {
   const classes = useStyles()
 
   return (
     <Grid className={classes.deliveryByContainer}>
-      <InputLabel className={classes.deliveryByLabel}>
-        {deliveryByLabel}
-      </InputLabel>
+      <InputLabel className={classes.deliveryByLabel}>{label}</InputLabel>
       <TextField
         id="date"
         type="date"
@@ -51,7 +45,7 @@ const OrderDeliveryByDatePicker = ({
           disableUnderline: true,
         }}
       />
-      <div className={classes.errorText}>{deliveryByError}</div>
+      <div className={classes.errorText}>{errorMessage}</div>
     </Grid>
   )
 }

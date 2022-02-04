@@ -39,16 +39,16 @@ const useStyles = makeStyles({
 
 const OrderQuantityInput = ({
   handleChange,
-  quantityLabel,
+  label,
   quantity,
-  quantityError,
+  errorMessage,
 }) => {
   const classes = useStyles()
 
   return (
     <Grid item xs={4} className={classes.quantityContainer}>
       <InputLabel item className={classes.quantityLabel}>
-        {quantityLabel}
+        {label}
       </InputLabel>
       <Input
         item
@@ -57,7 +57,7 @@ const OrderQuantityInput = ({
         onChange={handleChange('quantity')}
         value={quantity}
       />
-      <div className={classes.errorText}>{quantityError}</div>
+      <div className={classes.errorText}>{errorMessage}</div>
     </Grid>
   )
 }

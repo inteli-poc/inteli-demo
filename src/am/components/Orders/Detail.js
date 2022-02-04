@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { CardMedia, Box, Grid, Paper, Typography } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useDispatch } from 'react-redux'
-import moment from 'moment'
 
 import { markOrderRead } from '../../../features/readOrdersSlice'
 import OrderStatus from './Status'
@@ -13,7 +12,7 @@ import Attachment from '../Attachment'
 import rejectAndNegotiateCloseX from '../../../images/close-x-black-icon.svg'
 import OrderQuantityInput from '../../../shared/OrderQuantityInput'
 import OrderDeliveryByDatePicker from '../../../shared/OrderDeliveryByDatePicker'
-import { DATE_PICKER_DATE_FORMAT } from '../../../utils/forms'
+import { isDeliveryByInvalid, isQuantityInvalid } from '../../../utils/forms'
 
 const useStyles = makeStyles({
   root: {
@@ -163,35 +162,11 @@ const OrderDetail = ({ order }) => {
     setDisplayNegotiation(!displayNegotiation)
   }
 
-  const isQuantityInvalid = (value, maxValue = 0) => {
-    if (!isNaN(value) && parseInt(value, 10) > maxValue) {
-      return 'Must be less than order'
-    } else if (!isNaN(value) && parseInt(value, 10) < 1) {
-      return 'More than 0'
-    } else if (value === '') {
-      return 'Must be a number'
-    } else {
-      return ''
-    }
-  }
-
   const setQuantityValue = (value) => {
     const quantityValue = value.replace(/\D/g, '')
 
     setQuantityError(isQuantityInvalid(quantityValue, order.quantity))
     setQuantity(parseInt(quantityValue, 10) || quantityValue)
-  }
-
-  const isDeliveryByInvalid = (value) => {
-    const date = moment(value, DATE_PICKER_DATE_FORMAT)
-
-    if (!date.isValid()) {
-      return 'Invalid date (dd/mm/yyyy)'
-    } else if (date.isValid() && date.isBefore(moment().startOf('day'))) {
-      return 'Not before today'
-    } else {
-      return ''
-    }
   }
 
   const setDeliveryByValue = (value) => {
@@ -379,14 +354,14 @@ const OrderDetail = ({ order }) => {
             </Grid>
             <OrderQuantityInput
               handleChange={handleChange}
-              quantityLabel="*Processed Quantity:"
+              label="*Processed Quantity:"
               quantity={quantity}
-              quantityError={quantityError}
+              errorMessage={quantityError}
             />
             <OrderDeliveryByDatePicker
               handleChange={handleChange}
-              deliveryByLabel="*Delivery date of remaining items:"
-              deliveryByError={deliveryByError}
+              label="*Delivery date of remaining items:"
+              errorMessage={deliveryByError}
             />
             <Grid className={classes.negotiationButtonWrapper}>
               <RejectOrderAction
