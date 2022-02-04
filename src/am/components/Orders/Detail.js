@@ -17,6 +17,7 @@ import { markOrderRead } from '../../../features/readOrdersSlice'
 import OrderStatus from './Status'
 import AcceptOrderAction from './AcceptAction'
 import RejectOrderAction from './RejectAction'
+import ManufactureOrderAction from './ManufactureAction'
 import Attachment from '../Attachment'
 import rejectAndNegotiateCloseX from '../../../images/close-x-black-icon.svg'
 
@@ -271,6 +272,29 @@ const OrderDetail = ({ order }) => {
     )
   }
 
+  const EmptyAction = () => {
+    return <></>
+  }
+
+  let Action = null
+  switch (order.type) {
+    case 'SubmittedOrder':
+      Action = AcceptOrderAction
+      break
+    case 'AcceptedOrder':
+      Action = ManufactureOrderAction
+      break
+    case 'ManufacturedOrder':
+      Action = EmptyAction
+      break
+    case 'ManufacturingOrder':
+      Action = EmptyAction
+      break
+    default:
+      Action = EmptyAction
+      break
+  }
+
   return (
     <Paper className={classes.root} elevation={0}>
       <Grid
@@ -363,7 +387,7 @@ const OrderDetail = ({ order }) => {
       </Grid>
       <Grid container>
         <Grid item xs={12}>
-          <AcceptOrderAction order={order} />
+          <Action order={order} />
         </Grid>
       </Grid>
       <Grid
