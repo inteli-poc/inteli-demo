@@ -69,11 +69,11 @@ const OrderStatusProgressBar = (props) => {
     return (
       <Grid container item direction="column">
         <ProgressBarSelector statusIndex={statusIndex} />
-        <Grid container item direction="column">
+        <Grid container item direction="row">
           <Grid item className={classes.progressBarSmall}>
             <Typography variant="body2">{statusLabels[0]}</Typography>
           </Grid>
-          <Grid item className={classes.progressBarSmall}>
+          <Grid item className={classes.progressBarLarge}>
             <Typography variant="body2">{statusLabels[1]}</Typography>
           </Grid>
           <Grid item className={classes.progressBarSmall}>
