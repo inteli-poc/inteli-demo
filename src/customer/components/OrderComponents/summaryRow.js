@@ -46,46 +46,44 @@ const SummaryRow = (props) => {
       elevation={0}
       className={classes.root}
     >
-      <div key={orderId}>
-        <Grid container xs={12} className={classes.listItemMargin}>
-          <Grid item xs={3}>
-            <CardMedia
-              component="img"
-              alt={name}
-              width="160"
-              image={image}
-              title={name}
-            />
-          </Grid>
-          <Grid item xs={8}>
-            <Typography
-              variant="h6"
-              component="h6"
-              className={classes.listPadding}
-            >
-              {name}
-            </Typography>
-            <Typography
-              variant="subtitle2"
-              component="h6"
-              display="inline"
-              className={classes.maherStyle}
-            >
-              MAHER
-            </Typography>
-            <Typography variant="subtitle1" component="h6" display="inline">
-              Qnt: {quantity}
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              component="h6"
-              className={classes.datePadding}
-            >
-              {deliveryBy}
-            </Typography>
-          </Grid>
+      <Grid container xs={12} className={classes.listItemMargin}>
+        <Grid item xs={3}>
+          <CardMedia
+            component="img"
+            alt={name}
+            width="160"
+            image={image}
+            title={name}
+          />
         </Grid>
-      </div>
+        <Grid item xs={8}>
+          <Typography
+            variant="h6"
+            component="h6"
+            className={classes.listPadding}
+          >
+            {name}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            component="h6"
+            display="inline"
+            className={classes.maherStyle}
+          >
+            MAHER
+          </Typography>
+          <Typography variant="subtitle1" component="h6" display="inline">
+            Qnt: {quantity}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            component="h6"
+            className={classes.datePadding}
+          >
+            {deliveryBy}
+          </Typography>
+        </Grid>
+      </Grid>
     </Paper>
   )
 }

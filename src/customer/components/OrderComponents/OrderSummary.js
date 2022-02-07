@@ -1,6 +1,7 @@
 import React from 'react'
 import { Paper, Typography, Grid, Box, CardMedia } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
+import OrderStatusProgressBar from '../OrderStatusProgressBar'
 
 const useStyles = makeStyles({
   name: {
@@ -32,6 +33,15 @@ const useStyles = makeStyles({
     '& h6': {
       marginRight: 'auto',
     },
+  },
+  maherStyle: {
+    backgroundColor: '#0C74BB',
+    color: '#ffff',
+    padding: '5px',
+    marginTop: '30px',
+    border: ' 1px solid 0C74BB',
+    borderRadius: '3px',
+    marginRight: '20px',
   },
 })
 
@@ -76,18 +86,20 @@ const OrderSummary = (props) => {
       price: price,
     },
     //deliveryBy: deliveryBy,
+    type: type,
     quantity: quantity,
   } = props.order
 
   const classes = useStyles()
   return (
     <Paper className={classes.root} elevation={0} xs={12}>
-      <Grid container className={classes.row} xs={12}>
+      <Grid container className={classes.row}>
         <Grid item xs={2}>
           <CardMedia
             component="img"
             alt={image}
             width="160"
+            height="160px"
             image={image}
             title={name}
           />
@@ -107,16 +119,10 @@ const OrderSummary = (props) => {
               <DetailRow title="Quantity" value={quantity}></DetailRow>
               <DetailRow title="Material" value={material}></DetailRow>
               <DetailRow title="Alloy" value={alloy}></DetailRow>
-
-              <DetailRow title="Unit Price" value={price}></DetailRow>
-              <DetailRow
-                title="Total Cost"
-                value={getTotalCost(price, quantity)}
-              ></DetailRow>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Box className={classes.addressMargin}>
             <Typography variant="h6">Shipping Address:</Typography>
             <Typography variant="subtitle1" color="textSecondary">
@@ -133,6 +139,34 @@ const OrderSummary = (props) => {
             </Typography>
           </Box>
         </Grid>
+        <Grid item xs={2}>
+          <Box className={classes.addressMargin}>
+            <DetailRow title="Quantity" value={quantity}></DetailRow>
+            <DetailRow
+              title="Price"
+              value={getTotalCost(price, quantity)}
+            ></DetailRow>
+            <Typography
+              variant="subtitle2"
+              component="h6"
+              display="inline"
+              className={classes.maherStyle}
+            >
+              MAHER
+            </Typography>
+          </Box>
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        alignItems="center"
+        className={`${classes.row} ${classes.header}`}
+      >
+        <Box>
+          <Grid item>
+            <OrderStatusProgressBar orderType={type} orderPowderId={alloy} />
+          </Grid>
+        </Box>
       </Grid>
     </Paper>
   )

@@ -98,11 +98,24 @@ const MyOrders = () => {
     ? customerOrders.find(({ id }) => `${id}` === params.orderId)
     : null
   const classes = useStyles()
+
   console.log('customerOrders.length', customerOrders)
 
   console.log('Selected order', selectedOrder)
   console.log('Params', params)
   console.log('InitialOrdeer', initialOrder)
+
+  const startingOrder = () => {
+    if (selectedOrder != null) {
+      return selectedOrder
+    } else if (initialOrder != null) {
+      return initialOrder
+    } else {
+      return null
+    }
+  }
+
+  console.log('startingOrder', startingOrder())
 
   return (
     <Grid container className={classes.containerWidth}>
@@ -112,11 +125,7 @@ const MyOrders = () => {
         ))}
       </Grid>
       <Grid item className={classes.rightColumn}>
-        {selectedOrder ? (
-          <OrderSummary order={selectedOrder} />
-        ) : (
-          <OrderSummary order={initialOrder} />
-        )}
+        <OrderSummary order={startingOrder()} />
       </Grid>
     </Grid>
   )
