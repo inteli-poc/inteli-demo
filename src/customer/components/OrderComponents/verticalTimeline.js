@@ -1,108 +1,179 @@
-import React from 'react'
-import { Grid, Typography } from '@material-ui/core'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import { useSelector } from 'react-redux'
+import * as React from 'react'
+import Timeline from '@mui/lab/Timeline'
+import TimelineItem from '@mui/lab/TimelineItem'
+import TimelineSeparator from '@mui/lab/TimelineSeparator'
+import TimelineConnector from '@mui/lab/TimelineConnector'
+import { TimelineContent, TimelineOppositeContent } from '@mui/lab/'
+import TimelineDot from '@mui/lab/TimelineDot'
+import { Typography } from '@mui/material'
+import { Container, Item } from '../../../shared/layout'
 
-import DownloadButton from './DownloadButton'
-import ProgressBarSelector from './ProgressBarSelector'
-
-const useStyles = makeStyles({
-  backButton: {
-    textDecoration: 'none',
-  },
-  order: {
-    border: 'solid #ccc 1px',
-    padding: '20px 20px 20px 0px',
-    marginBottom: '8px',
-  },
-  detailText: {
-    display: 'inline',
-  },
-  name: {
-    marginBottom: '20px',
-  },
-  progressBarSmall: {
-    width: 171,
-  },
-  progressBarLarge: {
-    width: 180,
-  },
-  progressBarWrapper: {
-    textAlign: 'left',
-  },
-})
+const statusLabels = [
+  'Order placed',
+  'Order accepted',
+  'Test results',
+  'Dispatched',
+  'Delivered',
+]
 
 const VerticalTimeline = (props) => {
-  const { orderType, orderPowderId } = props
+  let statusIndex = 0
+  if (props.props === 'SubmittedOrder') {
+    statusIndex = 1
+  } else if (props.props === 'AcceptedOrder') {
+    statusIndex = 2
+  } else if (props.props === 'ManufacturedOrder') {
+    statusIndex = 3
+  } else {
+    statusIndex = 0
+  }
 
-  const selectedLabTest = useSelector((state) =>
-    state.labTests.find(
-      ({ powderId, type }) =>
-        type === 'PowderTestResult' && powderId === orderPowderId
-    )
-  )
-
-  const classes = useStyles()
-
-  const ProgressBar = () => {
-    const statusLabels = [
-      'Order placed',
-      'Order accepted',
-      'Test results',
-      'Dispatched',
-      'Delivered',
-    ]
-
-    let statusIndex = 0
-    if (orderType === 'SubmittedOrder') {
-      statusIndex = 0
-    } else if (orderType === 'AcceptedOrder') {
-      statusIndex = 1
-    } else if (orderType === 'ManufacturedOrder') {
-      if (selectedLabTest) {
-        statusIndex = 2
-      } else {
-        statusIndex = 1
-      }
+  function GetColour(index, value) {
+    if (index >= value) {
+      return '#FF9900'
+    } else {
+      return '#CCCCCC'
     }
-
-    return (
-      <div>
-        <Typography variant="h6">Shipping Address:</Typography>
-        <Grid container item>
-          <ProgressBarSelector statusIndex={statusIndex} />
-          <Grid container item direction="row">
-            <Grid item className={classes.progressBarSmall}>
-              <Typography variant="body2">{statusLabels[0]}</Typography>
-            </Grid>
-            <Grid item className={classes.progressBarSmall}>
-              <Typography variant="body2">{statusLabels[1]}</Typography>
-            </Grid>
-            <Grid item className={classes.progressBarSmall}>
-              <Typography variant="body2">{statusLabels[2]}</Typography>
-            </Grid>
-            <Grid item className={classes.progressBarSmall}>
-              <Typography variant="body2">{statusLabels[3]}</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body2">{statusLabels[4]}</Typography>
-            </Grid>
-          </Grid>
-          {statusIndex >= 2
-            ? DownloadButton({ statusIndex, orderPowderId })
-            : null}
-        </Grid>
-      </div>
-    )
   }
 
   return (
-    <Grid container item direction="column">
-      <Grid item>
-        <ProgressBar />
-      </Grid>
-    </Grid>
+    <Container spacing={0}>
+      <Item
+        style={{}}
+        sm={12}
+        sx={{
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
+        }} /* container column size of 4/12 */
+      >
+        <Timeline>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot
+                sx={{
+                  backgroundColor: GetColour(statusIndex, 1),
+                }}
+              />
+              <TimelineConnector
+                sx={{
+                  backgroundColor: GetColour(statusIndex, 1),
+                }}
+              />
+            </TimelineSeparator>
+            <Item>
+              <TimelineContent>
+                {' '}
+                <Typography variant="h6">{statusLabels[0]}</Typography>
+                {/*
+                Content
+              */}
+              </TimelineContent>
+              <TimelineOppositeContent />
+            </Item>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot
+                sx={{
+                  backgroundColor: GetColour(statusIndex, 2),
+                }}
+              />
+              <TimelineConnector
+                sx={{
+                  backgroundColor: GetColour(statusIndex, 2),
+                }}
+              />
+            </TimelineSeparator>
+            <Item sm={12}>
+              <TimelineContent>
+                <Typography variant="h6">{statusLabels[1]}</Typography>
+                {/*
+                Content
+              */}
+              </TimelineContent>
+            </Item>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot
+                sx={{
+                  backgroundColor: GetColour(statusIndex, 3),
+                }}
+              />
+              <TimelineConnector
+                sx={{
+                  backgroundColor: GetColour(statusIndex, 3),
+                }}
+              />
+            </TimelineSeparator>
+            <Item>
+              <TimelineContent>
+                {' '}
+                <Typography variant="h6">{statusLabels[2]}</Typography>
+                {/*
+                Content
+              */}
+              </TimelineContent>
+              <TimelineOppositeContent />
+            </Item>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot
+                sx={{
+                  backgroundColor: GetColour(statusIndex, 4),
+                }}
+              />
+              <TimelineConnector
+                sx={{
+                  backgroundColor: statusIndex >= 4 ? '#FF9900' : '#CCCCCC',
+                }}
+              />
+            </TimelineSeparator>
+            <Item>
+              <TimelineContent>
+                {' '}
+                <Typography variant="h6">{statusLabels[3]}</Typography>
+                {/*
+                Content
+              */}
+              </TimelineContent>
+              <TimelineOppositeContent />
+            </Item>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot
+                sx={{
+                  backgroundColor: GetColour(statusIndex, 5),
+                }}
+              />
+            </TimelineSeparator>
+            <Item>
+              <TimelineContent>
+                {' '}
+                <Typography variant="h6">{statusLabels[4]}</Typography>
+                {/*
+                Content
+              */}
+              </TimelineContent>
+              <TimelineOppositeContent />
+            </Item>
+          </TimelineItem>
+        </Timeline>
+      </Item>
+      {/* <Item sm={3}>
+        <div slyle={{ width: '100%', height: 100, backgroundColor: '#111341' }}>
+          tsomesome somesome somesome somesome somesome somesome somesome
+          extsome textsome textsome textsome text text
+        </div>
+      </Item>
+      <Item sm={4}>
+        <h1 slyle={{ backgroundColor: 'green' }}>
+          somesome textsome textsome textsome textsome text text
+        </h1>
+      </Item> */}
+    </Container>
   )
 }
-
 export default VerticalTimeline

@@ -4,9 +4,17 @@ import { ReactComponent as OrderPlacedStatus } from '../../images/order-placed.s
 import { ReactComponent as OrderPlacedAcceptedStatus } from '../../images/order-placed-accepted.svg'
 import { ReactComponent as OrderAcceptedStatus } from '../../images/order-accepted.svg'
 import { ReactComponent as OrderNonStatus } from '../../images/order-non.svg'
+//import makeStyles from '@material-ui/core/styles/makeStyles'
+
+/* const useStyles = makeStyles({
+  rotate: {
+    transform: 'rotate(90deg)',
+  },
+}) */
 
 const ProgressBarSelector = (props) => {
   const { statusIndex } = props
+  //const classes = useStyles()
 
   switch (statusIndex) {
     case 0:

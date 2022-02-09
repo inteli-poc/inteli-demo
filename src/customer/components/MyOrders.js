@@ -125,7 +125,9 @@ const MyOrders = () => {
         ))}
       </Grid>
       <Grid item className={classes.rightColumn}>
-        <OrderSummary order={startingOrder()} />
+        {startingOrder() != null ? (
+          <OrderSummary order={startingOrder()} />
+        ) : null}
       </Grid>
     </Grid>
   )

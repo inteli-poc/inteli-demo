@@ -1,7 +1,9 @@
 import React from 'react'
 import { Paper, Typography, Grid, Box, CardMedia } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import OrderStatusProgressBar from '../OrderStatusProgressBar'
+//import OrderStatusProgressBar from '../OrderStatusProgressBar'
+//import VerticalTest from './VerticalTest'
+import VerticalTimeline from './verticalTimeline'
 
 const useStyles = makeStyles({
   name: {
@@ -43,6 +45,19 @@ const useStyles = makeStyles({
     borderRadius: '3px',
     marginRight: '20px',
   },
+  leftPadding: {
+    paddingLeft: '60px',
+    marginBottom: '20px',
+  },
+  columnTwoPadding: {
+    paddingLeft: '40px',
+  },
+  pricePadding: {
+    paddingBottom: '25px',
+  },
+  picturePadding: {
+    paddingLeft: '10px',
+  },
 })
 
 const DetailRow = ({ title, value }) => {
@@ -68,7 +83,7 @@ const getTotalCost = (price, quantity) => {
 
   if (price && quantity) {
     cost = price * quantity
-    cost = `${cost}.00`
+    cost = `£${cost}.00`
   }
 
   return cost
@@ -102,9 +117,10 @@ const OrderSummary = (props) => {
             height="160px"
             image={image}
             title={name}
+            className={classes.picturePadding}
           />
         </Grid>
-        <Grid container item xs={4}>
+        <Grid container item xs={4} className={classes.columnTwoPadding}>
           <Typography
             gutterBottom
             variant="h6"
@@ -140,10 +156,15 @@ const OrderSummary = (props) => {
           </Box>
         </Grid>
         <Grid item xs={2}>
-          <Box className={classes.addressMargin}>
-            <DetailRow title="Quantity" value={quantity}></DetailRow>
+          <div className={classes.addressMargin}>
+            <DetailRow
+              title="Quantity"
+              value={quantity}
+              className={classes.pricePadding}
+            ></DetailRow>
             <DetailRow
               title="Price"
+              className={classes.pricePadding}
               value={getTotalCost(price, quantity)}
             ></DetailRow>
             <Typography
@@ -154,7 +175,7 @@ const OrderSummary = (props) => {
             >
               MAHER
             </Typography>
-          </Box>
+          </div>
         </Grid>
       </Grid>
       <Grid
@@ -164,87 +185,20 @@ const OrderSummary = (props) => {
       >
         <Box>
           <Grid item>
-            <OrderStatusProgressBar orderType={type} orderPowderId={alloy} />
+            <Typography
+              style={{ color: '#494E56' }}
+              className={classes.leftPadding}
+              variant="h5"
+            >
+              Order Status
+            </Typography>
+
+            <VerticalTimeline props={type}></VerticalTimeline>
           </Grid>
         </Box>
       </Grid>
     </Paper>
   )
-}
-
-{
-  /* <Paper className={classes.root} elevation={0}>
-<Grid container className={classes.row}>
-  <Grid item xs={3}>
-    <CardMedia
-      component="img"
-      alt={name}
-      width="160"
-      image={image}
-      title={name}
-    />
-  </Grid>
-  <Grid container item xs={9}>
-    <Typography
-      gutterBottom
-      variant="h5"
-      className={classes.orderDetailsHeading}
-    >
-      {name}
-    </Typography>
-    <Grid container>
-      <Grid item xs={3} className={classes.content}>
-        <Box>
-          <DetailRow
-            variant="subtitle2"
-            title="Part name"
-            value={name}
-          ></DetailRow>
-          <DetailRow
-            variant="subtitle2"
-            title="Part Number"
-            value={partNumber}
-          ></DetailRow>
-          <DetailRow
-            variant="subtitle2"
-            title="Material"
-            value={material}
-          ></DetailRow>
-          <DetailRow
-            variant="subtitle2"
-            title="Alloy"
-            value={alloy}
-          ></DetailRow>
-        </Box>
-      </Grid>
-      <Grid item xs={3}>
-        <Box>
-          <Typography variant="subtitle2">Shipping Address:</Typography>
-          <Typography variant="subtitle2" color="textSecondary">
-            Digital Catapult
-          </Typography>
-          <Typography variant="subtitle2" color="textSecondary">
-            101 Euston Road
-          </Typography>
-          <Typography variant="subtitle2" color="textSecondary">
-            London
-          </Typography>
-          <Typography variant="subtitle2" color="textSecondary">
-            NW1 2RA
-          </Typography>
-        </Box>
-      </Grid>
-      <Grid item xs={3}>
-        <Box>
-          <Typography variant="subtitle2">Quantity: 200</Typography>
-          <br />
-          <Typography variant="subtitle2">Price: £1,200</Typography>
-        </Box>
-      </Grid>
-    </Grid>
-  </Grid>
-</Grid>
-</Paper> */
 }
 
 export default OrderSummary
