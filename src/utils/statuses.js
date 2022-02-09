@@ -3,4 +3,12 @@ const powderTestStatus = {
   request: 'request',
 }
 
-export { powderTestStatus }
+const orderStatus = {
+  submitted: 'submitted',
+  amended: 'amended',
+  accepted: 'accepted',
+  manufacturing: 'manufacturing',
+  manufactured: 'manufactured',
+}
+
+export { powderTestStatus, orderStatus }

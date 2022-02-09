@@ -1,27 +1,17 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addOrder, updateOrder } from '../features/ordersSlice'
+import { upsertOrder } from '../features/ordersSlice'
 import { upsertPowder } from '../features/powdersSlice'
 import { upsertLabTest } from '../features/labTestsSlice'
 
 import { useApi, tokenTypes } from '../utils'
 
-// will search for the equivalent token that exists in the list `items`
-// to the passed `token`
-const findOriginalId = (items, token) => {
-  // First check if we have a matching id and return that if it exists
-  const currentItem = items.find(({ latestId }) => token.id === latestId)
-
-  if (currentItem) {
-    return currentItem.id
-  } else {
-    // look for a token whose latest version is listed as a parent of `token`
-    const parentItem = items.find(({ latestId }) =>
-      token.parents.some((parentId) => parentId === latestId)
-    )
-    // if we don't find a parent this is a new item
-    return parentItem ? parentItem.id : token.id
-  }
+// so metadata files that are svg images can be displayed, change from default MIME of 'application/octet-stream'
+const svgMimeUrl = async (imageUrl) => {
+  const response = await fetch(imageUrl)
+  const oldBlob = await response.blob()
+  const blob = new Blob([oldBlob], { type: 'image/svg+xml' })
+  return URL.createObjectURL(blob)
 }
 
 // temporary version of the component that will poll the API
@@ -54,6 +44,15 @@ const BlockchainWatcher = ({ children }) => {
           // get the token to process
           const token = await api.tokenById(i)
 
+          if (
+            token.metadata.type === tokenTypes.order &&
+            token.metadata.orderImage
+          ) {
+            token.metadata.orderImage.url = await svgMimeUrl(
+              token.metadata.orderImage.url
+            )
+          }
+
           // if state has been modified and the effect canceled bail. The re-render will
           // generate the effect again with the correct state context. Note nothing asynchronous
           // should follow this point in the loop
@@ -63,47 +62,17 @@ const BlockchainWatcher = ({ children }) => {
 
           // Handle each token based on type
           switch (token.metadata.type) {
-            case 'SubmittedOrder':
+            case tokenTypes.order: {
               dispatch(
-                addOrder({
+                upsertOrder({
                   id: token.id,
-                  latestId: token.id,
-                  owner: token.roles.Owner,
-                  latestOwner: token.roles.Owner,
-                  ...token.metadata,
+                  original_id: token.original_id,
+                  roles: token.roles,
+                  metadata: token.metadata,
                 })
               )
               break
-            case 'AcceptedOrder':
-              dispatch(
-                updateOrder({
-                  id: findOriginalId(orders, token),
-                  latestId: token.id,
-                  latestOwner: token.roles.Owner,
-                  ...token.metadata,
-                })
-              )
-              break
-            case 'RejectedOrder':
-              dispatch(
-                updateOrder({
-                  id: findOriginalId(orders, token),
-                  latestId: token.id,
-                  latestOwner: token.roles.Owner,
-                  ...token.metadata,
-                })
-              )
-              break
-            case 'ManufacturedOrder':
-              dispatch(
-                updateOrder({
-                  id: findOriginalId(orders, token),
-                  latestId: token.id,
-                  latestOwner: token.roles.Owner,
-                  ...token.metadata,
-                })
-              )
-              break
+            }
             case tokenTypes.powder:
               dispatch(
                 upsertPowder({

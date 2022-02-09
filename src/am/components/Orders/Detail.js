@@ -4,6 +4,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useDispatch } from 'react-redux'
 
 import { markOrderRead } from '../../../features/readOrdersSlice'
+import { orderStatus } from '../../../utils'
 import OrderStatus from './Status'
 import AcceptOrderAction from './AcceptAction'
 import RejectOrderAction from './RejectAction'
@@ -152,7 +153,19 @@ const OrderDetail = ({ order }) => {
   const [deliveryByError, setDeliveryByError] = useState('')
   const [displayNegotiation, setDisplayNegotiation] = useState(true)
 
-  const { partId, image, name, material, alloy, price } = order.orderDetails
+  const {
+    metadata: {
+      partId,
+      orderImage,
+      name,
+      material,
+      alloy,
+      price,
+      type,
+      status,
+      orderReference,
+    },
+  } = order
 
   useEffect(() => {
     dispatch(markOrderRead(order.id))
@@ -165,7 +178,7 @@ const OrderDetail = ({ order }) => {
   const setQuantityValue = (value) => {
     const quantityValue = value.replace(/\D/g, '')
 
-    setQuantityError(isQuantityInvalid(quantityValue, order.quantity))
+    setQuantityError(isQuantityInvalid(quantityValue, order.metadata.quantity))
     setQuantity(parseInt(quantityValue, 10) || quantityValue)
   }
 
@@ -187,7 +200,7 @@ const OrderDetail = ({ order }) => {
 
   const isFormReady = () => {
     return (
-      !isQuantityInvalid(quantity, order.quantity) &&
+      !isQuantityInvalid(quantity, order.metadata.quantity) &&
       !isDeliveryByInvalid(deliveryBy)
     )
   }
@@ -197,17 +210,16 @@ const OrderDetail = ({ order }) => {
   }
 
   let Action = null
-  switch (order.type) {
-    case 'SubmittedOrder':
+  switch (status) {
+    case orderStatus.submitted:
       Action = AcceptOrderAction
       break
-    case 'AcceptedOrder':
+    case orderStatus.accepted:
       Action = ManufactureOrderAction
       break
-    case 'ManufacturedOrder':
-      Action = EmptyAction
-      break
-    case 'ManufacturingOrder':
+    case orderStatus.amended:
+    case orderStatus.manufacturing:
+    case orderStatus.manufactured:
       Action = EmptyAction
       break
     default:
@@ -224,11 +236,11 @@ const OrderDetail = ({ order }) => {
       >
         <Grid item xs={9}>
           <Typography variant="h6" component="h6">
-            Order: {order.orderReference}
+            Order: {orderReference}
           </Typography>
         </Grid>
         <Grid item xs={3}>
-          <OrderStatus orderStatus={order.type} />
+          <OrderStatus orderStatus={type} />
         </Grid>
       </Grid>
       <Grid container className={classes.row}>
@@ -237,7 +249,7 @@ const OrderDetail = ({ order }) => {
             component="img"
             alt={name}
             width="160"
-            image={image}
+            image={orderImage.url}
             title={name}
           />
         </Grid>
@@ -254,12 +266,15 @@ const OrderDetail = ({ order }) => {
               <Box>
                 <DetailRow title="Part name" value={name}></DetailRow>
                 <DetailRow title="Part Number" value={partId}></DetailRow>
-                <DetailRow title="Quantity" value={order.quantity}></DetailRow>
+                <DetailRow
+                  title="Quantity"
+                  value={order.metadata.quantity}
+                ></DetailRow>
                 <DetailRow title="Material" value={material}></DetailRow>
                 <DetailRow title="Alloy" value={alloy}></DetailRow>
                 <DetailRow
                   title="Delivery By"
-                  value={order.deliveryBy}
+                  value={order.metadata.deliveryBy}
                 ></DetailRow>
                 <DetailRow title="Unit Price" value={price}></DetailRow>
                 <DetailRow
@@ -270,12 +285,6 @@ const OrderDetail = ({ order }) => {
             </Grid>
             <Grid item xs={6}>
               <Box>
-                <DetailRow
-                  title="Customer name"
-                  value={
-                    order.CustomerDetails ? 'not empty' : 'no customer details'
-                  }
-                ></DetailRow>
                 <Typography variant="subtitle2">Shipping Address:</Typography>
                 <Typography variant="subtitle1" color="textSecondary">
                   Digital Catapult

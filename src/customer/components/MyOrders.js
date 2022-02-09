@@ -67,12 +67,22 @@ const MyOrders = () => {
       <Container>
         {customerOrders.length ? (
           [...customerOrders].reverse().map((order) => {
-            const { image, name, partId, material, alloy } = order.orderDetails
-
+            const {
+              metadata: {
+                status,
+                powderId,
+                orderImage,
+                name,
+                partId,
+                material,
+                alloy,
+                orderReference,
+              },
+            } = order
             return (
               <Paper
                 elevation={0}
-                key={order.orderReference}
+                key={orderReference}
                 className={classes.order}
               >
                 <Grid container item direction="row" alignItems="center">
@@ -80,7 +90,7 @@ const MyOrders = () => {
                     <CardMedia
                       component="img"
                       alt={name}
-                      image={image}
+                      image={orderImage.url}
                       title={name}
                     />
                   </Grid>
@@ -94,8 +104,8 @@ const MyOrders = () => {
                   </Grid>
                   <Grid item>
                     <OrderStatusProgressBar
-                      orderType={order.type}
-                      orderPowderId={order.powderId}
+                      status={status}
+                      orderPowderId={powderId}
                     />
                   </Grid>
                 </Grid>
