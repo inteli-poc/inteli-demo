@@ -62,6 +62,12 @@ const useStyles = makeStyles((theme) => ({
     /* width: '1280px', */
     width: '1546px',
   },
+  active: {
+    background: 'green',
+  },
+  notActive: {
+    background: 'red',
+  },
 }))
 
 const DetailRow = ({ title, value }) => {
@@ -112,8 +118,10 @@ const MyOrders = () => {
       return null
     }
   }
-
-  console.log('startingOrder', startingOrder())
+  const id = startingOrder()
+  for (var key in id) {
+    console.log(key, typeof key)
+  }
 
   return (
     <Grid container className={classes.containerWidth}>

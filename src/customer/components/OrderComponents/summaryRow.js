@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Typography,
   Grid,
@@ -26,6 +26,7 @@ const useStyles = makeStyles({
   },
   datePadding: {
     paddingLeft: '80px',
+    paddingTop: '5px',
   },
   root: {
     padding: 8,
@@ -35,9 +36,33 @@ const useStyles = makeStyles({
     borderRadius: '8px',
     textDecoration: 'none',
   },
+  isNotActive: {
+    border: 'none',
+  },
+  isActive: {
+    border: '1px solid #ccc',
+  },
+  fourHundFont: {
+    fontWeight: '400',
+  },
+  threeFiftyFont: {
+    fontWeight: '350',
+  },
+  dateColour: {
+    color: '#868B92',
+  },
 })
 
+const getCurrentItem = () => {
+  const url = window.location.href
+  return url
+    .split('/')
+    .filter((e) => e)
+    .pop()
+}
+
 const SummaryRow = (props) => {
+  console.log('URL ENDING', getCurrentItem())
   const {
     id: orderId,
     orderDetails: { name: name, image: image },
@@ -45,9 +70,39 @@ const SummaryRow = (props) => {
     quantity: quantity,
   } = props.order
   const classes = useStyles()
+  const [isSelected, setSelectState] = useState(false)
+
+  var parts = deliveryBy.split('/')
+  var dt = new Date(
+    parseInt(parts[2], 10),
+    parseInt(parts[1], 10) - 1,
+    parseInt(parts[0], 10)
+  )
+
+  const formattedDate = dt
+    .toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
+    .replace(/ /g, ' ')
+
   return (
-    <Paper id={orderId} elevation={0} className={classes.root}>
-      <CardActionArea component={RouterLink} to={`/app/my-orders/${orderId}`}>
+    <Paper
+      id={orderId}
+      elevation={0}
+      className={`${classes.root} ${
+        isSelected ? classes.isActive : classes.isNotActive
+      }`}
+    >
+      <CardActionArea
+        onClick={() => {
+          if (isSelected === false) setSelectState(true)
+          else setSelectState(false)
+        }}
+        component={RouterLink}
+        to={`/app/my-orders/${orderId}`}
+      >
         <Grid container xs={12} className={classes.listItemMargin}>
           <Grid item xs={3}>
             <CardMedia
@@ -74,15 +129,20 @@ const SummaryRow = (props) => {
             >
               MAHER
             </Typography>
-            <Typography variant="subtitle1" component="h6" display="inline">
+            <Typography
+              variant="subtitle2"
+              component="h6"
+              display="inline"
+              className={classes.fourHundFont}
+            >
               Qnt: {quantity}
             </Typography>
             <Typography
-              variant="subtitle1"
+              variant="subtitle2"
               component="h6"
-              className={classes.datePadding}
+              className={`${classes.datePadding} ${classes.threeFiftyFont} ${classes.dateColour}`}
             >
-              {deliveryBy}
+              {formattedDate}
             </Typography>
           </Grid>
         </Grid>

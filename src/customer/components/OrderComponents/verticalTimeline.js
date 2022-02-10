@@ -7,6 +7,20 @@ import { TimelineContent, TimelineOppositeContent } from '@mui/lab/'
 import TimelineDot from '@mui/lab/TimelineDot'
 import { Typography } from '@mui/material'
 import { Container, Item } from '../../../shared/layout'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+
+const useStyles = makeStyles({
+  dateTime: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    float: 'right',
+    color: '#868B92',
+    fontWeight: '350',
+  },
+  time: {
+    paddingLeft: '20px',
+  },
+})
 
 const statusLabels = [
   'Order placed',
@@ -17,12 +31,22 @@ const statusLabels = [
 ]
 
 const VerticalTimeline = (props) => {
+  const classes = useStyles()
+
+  const deliveryBy = props.props.deliveryBy
+  const time = props.props.time
+  const type = props.props.type
+
+  console.log('Props', deliveryBy)
+  console.log('Props', time)
+  console.log('Props', type)
+
   let statusIndex = 0
-  if (props.props === 'SubmittedOrder') {
+  if (type === 'SubmittedOrder') {
     statusIndex = 1
-  } else if (props.props === 'AcceptedOrder') {
+  } else if (type === 'AcceptedOrder') {
     statusIndex = 2
-  } else if (props.props === 'ManufacturedOrder') {
+  } else if (type === 'ManufacturedOrder') {
     statusIndex = 3
   } else {
     statusIndex = 0
@@ -36,11 +60,13 @@ const VerticalTimeline = (props) => {
     }
   }
 
+  const formattedDate = deliveryBy.split('/').join('-')
+
   return (
     <Container spacing={0}>
       <Item
         style={{}}
-        sm={12}
+        xs={10}
         sx={{
           justifyContent: 'flex-start',
           alignItems: 'flex-start',
@@ -64,6 +90,18 @@ const VerticalTimeline = (props) => {
               <TimelineContent>
                 {' '}
                 <Typography variant="h6">{statusLabels[0]}</Typography>
+                {/*
+                  Date and time goes first in content
+                */}
+                <Typography
+                  variant="subtitle1"
+                  className={`${classes.dateTime} ${classes.time}`}
+                >
+                  {time}
+                </Typography>
+                <Typography variant="subtitle1" className={classes.dateTime}>
+                  {formattedDate}
+                </Typography>
                 {/*
                 Content
               */}
@@ -162,17 +200,6 @@ const VerticalTimeline = (props) => {
           </TimelineItem>
         </Timeline>
       </Item>
-      {/* <Item sm={3}>
-        <div slyle={{ width: '100%', height: 100, backgroundColor: '#111341' }}>
-          tsomesome somesome somesome somesome somesome somesome somesome
-          extsome textsome textsome textsome text text
-        </div>
-      </Item>
-      <Item sm={4}>
-        <h1 slyle={{ backgroundColor: 'green' }}>
-          somesome textsome textsome textsome textsome text text
-        </h1>
-      </Item> */}
     </Container>
   )
 }

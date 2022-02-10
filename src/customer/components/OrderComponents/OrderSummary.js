@@ -14,10 +14,9 @@ const useStyles = makeStyles({
   },
   root: {
     marginLeft: '32px',
-    border: 'solid 2px #ccc',
   },
   row: {
-    padding: '16px 0px',
+    padding: '16px 0px 70px 0px',
     borderBottom: '1px lightgrey solid',
   },
   inline: {
@@ -58,6 +57,15 @@ const useStyles = makeStyles({
   picturePadding: {
     paddingLeft: '10px',
   },
+  orderStatus: {
+    paddingTop: '30px',
+  },
+  shippingPadding: {
+    paddingBottom: '10px',
+  },
+  sevenHunFont: {
+    fontWeight: '700',
+  },
 })
 
 const DetailRow = ({ title, value }) => {
@@ -80,18 +88,24 @@ const DetailRow = ({ title, value }) => {
 }
 const getTotalCost = (price, quantity) => {
   let cost = '0.00'
-
   if (price && quantity) {
     cost = price * quantity
-    cost = `£${cost}.00`
+    cost = `${cost}.00`
   }
-
   return cost
 }
 
+const formatCost = (cost) => {
+  return new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: 'GBP',
+  }).format(cost)
+}
+
 const OrderSummary = (props) => {
+  const classes = useStyles()
   const {
-    //id: orderId,
+    id: orderId,
     orderDetails: {
       name: name,
       image: image,
@@ -100,14 +114,14 @@ const OrderSummary = (props) => {
       partId: partId,
       price: price,
     },
-    //deliveryBy: deliveryBy,
+    deliveryBy: deliveryBy,
     type: type,
     quantity: quantity,
+    time: time,
   } = props.order
 
-  const classes = useStyles()
   return (
-    <Paper className={classes.root} elevation={0} xs={12}>
+    <Paper id={orderId} className={classes.root} elevation={0} xs={12}>
       <Grid container className={classes.row}>
         <Grid item xs={2}>
           <CardMedia
@@ -140,7 +154,9 @@ const OrderSummary = (props) => {
         </Grid>
         <Grid item xs={3}>
           <Box className={classes.addressMargin}>
-            <Typography variant="h6">Shipping Address:</Typography>
+            <Typography variant="subtitle2" className={classes.shippingPadding}>
+              Shipping Address:
+            </Typography>
             <Typography variant="subtitle1" color="textSecondary">
               Digital Catapult
             </Typography>
@@ -157,16 +173,17 @@ const OrderSummary = (props) => {
         </Grid>
         <Grid item xs={2}>
           <div className={classes.addressMargin}>
-            <DetailRow
-              title="Quantity"
-              value={quantity}
-              className={classes.pricePadding}
-            ></DetailRow>
-            <DetailRow
-              title="Price"
-              className={classes.pricePadding}
-              value={getTotalCost(price, quantity)}
-            ></DetailRow>
+            <div className={classes.pricePadding}>
+              <Typography
+                variant="subtitle2"
+                className={`${classes.shippingPadding} ${classes.sevenHunFont}`}
+              >
+                Quantity: {quantity}
+              </Typography>
+              <Typography variant="subtitle2" className={classes.sevenHunFont}>
+                Price: {formatCost(getTotalCost(price, quantity))}
+              </Typography>
+            </div>
             <Typography
               variant="subtitle2"
               component="h6"
@@ -178,24 +195,22 @@ const OrderSummary = (props) => {
           </div>
         </Grid>
       </Grid>
-      <Grid
-        container
-        alignItems="center"
-        className={`${classes.row} ${classes.header}`}
-      >
-        <Box>
-          <Grid item>
-            <Typography
-              style={{ color: '#494E56' }}
-              className={classes.leftPadding}
-              variant="h5"
-            >
-              Order Status
-            </Typography>
 
-            <VerticalTimeline props={type}></VerticalTimeline>
+      <Grid item>
+        <Typography
+          style={{ color: '#494E56' }}
+          className={`${classes.leftPadding} ${classes.orderStatus}`}
+          variant="h5"
+        >
+          Order Status
+        </Typography>
+        <Grid container>
+          <Grid item xs={11}>
+            <VerticalTimeline
+              props={{ type, deliveryBy, time }}
+            ></VerticalTimeline>
           </Grid>
-        </Box>
+        </Grid>
       </Grid>
     </Paper>
   )
