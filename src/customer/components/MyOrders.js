@@ -1,6 +1,7 @@
 // TODO Remove
 /* eslint-disable */
 import React from 'react'
+import { last } from 'lodash'
 import { Grid, Paper, Typography, CardMedia, Box } from '@material-ui/core'
 //import BackButton from './BackButton'
 import makeStyles from '@material-ui/core/styles/makeStyles'
@@ -93,6 +94,10 @@ const MyOrders = () => {
   const params = useParams()
   const customerOrders = useSelector((state) => state.customerOrders)
 
+  const [activeItem, setActiveItem] = React.useState(undefined)
+
+  // The initial order shown in the list is always the last one unless there is
+  // a pre-selected order ID in the params
   const initialOrder =
     customerOrders != null || customerOrders.length > 0
       ? customerOrders[customerOrders.length - 1]
@@ -102,12 +107,7 @@ const MyOrders = () => {
     ? customerOrders.find(({ id }) => `${id}` === params.orderId)
     : null
   const classes = useStyles()
-
-  console.log('customerOrders.length', customerOrders)
-
-  console.log('Selected order', selectedOrder)
-  console.log('Params', params)
-  console.log('InitialOrdeer', initialOrder)
+  console.log({ activeItem })
 
   const startingOrder = () => {
     if (selectedOrder != null) {
@@ -118,16 +118,16 @@ const MyOrders = () => {
       return null
     }
   }
-  const id = startingOrder()
-  for (var key in id) {
-    console.log(key, typeof key)
-  }
 
   return (
     <Grid container className={classes.containerWidth}>
       <Grid item className={classes.leftColumn}>
-        {[...customerOrders].reverse().map((order) => (
-          <SummaryRow order={order} />
+        {[...customerOrders].reverse().map((order, i) => (
+          <SummaryRow
+            setActiveItem={setActiveItem}
+            isActive={activeItem /*id*/ === order.id /*|| i === 0*/}
+            order={order}
+          />
         ))}
       </Grid>
       <Grid item className={classes.rightColumn}>

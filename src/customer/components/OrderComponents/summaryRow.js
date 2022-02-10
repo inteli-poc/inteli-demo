@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Typography,
   Grid,
@@ -19,28 +19,28 @@ const useStyles = makeStyles({
     marginRight: '20px',
   },
   listPadding: {
-    marginBottom: '10px',
+    paddingBottom: '20px',
   },
   listItemMargin: {
     marginBottom: '60px',
   },
   datePadding: {
-    paddingLeft: '80px',
+    paddingLeft: '103px',
     paddingTop: '5px',
   },
   root: {
     padding: 8,
     width: '100%',
     height: '100px',
-    marginBottom: '40px',
+    marginBottom: '25px',
     borderRadius: '8px',
     textDecoration: 'none',
   },
   isNotActive: {
-    border: 'none',
+    background: '#f8f8f8',
   },
   isActive: {
-    border: '1px solid #ccc',
+    background: '#fff',
   },
   fourHundFont: {
     fontWeight: '400',
@@ -51,18 +51,12 @@ const useStyles = makeStyles({
   dateColour: {
     color: '#868B92',
   },
+  maherPadding: {
+    paddingLeft: '25px',
+  },
 })
 
-const getCurrentItem = () => {
-  const url = window.location.href
-  return url
-    .split('/')
-    .filter((e) => e)
-    .pop()
-}
-
-const SummaryRow = (props) => {
-  console.log('URL ENDING', getCurrentItem())
+const SummaryRow = ({ setActiveItem, isActive, ...props }) => {
   const {
     id: orderId,
     orderDetails: { name: name, image: image },
@@ -70,8 +64,9 @@ const SummaryRow = (props) => {
     quantity: quantity,
   } = props.order
   const classes = useStyles()
-  const [isSelected, setSelectState] = useState(false)
+  console.log({ props, isActive })
 
+  // Split the date so it can be formatted
   var parts = deliveryBy.split('/')
   var dt = new Date(
     parseInt(parts[2], 10),
@@ -79,6 +74,7 @@ const SummaryRow = (props) => {
     parseInt(parts[0], 10)
   )
 
+  // Format the date to dd mmm yyyy
   const formattedDate = dt
     .toLocaleDateString('en-GB', {
       day: 'numeric',
@@ -91,14 +87,16 @@ const SummaryRow = (props) => {
     <Paper
       id={orderId}
       elevation={0}
-      className={`${classes.root} ${
-        isSelected ? classes.isActive : classes.isNotActive
+      /* style={{
+        backgroundColor: isActive ? 'red' : 'blue',
+      }} */
+      className={`${classes.root}  ${
+        isActive ? classes.isActive : classes.isNotActive
       }`}
     >
       <CardActionArea
         onClick={() => {
-          if (isSelected === false) setSelectState(true)
-          else setSelectState(false)
+          setActiveItem(orderId)
         }}
         component={RouterLink}
         to={`/app/my-orders/${orderId}`}
@@ -133,14 +131,14 @@ const SummaryRow = (props) => {
               variant="subtitle2"
               component="h6"
               display="inline"
-              className={classes.fourHundFont}
+              className={`${classes.fourHundFont} ${classes.maherPadding}`}
             >
               Qnt: {quantity}
             </Typography>
             <Typography
               variant="subtitle2"
               component="h6"
-              className={`${classes.datePadding} ${classes.threeFiftyFont} ${classes.dateColour}`}
+              className={`${classes.datePadding} ${classes.threeFiftyFont} ${classes.dateColour} `}
             >
               {formattedDate}
             </Typography>
