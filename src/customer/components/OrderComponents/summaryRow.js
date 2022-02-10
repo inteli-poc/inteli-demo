@@ -1,5 +1,11 @@
 import React from 'react'
-import { Typography, Grid, CardMedia, Paper } from '@material-ui/core'
+import {
+  Typography,
+  Grid,
+  CardMedia,
+  Paper,
+  CardActionArea,
+} from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Link as RouterLink } from 'react-router-dom'
 
@@ -24,8 +30,8 @@ const useStyles = makeStyles({
   root: {
     padding: 8,
     width: '100%',
-    height: '32px',
-    marginBottom: '8px',
+    height: '100px',
+    marginBottom: '40px',
     borderRadius: '8px',
     textDecoration: 'none',
   },
@@ -40,50 +46,47 @@ const SummaryRow = (props) => {
   } = props.order
   const classes = useStyles()
   return (
-    <Paper
-      component={RouterLink}
-      to={`/app/my-orders/${orderId}`}
-      elevation={0}
-      className={classes.root}
-    >
-      <Grid container xs={12} className={classes.listItemMargin}>
-        <Grid item xs={3}>
-          <CardMedia
-            component="img"
-            alt={name}
-            width="160"
-            image={image}
-            title={name}
-          />
+    <Paper id={orderId} elevation={0} className={classes.root}>
+      <CardActionArea component={RouterLink} to={`/app/my-orders/${orderId}`}>
+        <Grid container xs={12} className={classes.listItemMargin}>
+          <Grid item xs={3}>
+            <CardMedia
+              component="img"
+              alt={name}
+              width="160"
+              image={image}
+              title={name}
+            />
+          </Grid>
+          <Grid item xs={8}>
+            <Typography
+              variant="h6"
+              component="h6"
+              className={classes.listPadding}
+            >
+              {name}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              component="h6"
+              display="inline"
+              className={classes.maherStyle}
+            >
+              MAHER
+            </Typography>
+            <Typography variant="subtitle1" component="h6" display="inline">
+              Qnt: {quantity}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              component="h6"
+              className={classes.datePadding}
+            >
+              {deliveryBy}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={8}>
-          <Typography
-            variant="h6"
-            component="h6"
-            className={classes.listPadding}
-          >
-            {name}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            component="h6"
-            display="inline"
-            className={classes.maherStyle}
-          >
-            MAHER
-          </Typography>
-          <Typography variant="subtitle1" component="h6" display="inline">
-            Qnt: {quantity}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            component="h6"
-            className={classes.datePadding}
-          >
-            {deliveryBy}
-          </Typography>
-        </Grid>
-      </Grid>
+      </CardActionArea>
     </Paper>
   )
 }

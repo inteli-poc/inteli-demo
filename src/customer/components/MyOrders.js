@@ -35,13 +35,11 @@ const useStyles = makeStyles((theme) => ({
   },
   leftColumn: {
     width: '390px',
-    border: '1px solid #fff',
   },
   rightColumn: {
     /* width: '880px', */
     width: '1146px',
     borderRadius: '8px',
-    border: '1px solid #fff',
   },
   maherStyle: {
     backgroundColor: '#0C74BB',
