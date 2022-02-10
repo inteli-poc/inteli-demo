@@ -331,7 +331,7 @@ const OrderDetail = ({ order }) => {
               className={`${classes.rejectAndNegotiateTitle} ${classes.rejectAndNegotiateToggle}`}
               onClick={toggleNegotiationDisplay}
             >
-              <Typography variant="subtitle1">
+              <Typography variant="subtitle1" className={classes.partTitle}>
                 Reject &amp; negotiate
               </Typography>
             </Grid>
