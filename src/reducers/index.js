@@ -10,13 +10,13 @@ import networkStatusReducer from '../features/networkStatusSlice'
 import appReducer from '../features/appSlice'
 
 export default combineReducers({
-    customerParts: customerPartsReducer,
-    customerOrders: customerOrdersReducer,
-    readOrders: readOrdersReducer,
-    powders: powdersReducer,
-    readPowders: readPowdersReducer,
-    labTests: labTestsReducer,
-    networkStatus: networkStatusReducer,
-    readTests: readTestsReducer,
-    app: appReducer,
+  customerParts: customerPartsReducer,
+  customerOrders: customerOrdersReducer,
+  readOrders: readOrdersReducer,
+  powders: powdersReducer,
+  readPowders: readPowdersReducer,
+  labTests: labTestsReducer,
+  networkStatus: networkStatusReducer,
+  readTests: readTestsReducer,
+  app: appReducer,
 })

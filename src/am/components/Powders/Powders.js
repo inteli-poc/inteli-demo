@@ -9,45 +9,44 @@ import PowderRow from './Row'
 import Header from '../Header'
 
 const useStyles = makeStyles({
-    tableHeader: {
-        borderBottom: '1px lightgrey solid',
-        paddingBottom: '8px',
-        paddingLeft: '32px',
-    },
+  tableHeader: {
+    borderBottom: '1px lightgrey solid',
+    paddingBottom: '8px',
+    paddingLeft: '32px',
+  },
 })
 
 const Powders = () => {
-    const classes = useStyles()
-    const { powders, labTests } = useSelector((state) => ({
-        powders: state.powders,
-        labTests: state.labTests,
-    }))
+  const classes = useStyles()
+  const { powders, labTests } = useSelector((state) => ({
+    powders: state.powders,
+    labTests: state.labTests,
+  }))
 
-    return (
-        <Box>
-            <Header title="Powder Inventory" />
-            <SearchField />
-            <PowderHeader className={classes.tableHeader} />
+  return (
+    <Box>
+      <Header title="Powder Inventory" />
+      <SearchField />
+      <PowderHeader className={classes.tableHeader} />
 
-            <Grid container direction="column">
-                {[...powders].reverse().map((powder) => {
-                    const labTest =
-                        labTests.find(
-                            ({ metadata }) =>
-                                metadata.powderId ===
-                                powder.original_id.toString()
-                        ) || null
-                    return (
-                        <PowderRow
-                            key={powder.original_id}
-                            powder={powder}
-                            labTest={labTest}
-                        />
-                    )
-                })}
-            </Grid>
-        </Box>
-    )
+      <Grid container direction="column">
+        {[...powders].reverse().map((powder) => {
+          const labTest =
+            labTests.find(
+              ({ metadata }) =>
+                metadata.powderId === powder.original_id.toString()
+            ) || null
+          return (
+            <PowderRow
+              key={powder.original_id}
+              powder={powder}
+              labTest={labTest}
+            />
+          )
+        })}
+      </Grid>
+    </Box>
+  )
 }
 
 export default Powders
