@@ -5,8 +5,8 @@ import { updateNetworkStatus } from '../features/networkStatusSlice'
 const API_HOST = process.env.REACT_APP_API_HOST || 'localhost'
 const API_PORT = process.env.REACT_APP_API_PORT || '3001'
 
-const wrappedFetch = (url, options) => fetch(url, options).then(res => res.json())
-
+const wrappedFetch = (url, options) =>
+    fetch(url, options).then((res) => res.json())
 
 const useNewFetchWrapper = () => {
     const dispatch = useDispatch()
@@ -48,7 +48,6 @@ const useNewFetchWrapper = () => {
 
 // TODO: convert into a middleware - matt?
 // e.g. for all routes ../v2*
-/*
 const checkJwt = (token) => {
     if (!token) return false
     try {
@@ -59,40 +58,9 @@ const checkJwt = (token) => {
         return false
     }
 }
-*/
+
 const useApi = () => {
     const newWrappedFetch = useNewFetchWrapper()
-
-    // TODO middleware if fairly simple implementation
-    // we don;'t use next js so there might be some changes required in this
-    // case we could use redux middleware
-    const getAuthToken = async () => {
-        const token = localStorage.getItem('token')
-
-        // TODO: once middleware is there this could be abstracted
-        if (!checkJwt(token)) {
-            localStorage.clear('token')
-            const response = await wrappedFetch(
-                `http://${API_HOST}:${API_PORT}/v2/auth`,
-                {
-                    method: 'POST',
-                    mode: 'cors',
-                    cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        client_id: process.env.REACT_APP_AUTH_CLIENT_ID,
-                        client_secret: process.env.REACT_APP_AUTH_CLIENT_SECRET,
-                    }),
-                }
-            )
-
-            localStorage.setItem('token', token)
-            return response.access_token
-        }
-        return token
-    }
 
     const runProcess = async (body) =>
         wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/run-process`, {

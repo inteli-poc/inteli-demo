@@ -2,18 +2,23 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { PromiseStateFactory } from './utils'
 import Api from '../utils/vitalamApi'
 
+const latestToken = (id) => {
+    id
+}
+
 const getRefToken = async (token, tokens = []) => {
-    const prevId = token.id - 1 // this is fragile, but hoping for an update soon 
-    return (!prevId|| token.ref) ? {
-        ref: token,
-        tokens,
-        position: token.id + tokens.length,
-    } : await getRefToken(
-        // TODO get all ids, and then await in parallel
-        await Api().tokenById(prevId), [
-            ...tokens,
-            token,
-        ])
+    const prevId = token.id - 1 // this is fragile, but hoping for an update soon
+    return !prevId || token.ref
+        ? {
+              ref: token,
+              tokens,
+              position: token.id + tokens.length,
+          }
+        : await getRefToken(
+              // TODO get all ids, and then await in parallel
+              await Api().tokenById(prevId),
+              [...tokens, token]
+          )
 }
 
 const getData = async (last, position = false, data = {}) => {
@@ -38,13 +43,13 @@ const loadAppState = createAsyncThunk('app/init', async (app = {}) => {
     try {
         return {
             ...app,
-            data: await getData(await Api().latestToken(), app.data),
+            data: await getData(await latestToken(), app.data),
         }
-    } catch(e) {
+    } catch (e) {
         // implement logging <bunyan or smt>
         console.log(e)
     }
-});
+})
 
 // Then, handle actions in your reducers:
 const app = createSlice({
@@ -56,7 +61,7 @@ const app = createSlice({
     },
     extraReducers: (builder) => {
         PromiseStateFactory.forEach((addCase) => addCase(builder, loadAppState))
-    }
+    },
 })
 
 export { loadAppState }

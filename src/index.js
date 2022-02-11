@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
+import { Provider, applyMiddleware } from 'react-redux'
+import { composeWithDevTools } from 'redux-devtools-extension'
 import { configureStore } from '@reduxjs/toolkit'
 
 import CustomerApp from './customer'
@@ -9,14 +10,18 @@ import LaboratoryApp from './laboratory'
 import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
 import { loadAppState } from './features/appSlice'
+import auth from './redux-middleware/auth'
+
 
 // TODO move to sep file
 const store = configureStore({
     reducer: rootReducer,
     devTools: process.env.NODE_ENV !== 'production',
+    middlewareEnhancer: composeWithDevTools(
+        applyMiddleware(auth),
+    ),
 })
 
-console.log('asdasd')
 store.dispatch(loadAppState())
 
 let App = null
