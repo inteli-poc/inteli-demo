@@ -1,7 +1,7 @@
 const tokenTypes = {
-  powderTest: 'POWDER_TEST',
-  powder: 'POWDER',
-  order: 'ORDER',
+    powderTest: 'POWDER_TEST',
+    powder: 'POWDER',
+    order: 'ORDER',
 }
 
 export default tokenTypes

@@ -12,39 +12,47 @@ import LabTestsWrapper from './LabTestsWrapper'
 import { identities, tokenTypes, powderTestStatus } from '../../utils'
 
 const Tested = () => {
-  const selectedId = useParams().testId * 1 || null
-  const laboratoryTests = useSelector((state) =>
-    state.labTests.filter(
-      ({ roles, metadata: { type, status } }) =>
-        type === tokenTypes.powderTest &&
-        status === powderTestStatus.result &&
-        roles.Laboratory === identities.current
+    const selectedId = useParams().testId * 1 || null
+    const laboratoryTests = useSelector((state) =>
+        state.labTests.filter(
+            ({ roles, metadata: { type, status } }) =>
+                type === tokenTypes.powderTest &&
+                status === powderTestStatus.result &&
+                roles.Laboratory === identities.current
+        )
     )
-  )
-  const selectedTest = laboratoryTests.find((l) => l.original_id === selectedId)
-  return (
-    <>
-      {laboratoryTests.length ? (
-        <LabTestsWrapper>
-          <Grid item xs={1} />
-          <Grid item xs={4} xs-offset={1} spacing={1}>
-            <LabTestsSearch />
-            <LabTestsItemsWrapper>
-              {laboratoryTests.reverse().map((test) => (
-                <LabTestsItem key={test.id} selectedId={selectedId} {...test} />
-              ))}
-            </LabTestsItemsWrapper>
-          </Grid>
-          <Grid item xs={6} xs-offset={1} spacing={1}>
-            {selectedTest ? <LabTestDetails {...selectedTest} /> : null}
-          </Grid>
-          <Grid item xs={1} />
-        </LabTestsWrapper>
-      ) : (
-        <EmptyPageWrapper>No items found...</EmptyPageWrapper>
-      )}
-    </>
-  )
+    const selectedTest = laboratoryTests.find(
+        (l) => l.original_id === selectedId
+    )
+    return (
+        <>
+            {laboratoryTests.length ? (
+                <LabTestsWrapper>
+                    <Grid item xs={1} />
+                    <Grid item xs={4} xs-offset={1} spacing={1}>
+                        <LabTestsSearch />
+                        <LabTestsItemsWrapper>
+                            {laboratoryTests.reverse().map((test) => (
+                                <LabTestsItem
+                                    key={test.id}
+                                    selectedId={selectedId}
+                                    {...test}
+                                />
+                            ))}
+                        </LabTestsItemsWrapper>
+                    </Grid>
+                    <Grid item xs={6} xs-offset={1} spacing={1}>
+                        {selectedTest ? (
+                            <LabTestDetails {...selectedTest} />
+                        ) : null}
+                    </Grid>
+                    <Grid item xs={1} />
+                </LabTestsWrapper>
+            ) : (
+                <EmptyPageWrapper>No items found...</EmptyPageWrapper>
+            )}
+        </>
+    )
 }
 
 export default Tested

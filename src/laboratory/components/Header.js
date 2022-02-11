@@ -5,12 +5,12 @@ import StaticNavigation from '../components/StaticNavigation'
 import Navigation from '../components/Navigation'
 
 const Header = ({ labType }) => {
-  return (
-    <AppBar>
-      <StaticNavigation labType={labType} />
-      <Navigation />
-    </AppBar>
-  )
+    return (
+        <AppBar>
+            <StaticNavigation labType={labType} />
+            <Navigation />
+        </AppBar>
+    )
 }
 
 export default Header

@@ -6,55 +6,55 @@ import { ReactComponent as OrderAcceptedStatus } from '../../images/order-accept
 import { ReactComponent as OrderNonStatus } from '../../images/order-non.svg'
 
 const ProgressBarSelector = (props) => {
-  const { statusIndex } = props
+    const { statusIndex } = props
 
-  switch (statusIndex) {
-    case 0:
-      return (
-        <Grid item>
-          <OrderPlacedStatus />
-          <OrderNonStatus />
-          <OrderNonStatus />
-          <OrderNonStatus />
-        </Grid>
-      )
-    case 1:
-      return (
-        <Grid item>
-          <OrderPlacedAcceptedStatus />
-          <OrderNonStatus />
-          <OrderNonStatus />
-          <OrderNonStatus />
-        </Grid>
-      )
-    case 2:
-      return (
-        <Grid item>
-          <OrderPlacedAcceptedStatus />
-          <OrderAcceptedStatus />
-          <OrderNonStatus />
-          <OrderNonStatus />
-        </Grid>
-      )
-    case 3:
-      return (
-        <Grid item>
-          <OrderPlacedAcceptedStatus />
-          <OrderAcceptedStatus />
-          <OrderAcceptedStatus />
-          <OrderNonStatus />
-        </Grid>
-      )
-    case 4:
-      return (
-        <Grid item>
-          <OrderPlacedAcceptedStatus />
-          <OrderAcceptedStatus />
-          <OrderAcceptedStatus />
-          <OrderAcceptedStatus />
-        </Grid>
-      )
-  }
+    switch (statusIndex) {
+        case 0:
+            return (
+                <Grid item>
+                    <OrderPlacedStatus />
+                    <OrderNonStatus />
+                    <OrderNonStatus />
+                    <OrderNonStatus />
+                </Grid>
+            )
+        case 1:
+            return (
+                <Grid item>
+                    <OrderPlacedAcceptedStatus />
+                    <OrderNonStatus />
+                    <OrderNonStatus />
+                    <OrderNonStatus />
+                </Grid>
+            )
+        case 2:
+            return (
+                <Grid item>
+                    <OrderPlacedAcceptedStatus />
+                    <OrderAcceptedStatus />
+                    <OrderNonStatus />
+                    <OrderNonStatus />
+                </Grid>
+            )
+        case 3:
+            return (
+                <Grid item>
+                    <OrderPlacedAcceptedStatus />
+                    <OrderAcceptedStatus />
+                    <OrderAcceptedStatus />
+                    <OrderNonStatus />
+                </Grid>
+            )
+        case 4:
+            return (
+                <Grid item>
+                    <OrderPlacedAcceptedStatus />
+                    <OrderAcceptedStatus />
+                    <OrderAcceptedStatus />
+                    <OrderAcceptedStatus />
+                </Grid>
+            )
+    }
 }
 
 export default ProgressBarSelector

@@ -3,15 +3,15 @@ import { NavLink } from 'react-router-dom'
 import React from 'react'
 
 const BackButton = (props) => {
-  const { buttonClass, backToLocation, value } = props
+    const { buttonClass, backToLocation, value } = props
 
-  return (
-    <Button>
-      <NavLink to={backToLocation} className={buttonClass}>
-        {value}
-      </NavLink>
-    </Button>
-  )
+    return (
+        <Button>
+            <NavLink to={backToLocation} className={buttonClass}>
+                {value}
+            </NavLink>
+        </Button>
+    )
 }
 
 export default BackButton

@@ -5,10 +5,10 @@ import { powderTestStatus, orderStatus } from './statuses'
 import metadataTypes from './metadataTypes'
 
 export {
-  identities,
-  useApi,
-  tokenTypes,
-  powderTestStatus,
-  orderStatus,
-  metadataTypes,
+    identities,
+    useApi,
+    tokenTypes,
+    powderTestStatus,
+    orderStatus,
+    metadataTypes,
 }
