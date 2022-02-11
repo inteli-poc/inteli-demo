@@ -1,6 +1,5 @@
 import React from 'react'
-import { Grid, Paper, Typography, CardMedia, Box } from '@material-ui/core'
-//import BackButton from './BackButton'
+import { Grid } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useParams } from 'react-router-dom'
 
@@ -67,25 +66,6 @@ const useStyles = makeStyles((theme) => ({
     background: 'red',
   },
 }))
-
-const DetailRow = ({ title, value }) => {
-  const classes = useStyles()
-  return (
-    <Box>
-      <Typography className={classes.inline} variant="subtitle2">
-        {title}:
-      </Typography>
-      &nbsp;
-      <Typography
-        className={classes.inline}
-        variant="subtitle1"
-        color="textSecondary"
-      >
-        {value}
-      </Typography>
-    </Box>
-  )
-}
 
 const MyOrders = () => {
   const params = useParams()
