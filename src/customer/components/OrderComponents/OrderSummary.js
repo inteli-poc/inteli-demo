@@ -68,6 +68,9 @@ const useStyles = makeStyles({
   },
 })
 
+// Helpers -------------------------------------
+
+// Formats a row that contains 2 items, for example 'Quantity: 1'
 const DetailRow = ({ title, value }) => {
   const classes = useStyles()
   return (
@@ -86,21 +89,26 @@ const DetailRow = ({ title, value }) => {
     </Box>
   )
 }
+
+// Calculates the base cose
 const getTotalCost = (price, quantity) => {
-  let cost = '0.00'
+  let cost = '0'
   if (price && quantity) {
     cost = price * quantity
-    cost = `${cost}.00`
+    cost = `${cost}`
   }
   return cost
 }
 
+// Formats the cost into £000,000,000.00
 const formatCost = (cost) => {
   return new Intl.NumberFormat('en-GB', {
     style: 'currency',
     currency: 'GBP',
   }).format(cost)
 }
+
+// End of Helpers -------------------------------------
 
 const OrderSummary = (props) => {
   const classes = useStyles()

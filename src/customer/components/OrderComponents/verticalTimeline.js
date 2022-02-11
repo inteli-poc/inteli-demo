@@ -22,6 +22,7 @@ const useStyles = makeStyles({
   },
 })
 
+// Inital labels to be used on the timeline, will need refactoring when alternatives are added
 const statusLabels = [
   'Order placed',
   'Order accepted',
@@ -37,10 +38,7 @@ const VerticalTimeline = (props) => {
   const time = props.props.time
   const type = props.props.type
 
-  console.log('Props', deliveryBy)
-  console.log('Props', time)
-  console.log('Props', type)
-
+  // Set the current status order. Again will eventually need updating with more states
   let statusIndex = 0
   if (type === 'SubmittedOrder') {
     statusIndex = 1
@@ -52,6 +50,7 @@ const VerticalTimeline = (props) => {
     statusIndex = 0
   }
 
+  // Helper function to decide the colour of a timeline segment
   function GetColour(index, value) {
     if (index >= value) {
       return '#FF9900'
@@ -70,7 +69,7 @@ const VerticalTimeline = (props) => {
         sx={{
           justifyContent: 'flex-start',
           alignItems: 'flex-start',
-        }} /* container column size of 4/12 */
+        }}
       >
         <Timeline>
           <TimelineItem>
@@ -104,7 +103,7 @@ const VerticalTimeline = (props) => {
                 </Typography>
                 {/*
                 Content
-              */}
+                */}
               </TimelineContent>
               <TimelineOppositeContent />
             </Item>
@@ -127,7 +126,7 @@ const VerticalTimeline = (props) => {
                 <Typography variant="h6">{statusLabels[1]}</Typography>
                 {/*
                 Content
-              */}
+                */}
               </TimelineContent>
             </Item>
           </TimelineItem>
@@ -150,7 +149,7 @@ const VerticalTimeline = (props) => {
                 <Typography variant="h6">{statusLabels[2]}</Typography>
                 {/*
                 Content
-              */}
+                */}
               </TimelineContent>
               <TimelineOppositeContent />
             </Item>
@@ -174,7 +173,7 @@ const VerticalTimeline = (props) => {
                 <Typography variant="h6">{statusLabels[3]}</Typography>
                 {/*
                 Content
-              */}
+                */}
               </TimelineContent>
               <TimelineOppositeContent />
             </Item>
@@ -193,7 +192,7 @@ const VerticalTimeline = (props) => {
                 <Typography variant="h6">{statusLabels[4]}</Typography>
                 {/*
                 Content
-              */}
+                */}
               </TimelineContent>
               <TimelineOppositeContent />
             </Item>

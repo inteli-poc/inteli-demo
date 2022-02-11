@@ -87,9 +87,6 @@ const SummaryRow = ({ setActiveItem, isActive, ...props }) => {
     <Paper
       id={orderId}
       elevation={0}
-      /* style={{
-        backgroundColor: isActive ? 'red' : 'blue',
-      }} */
       className={`${classes.root}  ${
         isActive ? classes.isActive : classes.isNotActive
       }`}

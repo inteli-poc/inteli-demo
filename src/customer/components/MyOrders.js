@@ -94,6 +94,7 @@ const MyOrders = () => {
   const params = useParams()
   const customerOrders = useSelector((state) => state.customerOrders)
 
+  // Stores and sets which item is active
   const [activeItem, setActiveItem] = React.useState(undefined)
 
   // The initial order shown in the list is always the last one unless there is
@@ -122,10 +123,10 @@ const MyOrders = () => {
   return (
     <Grid container className={classes.containerWidth}>
       <Grid item className={classes.leftColumn}>
-        {[...customerOrders].reverse().map((order, i) => (
+        {[...customerOrders].reverse().map((order) => (
           <SummaryRow
             setActiveItem={setActiveItem}
-            isActive={activeItem /*id*/ === order.id /*|| i === 0*/}
+            isActive={activeItem /*id*/ === order.id}
             order={order}
           />
         ))}
