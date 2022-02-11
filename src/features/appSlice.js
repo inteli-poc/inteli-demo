@@ -1,63 +1,64 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-// import getLastToken from './nowwhere/dot/token';
-
-const getLastToken = () => Promise.resolve({ id: 10 })
-const getTokenById = (id) => {
-    if (id === 2) return Promise.resolve({ id, ref: true })
-    return Promise.resolve({ id })
-}
+import { PromiseStateFactory } from './utils'
+import Api from '../utils/vitalamApi'
 
 const getRefToken = async (token, tokens = []) => {
-    if (token.id === 1 || token.ref)
-        return {
-            ref: token,
-            tokens,
-            position: token.id + tokens.length,
-        }
-    return await getRefToken(await getTokenById(token.id - 1), [
-        ...tokens,
-        token,
-    ])
+    const prevId = token.id - 1 // this is fragile, but hoping for an update soon 
+    return (!prevId|| token.ref) ? {
+        ref: token,
+        tokens,
+        position: token.id + tokens.length,
+    } : await getRefToken(
+        // TODO get all ids, and then await in parallel
+        await Api().tokenById(prevId), [
+            ...tokens,
+            token,
+        ])
 }
 
 const getData = async (last, position = false, data = {}) => {
+    if (!last) return Promise.reject('unable to retrieve last token')
     // return a ref token along with the checked tokens so client can catch up if needed
     if (!position) {
-        const { position, ...newData } = await getRefToken(last)
-        return await getData(last, position, newData)
+        const { position, ...tokens } = await getRefToken(last)
+        return await getData(last, position, tokens)
     }
 
     // caching up if needed
     return position <= last.id
         ? await getData(last, position + 1, {
               ...data,
-              tokens: [...data.tokens, await getTokenById(position + 1)],
+              // TODO get all ids, and then await in parallel
+              tokens: [...data.tokens, await Api().tokenById(position + 1)],
           })
         : { last, ...data }
 }
 
-export const loadAppState = createAsyncThunk('app/init', async (app = {}) => ({
-    ...app,
-    data: await getData(await getLastToken(), app.data),
-}))
+const loadAppState = createAsyncThunk('app/init', async (app = {}) => {
+    try {
+        return {
+            ...app,
+            data: await getData(await Api().latestToken(), app.data),
+        }
+    } catch(e) {
+        // implement logging <bunyan or smt>
+        console.log(e)
+    }
+});
 
 // Then, handle actions in your reducers:
 const app = createSlice({
     name: 'app',
     initialState: { isFetching: false, isError: false },
     reducers: {
-        update: (args) => console.log(args),
-        clear: (args) => console.log(args),
+        __update: (args) => console.log(args),
+        __clear: (args) => console.log(args),
     },
     extraReducers: (builder) => {
-        // Add reducers for additional action types here, and handle loading state as needed
-        builder.addCase(loadAppState.fulfilled, (state, action) => {
-            console.log({ state, action })
-            return action.payload
-        })
-    },
+        PromiseStateFactory.forEach((addCase) => addCase(builder, loadAppState))
+    }
 })
 
-// dispatch(loadAppState({}))
+export { loadAppState }
 
 export default app.reducer
