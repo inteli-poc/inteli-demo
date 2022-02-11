@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider, applyMiddleware } from 'react-redux'
+import { Provider } from 'react-redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, applyMiddleware } from '@reduxjs/toolkit'
 
+// this seems a little overkill to render a different app rather than render different components, we should focus on re-useable components
 import CustomerApp from './customer'
 import AdditiveManufacturerApp from './am'
 import LaboratoryApp from './laboratory'
@@ -22,6 +23,7 @@ const store = configureStore({
     ),
 })
 
+// move to middleware along with the new prop 'loaded: false' and update once don[e
 store.dispatch(loadAppState())
 
 let App = null

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-// import jwtDecode from 'jwt-decode'
+import jwtDecode from 'jwt-decode'
 import { updateNetworkStatus } from '../features/networkStatusSlice'
 
 const API_HOST = process.env.REACT_APP_API_HOST || 'localhost'
@@ -61,6 +61,32 @@ const checkJwt = (token) => {
 
 const useApi = () => {
     const newWrappedFetch = useNewFetchWrapper()
+    const getAuthToken = async () => {
+        const token = localStorage.getItem('token')
+        // TODO: once middleware is there this could be abstracted
+        if (!checkJwt(token)) {
+            localStorage.clear('token')
+            const response = await wrappedFetch(
+                `http://${API_HOST}:${API_PORT}/v2/auth`,
+                {
+                    method: 'POST',
+                    mode: 'cors',
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        client_id: process.env.REACT_APP_AUTH_CLIENT_ID,
+                        client_secret: process.env.REACT_APP_AUTH_CLIENT_SECRET,
+                    }),
+                }
+            )
+
+            localStorage.setItem('token', token)
+            return response.access_token
+        }
+        return token
+    }
 
     const runProcess = async (body) =>
         wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/run-process`, {
