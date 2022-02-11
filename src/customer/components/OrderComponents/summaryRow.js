@@ -59,9 +59,12 @@ const useStyles = makeStyles({
 const SummaryRow = ({ setActiveItem, isActive, ...props }) => {
   const {
     id: orderId,
-    orderDetails: { name: name, image: image },
-    deliveryBy: deliveryBy,
-    quantity: quantity,
+    metadata: {
+      name: name,
+      image: image,
+      deliveryBy: deliveryBy,
+      quantity: quantity,
+    },
   } = props.order
   const classes = useStyles()
   console.log({ props, isActive })

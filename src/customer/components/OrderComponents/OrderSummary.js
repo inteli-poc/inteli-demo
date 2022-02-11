@@ -114,18 +114,18 @@ const OrderSummary = (props) => {
   const classes = useStyles()
   const {
     id: orderId,
-    orderDetails: {
+    metadata: {
       name: name,
       image: image,
       alloy: alloy,
       material: material,
       partId: partId,
       price: price,
+      deliveryBy: deliveryBy,
+      type: type,
+      quantity: quantity,
+      time: time,
     },
-    deliveryBy: deliveryBy,
-    type: type,
-    quantity: quantity,
-    time: time,
   } = props.order
 
   return (

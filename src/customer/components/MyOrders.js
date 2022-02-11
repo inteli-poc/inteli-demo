@@ -108,7 +108,6 @@ const MyOrders = () => {
     ? customerOrders.find(({ id }) => `${id}` === params.orderId)
     : null
   const classes = useStyles()
-  console.log({ activeItem })
 
   const startingOrder = () => {
     if (selectedOrder != null) {
