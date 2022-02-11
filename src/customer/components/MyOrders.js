@@ -1,7 +1,4 @@
-// TODO Remove
-/* eslint-disable */
 import React from 'react'
-import { last } from 'lodash'
 import { Grid, Paper, Typography, CardMedia, Box } from '@material-ui/core'
 //import BackButton from './BackButton'
 import makeStyles from '@material-ui/core/styles/makeStyles'
