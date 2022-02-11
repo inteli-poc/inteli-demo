@@ -92,6 +92,8 @@ const DetailRow = ({ title, value }) => {
 
 const MyOrders = () => {
   const params = useParams()
+
+  //This is where the ID from a previously selected item is stored
   const customerOrders = useSelector((state) => state.customerOrders)
 
   // Stores and sets which item is active
@@ -124,6 +126,7 @@ const MyOrders = () => {
       <Grid item className={classes.leftColumn}>
         {[...customerOrders].reverse().map((order) => (
           <SummaryRow
+            key={order.id}
             setActiveItem={setActiveItem}
             isActive={activeItem /*id*/ === order.id}
             order={order}

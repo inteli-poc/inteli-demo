@@ -110,23 +110,20 @@ const formatCost = (cost) => {
 
 // End of Helpers -------------------------------------
 
-const OrderSummary = (props) => {
+const OrderSummary = ({ order }) => {
   const classes = useStyles()
   const {
     id: orderId,
     metadata: {
       name: name,
-      image: image,
+      orderImage: image,
       alloy: alloy,
       material: material,
       partId: partId,
       price: price,
-      deliveryBy: deliveryBy,
-      type: type,
       quantity: quantity,
-      time: time,
     },
-  } = props.order
+  } = order
 
   return (
     <Paper id={orderId} className={classes.root} elevation={0} xs={12}>
@@ -134,11 +131,11 @@ const OrderSummary = (props) => {
         <Grid item xs={2}>
           <CardMedia
             component="img"
-            alt={image}
+            alt={image.filename}
             width="160"
             height="160px"
-            image={image}
-            title={name}
+            image={image.url}
+            title={image.filename}
             className={classes.picturePadding}
           />
         </Grid>
@@ -214,9 +211,7 @@ const OrderSummary = (props) => {
         </Typography>
         <Grid container>
           <Grid item xs={11}>
-            <VerticalTimeline
-              props={{ type, deliveryBy, time }}
-            ></VerticalTimeline>
+            <VerticalTimeline order={order}></VerticalTimeline>
           </Grid>
         </Grid>
       </Grid>

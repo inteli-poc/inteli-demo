@@ -61,13 +61,12 @@ const SummaryRow = ({ setActiveItem, isActive, ...props }) => {
     id: orderId,
     metadata: {
       name: name,
-      image: image,
+      orderImage: image,
       deliveryBy: deliveryBy,
       quantity: quantity,
     },
   } = props.order
   const classes = useStyles()
-  console.log({ props, isActive })
 
   // Split the date so it can be formatted
   var parts = deliveryBy.split('/')
@@ -105,10 +104,10 @@ const SummaryRow = ({ setActiveItem, isActive, ...props }) => {
           <Grid item xs={3}>
             <CardMedia
               component="img"
-              alt={name}
+              alt={image.filename}
               width="160"
-              image={image}
-              title={name}
+              image={image.url}
+              title={image.filename}
             />
           </Grid>
           <Grid item xs={8}>

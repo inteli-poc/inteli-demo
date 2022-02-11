@@ -31,20 +31,21 @@ const statusLabels = [
   'Delivered',
 ]
 
-const VerticalTimeline = (props) => {
+const VerticalTimeline = ({ order }) => {
   const classes = useStyles()
 
-  const deliveryBy = props.props.deliveryBy
-  const time = props.props.time
-  const type = props.props.type
+  const {
+    id: orderId,
+    metadata: { deliveryBy: deliveryBy, status: type },
+  } = order
 
   // Set the current status order. Again will eventually need updating with more states
   let statusIndex = 0
-  if (type === 'SubmittedOrder') {
+  if (type === 'submitted') {
     statusIndex = 1
-  } else if (type === 'AcceptedOrder') {
+  } else if (type === 'accepted') {
     statusIndex = 2
-  } else if (type === 'ManufacturedOrder') {
+  } else if (type === 'manufactured') {
     statusIndex = 3
   } else {
     statusIndex = 0
@@ -62,7 +63,7 @@ const VerticalTimeline = (props) => {
   const formattedDate = deliveryBy.split('/').join('-')
 
   return (
-    <Container spacing={0}>
+    <Container id={orderId} spacing={0}>
       <Item
         style={{}}
         xs={10}
@@ -96,7 +97,7 @@ const VerticalTimeline = (props) => {
                   variant="subtitle1"
                   className={`${classes.dateTime} ${classes.time}`}
                 >
-                  {time}
+                  {' '}
                 </Typography>
                 <Typography variant="subtitle1" className={classes.dateTime}>
                   {formattedDate}
