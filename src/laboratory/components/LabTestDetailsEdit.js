@@ -15,8 +15,9 @@ import { useDropzone } from 'react-dropzone'
 import Attachment from './Attachment'
 import images from '../../images'
 import LabTestRow from './LabTestRow'
-import { identities, useApi } from '../../utils'
-import { updateLabTest } from '../../features/labTestsSlice'
+import { identities, useApi, tokenTypes, metadataTypes } from '../../utils'
+import { powderTestStatus } from '../../utils/statuses'
+import { upsertLabTest } from '../../features/labTestsSlice'
 
 const useStyles = makeStyles({
   root: { marginTop: '40px', marginBottom: '40px', padding: '8px' },
@@ -37,33 +38,14 @@ const useStyles = makeStyles({
   },
 })
 
-const u8Array2base64URI = (obj) => {
-  const type = obj.fileType
-  const ext = obj.fileExt
-  const u8 = obj.fileContent
-
-  const CHUNK_SZ = 0x8000
-  const parsedChunks = []
-  for (let i = 0; i < u8.length; i += CHUNK_SZ) {
-    parsedChunks.push(
-      String.fromCharCode.apply(null, u8.subarray(i, i + CHUNK_SZ))
-    )
-  }
-  const base64 = btoa(parsedChunks.join(''))
-
-  const prefix = 'data:' + type + '/' + ext + ';base64,'
-  const base64URI = base64 ? prefix + base64 : ''
-
-  return base64URI
-}
-
 const LabTestDetailsEdit = ({ id }) => {
   const classes = useStyles()
   const [labTestPassOrFail, setLabTestPassOrFail] = useState('')
   const [labTestReason, setLabTestReason] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const [fileObject, setFileObject] = useState(null)
+  const [reportFile, setReportFile] = useState(null)
+  let reasonFile = null
 
   const api = useApi()
   const dispatch = useDispatch()
@@ -77,17 +59,19 @@ const LabTestDetailsEdit = ({ id }) => {
       const images = ['png', 'gif', 'jpg']
       const type = images.includes(ext) ? 'image' : 'application'
       const reader = new FileReader()
-      reader.onabort = () => console.log('File reading was aborted')
-      reader.onerror = () => console.log('file reading has failed')
+      reader.onabort = () => console.error('File reading was aborted')
+      reader.onerror = () => console.error('file reading has failed')
       reader.onload = () => {
-        const u8 = new Uint8Array(reader.result)
+        const blob = new Blob([reader.result], {
+          type: type,
+        })
+        const url = URL.createObjectURL(blob)
         const obj = {
+          blob: blob,
           fileName: name,
-          fileExt: ext,
-          fileType: type,
-          fileContent: u8,
+          url: url,
         }
-        setFileObject(obj)
+        setReportFile(obj)
       }
       reader.readAsArrayBuffer(file)
     },
@@ -99,39 +83,95 @@ const LabTestDetailsEdit = ({ id }) => {
   const handleChange = (event) => {
     setLabTestReason(event.target.value)
   }
-  const createFormData = (inputs, file) => {
+  const createFormData = (inputs, roles, metadata) => {
     const formData = new FormData()
     const outputs = [
       {
-        owner: identities.am,
-        metadataFile: 'file',
+        roles,
+        metadata: {
+          type: { type: metadataTypes.literal, value: metadata.type },
+          status: { type: metadataTypes.literal, value: metadata.status },
+          overallResult: {
+            type: metadataTypes.literal,
+            value: metadata.overallResult,
+          },
+          ...(metadata.testReport
+            ? {
+                testReport: {
+                  type: metadataTypes.file,
+                  value: metadata.testReport.fileName,
+                },
+              }
+            : {}),
+          ...(metadata.testReason
+            ? {
+                testReason: {
+                  type: metadataTypes.file,
+                  value: metadata.testReason.fileName,
+                },
+              }
+            : {}),
+        },
+        parent_index: 0,
       },
     ]
 
     formData.set('request', JSON.stringify({ inputs, outputs }))
-    formData.set('file', file, 'file')
+
+    if (metadata.testReport) {
+      formData.append('files', reportFile.blob, reportFile.fileName)
+    }
+
+    if (metadata.testReason) {
+      formData.append('files', reasonFile.blob, reasonFile.fileName)
+    }
 
     return formData
   }
 
-  const onSubmit = async () => {
-    setIsSubmitting(true)
-    const base64 = u8Array2base64URI(fileObject)
-    const fileData = {
-      type: 'PowderTestResult',
-      overallResult: labTestPassOrFail,
-      testReason: labTestReason ? labTestReason : '',
-      testReport: /*prefix +*/ base64,
+  const createReasonFile = (labTestReason) => {
+    if (labTestReason) {
+      const blob = new Blob([labTestReason], {
+        type: 'text/plain',
+      })
+      const url = URL.createObjectURL(blob)
+      return {
+        blob: blob,
+        fileName: 'testReason.txt',
+        url: url,
+      }
+    } else {
+      return null
     }
-    const file = new Blob([JSON.stringify(fileData)])
-    const formData = createFormData([id], file)
+  }
+
+  const onSubmit = async () => {
+    reasonFile = createReasonFile(labTestReason)
+
+    const roles = { Owner: identities.am }
+    const metadata = {
+      type: tokenTypes.powderTest,
+      status: powderTestStatus.result,
+      overallResult: labTestPassOrFail,
+      ...(reportFile
+        ? { testReport: { fileName: reportFile.fileName, url: reportFile.url } }
+        : {}),
+      ...(reasonFile
+        ? { testReason: { fileName: reasonFile.fileName, url: reasonFile.url } }
+        : {}),
+    }
+
+    setIsSubmitting(true)
+
+    const formData = createFormData([id], roles, metadata)
     const response = await api.runProcess(formData)
-    const token = { id: id, latestId: response[0], ...fileData }
-    dispatch(updateLabTest(token))
+    const token = { id: response[0], original_id: id, roles, metadata }
+    dispatch(upsertLabTest(token))
+
     navigate('/app/tested/' + id)
   }
 
-  const hasFile = fileObject !== null
+  const hasFile = reportFile !== null
 
   return (
     <Grid container spacing={0} className={classes.root}>
@@ -179,8 +219,8 @@ const LabTestDetailsEdit = ({ id }) => {
                   Attached documents
                 </Typography>
                 <Attachment
-                  name={fileObject.fileName}
-                  downloadData={u8Array2base64URI(fileObject)}
+                  name={reportFile.fileName}
+                  downloadData={reportFile.url}
                 />
               </>
             )}

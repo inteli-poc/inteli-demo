@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 
 import { markTestRead } from '../../../features/readTestsSlice'
 import Attachment from '../Attachment'
+import { orderStatus } from '../../../utils'
 
 const useStyles = makeStyles({
   root: {
@@ -52,14 +53,16 @@ const DetailRow = ({ title, value }) => {
 }
 
 const OrderDetail = ({ test }) => {
-  const { overallResult, testReason, testReport, powderId } = test
+  const {
+    metadata: { overallResult, testReason, testReport, powderId },
+  } = test
 
   const classes = useStyles()
   const dispatch = useDispatch()
   const orders = useSelector((state) =>
     state.customerOrders.filter(
-      ({ type, powderId: orderPowder }) =>
-        type === 'ManufacturedOrder' && orderPowder === powderId
+      ({ metadata: { status, powderId: orderPowder } }) =>
+        status === orderStatus.manufactured && orderPowder === powderId
     )
   )
 
@@ -103,7 +106,14 @@ const OrderDetail = ({ test }) => {
           <Typography variant="body1" className={classes.fontBold}>
             Reason:
           </Typography>
-          <Typography>{testReason}</Typography>
+          {testReason ? (
+            <Attachment
+              name={testReason.fileName}
+              downloadData={testReason.url}
+            />
+          ) : (
+            <Typography>No reason given</Typography>
+          )}
         </Grid>
       </Grid>
 
@@ -114,27 +124,33 @@ const OrderDetail = ({ test }) => {
         {/* TODO: Remove spacing cheat below */}
         <DetailRow title="" value="&nbsp;"></DetailRow>{' '}
         {orders.map((order) => (
-          <Box key={order.id}>
+          <Box key={order.original_id}>
             <DetailRow
               title="Order Number"
-              value={order.orderReference}
+              value={order.metadata.orderReference}
             ></DetailRow>
             <DetailRow
               title="Part Name"
-              value={order.orderDetails.name}
+              value={order.metadata.name}
             ></DetailRow>
             <DetailRow
               title="Part Id"
-              value={order.orderDetails.partId}
+              value={order.metadata.partId}
             ></DetailRow>
           </Box>
         ))}
         <Box className={classes.attachment}>
-          <DetailRow title="Attached Documents"></DetailRow>
-          <Attachment
-            name="Powder test results.PDF"
-            downloadData={testReport}
-          />
+          {testReport ? (
+            <>
+              <DetailRow title="Attached Documents"></DetailRow>
+              <Attachment
+                name={testReport.fileName}
+                downloadData={testReport.url}
+              />
+            </>
+          ) : (
+            <DetailRow title="Report" value="No report"></DetailRow>
+          )}
         </Box>
       </Box>
     </Paper>

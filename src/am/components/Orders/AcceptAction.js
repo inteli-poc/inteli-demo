@@ -4,8 +4,14 @@ import Button from '@material-ui/core/Button'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useDispatch } from 'react-redux'
 
-import { updateOrder } from '../../../features/ordersSlice'
-import { identities, useApi } from '../../../utils'
+import { upsertOrder } from '../../../features/ordersSlice'
+import {
+  identities,
+  useApi,
+  tokenTypes,
+  orderStatus,
+  metadataTypes,
+} from '../../../utils'
 
 const useStyles = makeStyles({
   buttonWrapper: {
@@ -17,21 +23,28 @@ const useStyles = makeStyles({
   acceptButton: {
     width: 250,
     height: 42,
+    backgroundColor: '#8ac1bc',
+    color: '#fff',
   },
 })
 
-const AcceptOrderAction = ({ order }) => {
+const AcceptAction = ({ order }) => {
   const classes = useStyles()
-  const [isAccepting, setIsAccepting] = useState(false)
   const dispatch = useDispatch()
   const api = useApi()
 
-  const createFormData = (inputs, file) => {
+  const [isAccepting, setIsAccepting] = useState(false)
+
+  const createFormData = (inputs, roles, metadata) => {
     const formData = new FormData()
     const outputs = [
       {
-        owner: identities.am,
-        metadataFile: 'file',
+        roles,
+        metadata: {
+          type: { type: metadataTypes.literal, value: metadata.type },
+          status: { type: metadataTypes.literal, value: metadata.status },
+        },
+        parent_index: 0,
       },
     ]
 
@@ -43,25 +56,23 @@ const AcceptOrderAction = ({ order }) => {
       })
     )
 
-    formData.set('file', file, 'file')
-
     return formData
   }
 
   const onChange = async () => {
     setIsAccepting(true)
 
-    const fileData = {
-      type: 'AcceptedOrder',
-      orderReference: order.orderReference,
+    const roles = { Owner: identities.am }
+    const metadata = {
+      type: tokenTypes.order,
+      status: orderStatus.accepted,
     }
 
-    const file = new Blob([JSON.stringify(fileData)])
-    const formData = createFormData([order.latestId], file)
+    const formData = createFormData([order.id], roles, metadata)
     const response = await api.runProcess(formData)
-    const token = { id: order.latestId, latestId: response[0], ...fileData }
+    const token = { id: response[0], original_id: order.id, roles, metadata }
 
-    dispatch(updateOrder(token))
+    dispatch(upsertOrder(token))
   }
 
   return (
@@ -69,18 +80,18 @@ const AcceptOrderAction = ({ order }) => {
       <Button
         size="medium"
         variant="contained"
-        color="primary"
         className={classes.acceptButton}
         onClick={isAccepting ? null : onChange}
+        disabled={order.metadata.status === orderStatus.accepted}
       >
         {isAccepting ? (
           <CircularProgress color="secondary" size="30px" />
         ) : (
-          'Accept'
+          'ACCEPT ORDER'
         )}
       </Button>
     </Container>
   )
 }
 
-export default AcceptOrderAction
+export default AcceptAction
