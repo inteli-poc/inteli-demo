@@ -1,26 +1,12 @@
 import { useDispatch } from 'react-redux'
-import jwtDecode from 'jwt-decode'
+// import jwtDecode from 'jwt-decode'
 import { updateNetworkStatus } from '../features/networkStatusSlice'
 
 const API_HOST = process.env.REACT_APP_API_HOST || 'localhost'
 const API_PORT = process.env.REACT_APP_API_PORT || '3001'
 
-// WTF,, refactor
-const useFetchWrapper = () => {
-    const dispatch = useDispatch()
-    const wrappedFetch = async (url, options) => {
-        try {
-            const req = await fetch(url, options)
-            // dispatch(updateNetworkStatus(!!req.ok))
-            return req.json()
-        } catch (err) {
-            // dispatch(updateNetworkStatus(false))
-            throw err
-        }
-    }
+const wrappedFetch = (url, options) => fetch(url, options).then(res => res.json())
 
-    return wrappedFetch
-}
 
 const useNewFetchWrapper = () => {
     const dispatch = useDispatch()
@@ -28,7 +14,7 @@ const useNewFetchWrapper = () => {
         let response
         try {
             response = await fetch(url, options)
-            updateNetworkStatus(!!response.ok)
+            dispatch(updateNetworkStatus(response.ok))
         } catch (err) {
             dispatch(updateNetworkStatus(false))
             throw err
@@ -62,6 +48,7 @@ const useNewFetchWrapper = () => {
 
 // TODO: convert into a middleware - matt?
 // e.g. for all routes ../v2*
+/*
 const checkJwt = (token) => {
     if (!token) return false
     try {
@@ -72,9 +59,8 @@ const checkJwt = (token) => {
         return false
     }
 }
-
+*/
 const useApi = () => {
-    const wrappedFetch = useFetchWrapper()
     const newWrappedFetch = useNewFetchWrapper()
 
     // TODO middleware if fairly simple implementation
