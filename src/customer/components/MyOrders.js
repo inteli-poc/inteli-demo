@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux'
 import SummaryRow from './OrderComponents/summaryRow'
 import OrderSummary from './OrderComponents/OrderSummary'
 
+import uniqid from 'uniqid'
+
 const useStyles = makeStyles((theme) => ({
   backButton: {
     textDecoration: 'none',
@@ -103,7 +105,7 @@ const MyOrders = () => {
       <Grid item className={classes.leftColumn}>
         {[...customerOrders].reverse().map((order) => (
           <SummaryRow
-            key={order.id}
+            key={uniqid()}
             setActiveItem={setActiveItem}
             isActive={activeItem /*id*/ === order.id}
             order={order}
