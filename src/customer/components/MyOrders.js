@@ -103,6 +103,7 @@ const MyOrders = () => {
       <Grid item className={classes.leftColumn}>
         {[...customerOrders].reverse().map((order) => (
           <SummaryRow
+            key={order.id}
             setActiveItem={setActiveItem}
             isActive={activeItem /*id*/ === order.id}
             order={order}
