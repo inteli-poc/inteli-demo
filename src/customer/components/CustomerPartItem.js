@@ -13,7 +13,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 
 const useStyles = makeStyles({
   root: {
-    padding: 8,
+    padding: '8px',
     width: 291,
     height: 277,
     border: 'none',
@@ -25,10 +25,19 @@ const useStyles = makeStyles({
   details: {
     display: 'inline',
   },
+  lastPartDetailsRow: {
+    margin: '8px 0px',
+  },
+  backgroundColorMaher: {
+    backgroundColor: '#0c74bb',
+    borderRadius: '3px',
+    padding: '4px 8px',
+    color: '#fff',
+  },
 })
 
 const CustomerPartItem = (props) => {
-  const { partId, image, name, material } = props
+  const { partId, image, name, material, alloy, supplier } = props
   const classes = useStyles()
 
   return (
@@ -54,6 +63,23 @@ const CustomerPartItem = (props) => {
             </Typography>
             <Typography variant="body2" color="textSecondary">
               {material}
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            justify="space-between"
+            alignItems="center"
+            className={classes.lastPartDetailsRow}
+          >
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              className={classes[`backgroundColor${supplier}`]}
+            >
+              {supplier}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {alloy}
             </Typography>
           </Grid>
         </CardContent>

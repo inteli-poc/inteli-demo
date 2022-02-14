@@ -30,12 +30,13 @@ const CustomerParts = () => {
     setSearch(searchValue)
 
     const result = customerParts.filter((part) => {
-      const { name, partId, material } = part
+      const { name, partId, material, alloy } = part
 
       if (
         name.toLowerCase().includes(searchValue.toLowerCase()) ||
         partId.includes(searchValue) ||
-        material.toLowerCase().includes(searchValue.toLowerCase())
+        material.toLowerCase().includes(searchValue.toLowerCase()) ||
+        alloy.toLowerCase().includes(searchValue.toLowerCase())
       )
         return part
     })
