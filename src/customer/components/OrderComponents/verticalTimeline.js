@@ -26,9 +26,10 @@ const useStyles = makeStyles({
 const statusLabels = [
   'Order placed',
   'Order accepted',
-  'Test results',
+  'Certification',
   'Dispatched',
   'Delivered',
+  'Amended',
 ]
 
 const VerticalTimeline = ({ order }) => {
@@ -39,6 +40,9 @@ const VerticalTimeline = ({ order }) => {
     metadata: { deliveryBy: deliveryBy, status: type },
   } = order
 
+  console.log('Order', order)
+  console.log('Type', type)
+
   // Set the current status order. Again will eventually need updating with more states
   let statusIndex = 0
   if (type === 'submitted') {
@@ -47,6 +51,10 @@ const VerticalTimeline = ({ order }) => {
     statusIndex = 2
   } else if (type === 'manufactured') {
     statusIndex = 3
+  } else if (type === 'manufacturing') {
+    statusIndex = 4
+  } else if (type === 'amended') {
+    statusIndex = 2
   } else {
     statusIndex = 0
   }
@@ -124,7 +132,11 @@ const VerticalTimeline = ({ order }) => {
             </TimelineSeparator>
             <Item sm={12}>
               <TimelineContent>
-                <Typography variant="h6">{statusLabels[1]}</Typography>
+                <Typography variant="h6">
+                  {type === 'amended'
+                    ? statusLabels[statusLabels.length - 1]
+                    : statusLabels[1]}
+                </Typography>
                 {/*
                 Content
                 */}

@@ -1,8 +1,6 @@
 import React from 'react'
 import { Paper, Typography, Grid, Box, CardMedia } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-//import OrderStatusProgressBar from '../OrderStatusProgressBar'
-//import VerticalTest from './VerticalTest'
 import VerticalTimeline from './verticalTimeline'
 
 const useStyles = makeStyles({

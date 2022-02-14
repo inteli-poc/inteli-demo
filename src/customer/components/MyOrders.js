@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Grid } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { useSelector } from 'react-redux'
-import SummaryRow from './OrderComponents/summaryRow'
+import SummaryRow from './OrderComponents/SummaryRow'
 import OrderSummary from './OrderComponents/OrderSummary'
 
 import uniqid from 'uniqid'
@@ -71,34 +71,50 @@ const useStyles = makeStyles((theme) => ({
 
 const MyOrders = () => {
   const params = useParams()
+  const navigate = useNavigate()
 
   //This is where the ID from a previously selected item is stored
   const customerOrders = useSelector((state) => state.customerOrders)
 
-  // Stores and sets which item is active
-  const [activeItem, setActiveItem] = React.useState(undefined)
-
-  // The initial order shown in the list is always the last one unless there is
-  // a pre-selected order ID in the params
-  const initialOrder =
-    customerOrders != null || customerOrders.length > 0
-      ? customerOrders[customerOrders.length - 1]
-      : null
-
   const selectedOrder = params.orderId
     ? customerOrders.find(({ id }) => `${id}` === params.orderId)
-    : null
-  const classes = useStyles()
+    : customerOrders[customerOrders.length - 1]
 
-  const startingOrder = () => {
-    if (selectedOrder != null) {
-      return selectedOrder
-    } else if (initialOrder != null) {
-      return initialOrder
+  console.log('Customer Orders', customerOrders)
+  console.log('Selected Order', selectedOrder)
+  console.log('Params', params.orderId)
+
+  const getSelectedOrderId = () => {
+    if (selectedOrder) {
+      return selectedOrder.id
+    } else if (customerOrders.length > 0) {
+      return customerOrders[customerOrders.length - 1].id
     } else {
-      return null
+      return -1
     }
   }
+
+  const selectedId = getSelectedOrderId()
+
+  const isValidIdTest = (idToTest) => {
+    if (idToTest != -1 && idToTest != undefined && !idToTest.isNaN) {
+      return true
+    } else {
+      false
+    }
+  }
+
+  const classes = useStyles()
+
+  useEffect(() => {
+    console.log('Use Effect', selectedId)
+
+    if (isValidIdTest(selectedId)) {
+      navigate({
+        pathname: `/app/my-orders/${selectedId}`,
+      })
+    }
+  }, [])
 
   return (
     <Grid container className={classes.containerWidth}>
@@ -106,16 +122,13 @@ const MyOrders = () => {
         {[...customerOrders].reverse().map((order) => (
           <SummaryRow
             key={uniqid()}
-            setActiveItem={setActiveItem}
-            isActive={activeItem /*id*/ === order.id}
             order={order}
+            activeItem={selectedId === order.id}
           />
         ))}
       </Grid>
       <Grid item className={classes.rightColumn}>
-        {startingOrder() != null ? (
-          <OrderSummary order={startingOrder()} />
-        ) : null}
+        {selectedOrder && <OrderSummary order={selectedOrder} />}
       </Grid>
     </Grid>
   )

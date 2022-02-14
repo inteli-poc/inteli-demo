@@ -56,17 +56,14 @@ const useStyles = makeStyles({
   },
 })
 
-const SummaryRow = ({ setActiveItem, isActive, ...props }) => {
+const SummaryRow = ({ order, activeItem }) => {
   const {
     id: orderId,
-    metadata: {
-      name: name,
-      orderImage: image,
-      deliveryBy: deliveryBy,
-      quantity: quantity,
-    },
-  } = props.order
+    metadata: { name, orderImage: image, deliveryBy, quantity },
+  } = order
   const classes = useStyles()
+
+  console.log('is Active', activeItem)
 
   // Split the date so it can be formatted
   var parts = deliveryBy.split('/')
@@ -90,13 +87,11 @@ const SummaryRow = ({ setActiveItem, isActive, ...props }) => {
       id={orderId}
       elevation={0}
       className={`${classes.root}  ${
-        isActive ? classes.isActive : classes.isNotActive
+        activeItem ? classes.isActive : classes.isNotActive
       }`}
     >
       <CardActionArea
-        onClick={() => {
-          setActiveItem(orderId)
-        }}
+        onClick={() => {}}
         component={RouterLink}
         to={`/app/my-orders/${orderId}`}
       >
