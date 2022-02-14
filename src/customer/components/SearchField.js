@@ -7,7 +7,7 @@ const SearchField = ({ handleChange }) => {
     <Wrapper>
       <TextField
         id="standard-full-width"
-        placeholder="Search by name, partId, or material..."
+        placeholder="Search by name, partId, material or alloy..."
         fullWidth
         onChange={handleChange}
         name="customerSearchPart"
