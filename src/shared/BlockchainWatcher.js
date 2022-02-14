@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 // import { upsertOrder } from '../features/ordersSlice'
 // import { upsertPowder } from '../features/powdersSlice'
 // import { upsertLabTest } from '../features/labTestsSlice'
-// import { loadAppState } from '../features/appSlice'
+import { fetchTokens } from '../features/tokensSlice'
 import { useApi } from '../utils'
 
 // so metadata files that are svg images can be displayed, change from default MIME of 'application/octet-stream'
@@ -28,6 +28,7 @@ const getStartToken = async () => {
 // temporary version of the component that will poll the API
 const BlockchainWatcher = ({ children }) => {
   const dispatch = useDispatch()
+  const isFetching = useSelector((state) => state.tokens.isFetching)
   // orders, powders pull from redux state
   // these will change and cause a re-render when we dispatch a change in the effect
   // const tokens = useSelector((state) => state.app.tokens)
@@ -43,7 +44,10 @@ const BlockchainWatcher = ({ children }) => {
     // we should continue to loop. This is the general behaviour if there are no new tokens
     const timerFn = async () => {
       try {
-        //dispatch(loadAppState())
+        if (!isFetching) {
+          console.log('debug: ', 'fetching new tokens...')
+          dispatch(fetchTokens())
+        }
       } catch (err) {
         console.error(
           `Error polling for blockchain state. Error was ${
@@ -51,15 +55,12 @@ const BlockchainWatcher = ({ children }) => {
           }`
         )
       }
-      if (timer !== null) {
-        timer = setTimeout(timerFn, 3000)
-      }
     }
     // kick off the timer immediately. This is important so that we can deal with multiple new tokens
     // quickly. Each new token from the blockchain will cause a redux state change that will require
     // that this effect be reset. Therefore to keep the loop going without delay this call should occur
     // straight away
-    timer = setTimeout(timerFn, 0)
+    timer = setTimeout(timerFn, 3000)
 
     // The clean-up function clears the timer (as expected) but also sets it to null to indicate to the
     // `pollFunc` that this specific effect instantiation has been canceled
