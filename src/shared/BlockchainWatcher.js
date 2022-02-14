@@ -1,18 +1,21 @@
-import React, { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { upsertOrder } from '../features/ordersSlice'
-import { upsertPowder } from '../features/powdersSlice'
-import { upsertLabTest } from '../features/labTestsSlice'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
-import { useApi, tokenTypes } from '../utils'
+// import { upsertOrder } from '../features/ordersSlice'
+// import { upsertPowder } from '../features/powdersSlice'
+// import { upsertLabTest } from '../features/labTestsSlice'
+// import { loadAppState } from '../features/appSlice'
+import { useApi } from '../utils'
 
 // so metadata files that are svg images can be displayed, change from default MIME of 'application/octet-stream'
+/*
 const svgMimeUrl = async (imageUrl) => {
   const response = await fetch(imageUrl)
   const oldBlob = await response.blob()
   const blob = new Blob([oldBlob], { type: 'image/svg+xml' })
   return URL.createObjectURL(blob)
 }
+*/
 
 /*
 // TODO should be an action and called when state init
@@ -25,12 +28,9 @@ const getStartToken = async () => {
 // temporary version of the component that will poll the API
 const BlockchainWatcher = ({ children }) => {
   const dispatch = useDispatch()
-  const lastProcessedId = useRef(0) // TODO should read from local
   // orders, powders pull from redux state
   // these will change and cause a re-render when we dispatch a change in the effect
-  const orders = useSelector((state) => state.customerOrders)
-  const powders = useSelector((state) => state.powders)
-  const labTests = useSelector((state) => state.labTests)
+  // const tokens = useSelector((state) => state.app.tokens)
   const api = useApi()
 
   // This effect manages the polling for new tokens
@@ -39,77 +39,11 @@ const BlockchainWatcher = ({ children }) => {
     // note when this is null it means the timer has been cancelled which is caused
     // by a component render
     let timer = undefined
-    const pollFunc = async () => {
-      // get the latest token
-      const { id: latestToken, metadata } = await api.latestToken()
-
-      // if there are tokens to process
-      if (latestToken > lastProcessedId.current) {
-        // this loop is almost redundant. We will only loop more than once
-        // if a token doesn't modify state
-        for (let i = lastProcessedId.current + 1; i <= latestToken; i++) {
-          // get the token to process
-          const token = await api.tokenById(i)
-
-          // if state has been modified and the effect canceled bail. The re-render will
-          // generate the effect again with the correct state context. Note nothing asynchronous
-          // should follow this point in the loop
-          if (timer === null) {
-            return
-          }
-
-          // Handle each token based on type
-          switch (token.metadata.type) {
-            case tokenTypes.order: {
-              dispatch(
-                upsertOrder({
-                  id: token.id,
-                  original_id: token.original_id,
-                  roles: token.roles,
-                  metadata: {
-                    ...metadata,
-                    ...(metadata.orderImage
-                      ? await svgMimeUrl(metadata.orderImage.url)
-                      : {}),
-                  },
-                })
-              )
-              break
-            }
-            case tokenTypes.powder:
-              dispatch(
-                upsertPowder({
-                  id: token.id,
-                  original_id: token.original_id,
-                  roles: token.roles,
-                  metadata: token.metadata,
-                })
-              )
-              break
-            case tokenTypes.powderTest:
-              dispatch(
-                upsertLabTest({
-                  id: token.id,
-                  original_id: token.original_id,
-                  roles: token.roles,
-                  metadata: token.metadata,
-                })
-              )
-              break
-            default:
-              console.error(`Unknown token type ${token.metadata.type}`)
-          }
-          // update the `lastProcessedId` now we've processed the token
-          lastProcessedId.current = i
-        }
-      }
-    }
-
     // poll the blockchain. If after the pollFunc the timer has not been set to null
     // we should continue to loop. This is the general behaviour if there are no new tokens
     const timerFn = async () => {
       try {
-        await pollFunc()
+        //dispatch(loadAppState())
       } catch (err) {
         console.error(
           `Error polling for blockchain state. Error was ${
@@ -118,7 +52,7 @@ const BlockchainWatcher = ({ children }) => {
         )
       }
       if (timer !== null) {
-        timer = setTimeout(timerFn, 1000)
+        timer = setTimeout(timerFn, 3000)
       }
     }
     // kick off the timer immediately. This is important so that we can deal with multiple new tokens
@@ -133,7 +67,7 @@ const BlockchainWatcher = ({ children }) => {
       clearTimeout(timer)
       timer = null
     }
-  }, [orders, powders, labTests, dispatch, api]) // effect sensitivities.
+  }, [dispatch, api]) // effect sensitivities.
   // These will force the effect to be canceled when redux state changes
 
   return <>{children}</>

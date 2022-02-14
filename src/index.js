@@ -1,8 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import { configureStore, applyMiddleware } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 
 // this seems a little overkill to render a different app rather than render different components, we should focus on re-useable components
 import CustomerApp from './customer'
@@ -10,18 +9,19 @@ import AdditiveManufacturerApp from './am'
 import LaboratoryApp from './laboratory'
 import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
-import { loadAppState } from './features/appSlice'
+import { fetchTokens } from './features/tokensSlice'
 import auth from './redux-middleware/auth'
+import localstorage from './redux-middleware/localstorage'
 
 // TODO move to sep file
 const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',
-  middlewareEnhancer: composeWithDevTools(applyMiddleware(auth)),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([auth, localstorage])
 })
 
 // move to middleware along with the new prop 'loaded: false' and update once don[e
-store.dispatch(loadAppState())
+store.dispatch(fetchTokens())
 
 let App = null
 let props = {}

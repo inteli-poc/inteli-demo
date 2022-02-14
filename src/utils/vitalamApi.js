@@ -72,7 +72,7 @@ const useApi = () => {
         }
       )
 
-      localStorage.setItem('token', token)
+      localStorage.setItem('token', response.access_token)
       return response.access_token
     }
     return token
@@ -110,30 +110,37 @@ const useApi = () => {
         },
       }
     )
+    console.log({ token })
     // temporary catch old style metadata
     if (token.metadata_keys.includes('')) {
-      token.metadata = await wrappedFetch(
-        `http://${API_HOST}:${API_PORT}/v2/item/${id}/metadata`,
-        {
-          method: 'GET',
-          mode: 'cors',
-          cache: 'no-cache',
-          headers: {
-            Authorization: `Bearer ${await getAuthToken()}`,
-          },
-        }
-      )
+      return {
+        ...token,
+        metadata: await wrappedFetch(
+          `http://${API_HOST}:${API_PORT}/v2/item/${id}/metadata`, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: {
+              Authorization: `Bearer ${await getAuthToken()}`,
+            },
+          }
+        )
+      }
     } else {
-      await getNewMetadata(token)
+      return {
+        ...token,
+        metadata:
+        await getNewMetadata(token)
+      }
     }
-
-    return token
   }
 
   const getNewMetadata = async (token) => {
+    // recursive function?
+    const metadata = {};
     await Promise.all(
       token.metadata_keys.map(async (metadata_key) => {
-        token.metadata[metadata_key] = await newWrappedFetch(
+        metadata[metadata_key] = await newWrappedFetch(
           `http://${API_HOST}:${API_PORT}/v2/item/${token.id}/metadata/${metadata_key}`,
           {
             method: 'GET',
@@ -146,7 +153,7 @@ const useApi = () => {
         )
       })
     )
-    return token
+    return metadata
   }
 
   return { runProcess, latestToken, tokenById }

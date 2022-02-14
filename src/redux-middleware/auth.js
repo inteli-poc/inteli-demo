@@ -47,7 +47,7 @@ const auth = (store) => (next) => (action) => {
   } catch (e) {
     // block action, reset state, and ..
     // dispatch a destruction action
-    console.log('invalid token, not return next action')
+    console.log('invalid token, not return next action', e)
   }
 }
 
