@@ -13,9 +13,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 
 const useStyles = makeStyles({
   root: {
-    padding: '8px',
+    padding: '4px',
     width: 291,
-    height: 277,
     border: 'none',
   },
   top: {
@@ -26,7 +25,7 @@ const useStyles = makeStyles({
     display: 'inline',
   },
   lastPartDetailsRow: {
-    margin: '8px 0px',
+    marginTop: '4px',
   },
   backgroundColorMaher: {
     backgroundColor: '#0c74bb',
