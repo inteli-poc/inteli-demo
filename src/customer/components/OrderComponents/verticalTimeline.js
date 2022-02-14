@@ -8,6 +8,7 @@ import TimelineDot from '@mui/lab/TimelineDot'
 import { Typography } from '@mui/material'
 import { Container, Item } from '../../../shared/layout'
 import makeStyles from '@material-ui/core/styles/makeStyles'
+import { Grid } from '@material-ui/core'
 
 const useStyles = makeStyles({
   dateTime: {
@@ -68,8 +69,8 @@ const VerticalTimeline = ({ order }) => {
     }
   }
 
-  const formattedDate = deliveryBy.split('/').join('-')
-
+  /*   const formattedDate = deliveryBy.split('/').join('-')
+   */
   return (
     <Container id={orderId} spacing={0}>
       <Item
@@ -97,22 +98,27 @@ const VerticalTimeline = ({ order }) => {
             <Item>
               <TimelineContent>
                 {' '}
-                <Typography variant="h6">{statusLabels[0]}</Typography>
-                {/*
-                  Date and time goes first in content
-                */}
-                <Typography
-                  variant="subtitle1"
-                  className={`${classes.dateTime} ${classes.time}`}
-                >
-                  {' '}
-                </Typography>
-                <Typography variant="subtitle1" className={classes.dateTime}>
-                  {formattedDate}
-                </Typography>
-                {/*
-                Content
-                */}
+                <Grid container alignItems="flex-start" xs={12}>
+                  <Grid item xs={9}>
+                    <Typography variant="h6">{statusLabels[0]}</Typography>
+                  </Grid>
+                  <Grid item xs={3} alignItems="flex-end">
+                    <Typography
+                      variant="subtitle1"
+                      className={`${classes.dateTime} ${classes.time}`}
+                    >
+                      {deliveryBy}
+                    </Typography>
+                  </Grid>
+                  <Grid item alignItems="flex-start">
+                    <Typography
+                      variant="subtitle1"
+                      className={`${classes.dateTime} ${classes.time}`}
+                    >
+                      Content Goes here
+                    </Typography>
+                  </Grid>
+                </Grid>
               </TimelineContent>
               <TimelineOppositeContent />
             </Item>
@@ -132,14 +138,31 @@ const VerticalTimeline = ({ order }) => {
             </TimelineSeparator>
             <Item sm={12}>
               <TimelineContent>
-                <Typography variant="h6">
-                  {type === 'amended'
-                    ? statusLabels[statusLabels.length - 1]
-                    : statusLabels[1]}
-                </Typography>
-                {/*
-                Content
-                */}
+                <Grid container alignItems="flex-start" xs={12}>
+                  <Grid item xs={9}>
+                    <Typography variant="h6">
+                      {type === 'amended'
+                        ? statusLabels[statusLabels.length - 1]
+                        : statusLabels[1]}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3} alignItems="flex-end">
+                    <Typography
+                      variant="subtitle1"
+                      className={`${classes.dateTime} ${classes.time}`}
+                    >
+                      {deliveryBy}
+                    </Typography>
+                  </Grid>
+                  <Grid item alignItems="flex-start">
+                    <Typography
+                      variant="subtitle1"
+                      className={`${classes.dateTime} ${classes.time}`}
+                    >
+                      Content Goes here
+                    </Typography>
+                  </Grid>
+                </Grid>
               </TimelineContent>
             </Item>
           </TimelineItem>
@@ -159,10 +182,27 @@ const VerticalTimeline = ({ order }) => {
             <Item>
               <TimelineContent>
                 {' '}
-                <Typography variant="h6">{statusLabels[2]}</Typography>
-                {/*
-                Content
-                */}
+                <Grid container alignItems="flex-start" xs={12}>
+                  <Grid item xs={9}>
+                    <Typography variant="h6">{statusLabels[2]}</Typography>
+                  </Grid>
+                  <Grid item xs={3} alignItems="flex-end">
+                    <Typography
+                      variant="subtitle1"
+                      className={`${classes.dateTime} ${classes.time}`}
+                    >
+                      {deliveryBy}
+                    </Typography>
+                  </Grid>
+                  <Grid item alignItems="flex-start">
+                    <Typography
+                      variant="subtitle1"
+                      className={`${classes.dateTime} ${classes.time}`}
+                    >
+                      Content Goes here
+                    </Typography>
+                  </Grid>
+                </Grid>
               </TimelineContent>
               <TimelineOppositeContent />
             </Item>
@@ -183,10 +223,27 @@ const VerticalTimeline = ({ order }) => {
             <Item>
               <TimelineContent>
                 {' '}
-                <Typography variant="h6">{statusLabels[3]}</Typography>
-                {/*
-                Content
-                */}
+                <Grid container alignItems="flex-start" xs={12}>
+                  <Grid item xs={9}>
+                    <Typography variant="h6">{statusLabels[3]}</Typography>
+                  </Grid>
+                  <Grid item xs={3} alignItems="flex-end">
+                    <Typography
+                      variant="subtitle1"
+                      className={`${classes.dateTime} ${classes.time}`}
+                    >
+                      {deliveryBy}
+                    </Typography>
+                  </Grid>
+                  <Grid item alignItems="flex-start">
+                    <Typography
+                      variant="subtitle1"
+                      className={`${classes.dateTime} ${classes.time}`}
+                    >
+                      Content Goes here
+                    </Typography>
+                  </Grid>
+                </Grid>
               </TimelineContent>
               <TimelineOppositeContent />
             </Item>
@@ -201,11 +258,27 @@ const VerticalTimeline = ({ order }) => {
             </TimelineSeparator>
             <Item>
               <TimelineContent>
-                {' '}
-                <Typography variant="h6">{statusLabels[4]}</Typography>
-                {/*
-                Content
-                */}
+                <Grid container alignItems="flex-start" xs={12}>
+                  <Grid item xs={9}>
+                    <Typography variant="h6">{statusLabels[4]}</Typography>
+                  </Grid>
+                  <Grid item xs={3} alignItems="flex-end">
+                    <Typography
+                      variant="subtitle1"
+                      className={`${classes.dateTime} ${classes.time}`}
+                    >
+                      {deliveryBy}
+                    </Typography>
+                  </Grid>
+                  <Grid item alignItems="flex-start">
+                    <Typography
+                      variant="subtitle1"
+                      className={`${classes.dateTime} ${classes.time}`}
+                    >
+                      Content Goes here
+                    </Typography>
+                  </Grid>
+                </Grid>
               </TimelineContent>
               <TimelineOppositeContent />
             </Item>
