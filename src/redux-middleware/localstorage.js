@@ -1,5 +1,9 @@
 import { update, upsertTokens } from '../features/tokensSlice'
 
+/*
+    at the moment localstorage middleware is more like a helper function
+    once reducer have been updated sort this so it just persists and reads
+*/
 const getCachedTokens = ({ dispatch }) => {
     console.log('debug: ', 'checking local storage for cached tokens')
     const tokens = readFromLocalStorage('tokens')
@@ -13,7 +17,7 @@ const getCachedTokens = ({ dispatch }) => {
 const readFromLocalStorage = (key) => {
     console.log('debug: ', `reading [${key}] to local storage`)
     const item = localStorage.getItem(key)
-    
+
     return item ? JSON.parse(item) : null;
 }
 
@@ -27,7 +31,8 @@ const putToLocalStorage = (key, data) => {
 }
 
 // conditional middleware
-// TODO ideally should just read and persist store, but for time being will do
+// TODO refactor it, ideally it should have some reducers excluded and everything
+// else can be persisted to local storage
 const localstorage = (store) => (next) => (action) => {
     const { type, payload } = action;
     switch(type) {

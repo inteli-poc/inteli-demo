@@ -7,6 +7,7 @@ import { upsertPowder } from './powdersSlice'
 import { PromiseStateFactory } from './utils'
 import Api from '../utils/vitalamApi'
 
+
 const getLatestToken = async ({ getState }, returnVal = null) => {
   const id = await Api().latestToken().then(res => res.id)
   const last = getState()?.tokens?.last
@@ -18,9 +19,11 @@ const getLatestToken = async ({ getState }, returnVal = null) => {
   }
 }
 
+// TODO rename and refactor once confirmed (should be called lookForRefTOken) or smth
 const getRefToken = async (token, position, tokens = []) => {
-  // api fails to return token with id 0, so setting first as ref
   console.log('checking if this token is ref: ', { token, position, tokens })
+  // 1. api fails to return token with id 0, so setting first as ref
+  // 2. so if ref token found, then return and carry on fetching in getData fn
   return token.id == 1 || position + 1 == token.id || token.ref
     ? {
         ref: token.ref ? token : undefined,
@@ -31,7 +34,7 @@ const getRefToken = async (token, position, tokens = []) => {
         // TODO get all ids, and then await in parallel
         await Api().tokenById(token.id - 1),
         position,
-        [...tokens, token]
+        [ ...tokens, token ],
       )
 }
 
@@ -41,6 +44,7 @@ const getData = async (last = { id: 0 }, tokens = {}, position = undefined) => {
     return await getData(last, { ...tokens, ...rest, data: [...data, ...tokens?.data || []] }, newPosition)
   }
 
+  // TODO should be a better way then incrementing by 1
   return position < last.id
     ? await getData(last, {
         ...tokens,
@@ -50,15 +54,17 @@ const getData = async (last = { id: 0 }, tokens = {}, position = undefined) => {
     : { ...tokens, last }
 }
 
-// a temp solution
+// this is a helper function to temporarly address current setup
+// only new tokens will call upsert actions
 const upsertTokens = (tokens, dispatch) => {
   console.log(tokens, dispatch)
-    const { ORDER, LAB_TEST, POWDER} = groupBy(tokens, 'metadata.type');
-    if (ORDER) ORDER.map(token => dispatch(upsertOrder(token)))
-    if (POWDER) POWDER.map(token => dispatch(upsertPowder(token)))
-    if (LAB_TEST) LAB_TEST.map(token => dispatch(upsertLabTest(token)))
+  const { ORDER, LAB_TEST, POWDER} = groupBy(tokens, 'metadata.type');
+  if (ORDER) ORDER.map(token => dispatch(upsertOrder(token)))
+  if (POWDER) POWDER.map(token => dispatch(upsertPowder(token)))
+  if (LAB_TEST) LAB_TEST.map(token => dispatch(upsertLabTest(token)))
 }
 
+// this  thunk is for fetching new tokens and storing to localstorage
 const fetchTokens = createAsyncThunk('tokens/fetch', async(action, store) => {
   try {
     const { latestToken, last } = getLatestToken(store)
@@ -68,7 +74,9 @@ const fetchTokens = createAsyncThunk('tokens/fetch', async(action, store) => {
   }
 })
 
+// initialize fn that read localstorage and sorts tokens by order/powder/etc
 const initTokens = createAsyncThunk('tokens/init', async (action, store) => {
+  // TODO remove try catch once confirmed that promise factory can handle
   try {
     const { tokens } = store.getItem()
     const { latestToken, last } = getLatestToken(store, tokens)
@@ -80,13 +88,12 @@ const initTokens = createAsyncThunk('tokens/init', async (action, store) => {
       ...res,
     }
   } catch (e) {
-    // implement logging <bunyan or smt>
-    // include dispatch along app arg
+    // implement logging <bunyan or smt> // can return error for 
     console.log(e)
   }
 })
 
-// Then, handle actions in your reducers:
+// a redux slice 
 const tokens = createSlice({
   name: 'tokens',
   initialState: { isFetching: false, isError: false, data: [] },
@@ -97,6 +104,7 @@ const tokens = createSlice({
         return {
           ...state,
           ...payload,
+          // figure out a nicer way
           data: [ ...state.data, ...payload.data ]
         }
       }
@@ -108,10 +116,15 @@ const tokens = createSlice({
   },
 })
 
+// exports
 const { actions, reducer } = tokens;
-const { update, clear } = actions
+const { update } = actions
 
-export { initTokens, update, clear, upsertTokens, fetchTokens}
+export {
+  initTokens,
+  fetchTokens,
+  update,
+  upsertTokens,
+}
 
-// TODO rename to tokens...
 export default reducer
