@@ -88,7 +88,7 @@ const MyOrders = () => {
         pathname: `/app/my-orders/${selectedOrder.id}`,
       })
     }
-  }, [selectedOrder])
+  }, [navigate, selectedOrder])
 
   return (
     <Grid container className={classes.containerWidth}>
