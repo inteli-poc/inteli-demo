@@ -1,5 +1,3 @@
-import jwtDecode from 'jwt-decode'
-
 const API_HOST = process.env.REACT_APP_API_HOST || 'localhost'
 const API_PORT = process.env.REACT_APP_API_PORT || '3001'
 
@@ -36,55 +34,17 @@ const useNewFetchWrapper = () => {
   return newWrappedFetch
 }
 
-// TODO: convert into a middleware - matt?
-// e.g. for all routes ../v2*
-const checkJwt = (token) => {
-  if (!token) return false
-  try {
-    const decoded = jwtDecode(token)
-    const hasExpired = decoded.exp * 1000 < Date.now()
-    return !hasExpired
-  } catch (err) {
-    return false
-  }
-}
-
 const useApi = () => {
   const newWrappedFetch = useNewFetchWrapper()
-  const getAuthToken = async () => {
-    const token = localStorage.getItem('token')
-    // TODO: once middleware is there this could be abstracted
-    if (!checkJwt(token)) {
-      localStorage.clear('token')
-      const response = await wrappedFetch(
-        `http://${API_HOST}:${API_PORT}/v2/auth`,
-        {
-          method: 'POST',
-          mode: 'cors',
-          cache: 'no-cache',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            client_id: process.env.REACT_APP_AUTH_CLIENT_ID,
-            client_secret: process.env.REACT_APP_AUTH_CLIENT_SECRET,
-          }),
-        }
-      )
-
-      localStorage.setItem('token', response.access_token)
-      return response.access_token
-    }
-    return token
-  }
-
+  const authToken = localStorage.getItem('token')
+  
   const runProcess = async (body) =>
     wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/run-process`, {
       method: 'POST',
       mode: 'cors',
       body,
       headers: {
-        Authorization: `Bearer ${await getAuthToken()}`,
+        Authorization: `Bearer ${authToken}`,
       },
     })
 
@@ -94,7 +54,7 @@ const useApi = () => {
       mode: 'cors',
       cache: 'no-cache',
       headers: {
-        Authorization: `Bearer ${await getAuthToken()}`,
+        Authorization: `Bearer ${authToken}`,
       },
     })
   }
@@ -106,11 +66,10 @@ const useApi = () => {
         mode: 'cors',
         cache: 'no-cache',
         headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
+          Authorization: `Bearer ${authToken}`,
         },
       }
     )
-    console.log({ token })
     // temporary catch old style metadata
     if (token.metadata_keys.includes('')) {
       return {
@@ -121,7 +80,7 @@ const useApi = () => {
             mode: 'cors',
             cache: 'no-cache',
             headers: {
-              Authorization: `Bearer ${await getAuthToken()}`,
+              Authorization: `Bearer ${authToken}`,
             },
           }
         )
@@ -147,7 +106,7 @@ const useApi = () => {
             mode: 'cors',
             cache: 'no-cache',
             headers: {
-              Authorization: `Bearer ${await getAuthToken()}`,
+              Authorization: `Bearer ${authToken}`,
             },
           }
         )

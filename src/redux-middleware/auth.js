@@ -1,4 +1,5 @@
 import jwtDecode from 'jwt-decode'
+import axios from 'axios'
 
 // TODO axios middle ware s fetching can be done within redu[[x
 const {
@@ -7,44 +8,38 @@ const {
   REACT_APP_AUTH_CLIENT_ID,
   REACT_APP_AUTH_CLIENT_SECRET,
 } = process.env
-const url = `http://${REACT_APP_API_HOST}:${REACT_APP_API_PORT}/v2/auth`
 const authReqParams = {
+  url: `http://${REACT_APP_API_HOST}:${REACT_APP_API_PORT}/v2/auth`,
   method: 'POST',
-  mode: 'cors',
-  cache: 'no-cache',
   headers: {
     'Content-Type': 'application/json',
   },
-}
-
-const isTokenValid = () => {
-  // TODO move to app store
-  const token = localStorage.getItem('token')
-  if (!token) return false
-  return jwtDecode(token).exp * 1000 > Date.now()
-}
-
-const getAuthToken = async () => {
-  const body = {
-    // replace with function args later or....
+  data: {
     client_id: REACT_APP_AUTH_CLIENT_ID,
     client_secret: REACT_APP_AUTH_CLIENT_SECRET,
   }
-  // axios ...
-  return fetch(url, { ...authReqParams, body })
+}
+
+const isTokenValid = () => {
+  // TODO move to redux store
+  // have one reducer for app's state 
+  const token = localStorage.getItem('token')
+  if (!token || token === 'undefined') return false
+  return jwtDecode(token).exp * 1000 > Date.now()
 }
 
 const auth = (store) => (next) => (action) => {
   try {
-    console.log('debug: ', { action, state: store.getState() })
+    console.log('debug: <auth> ', { action, state: store.getState() })
+
     if (isTokenValid()) return next(action)
     localStorage.clear('token')
-    getAuthToken().then((token) => {
-      //dispatch.saveTOken to the app and allow it to handle local storage
-      localStorage.setItem('token', token.json().access_token)
+    axios(authReqParams).then(({ data }) => {
+      localStorage.setItem('token', data.access_token)
       return next(action)
     })
   } catch (e) {
+    localStorage.clear('token')
     // block action, reset state, and ..
     // dispatch a destruction action
     console.log('invalid token, not return next action', e)

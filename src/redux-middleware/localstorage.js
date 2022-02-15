@@ -8,22 +8,23 @@ const getCachedTokens = ({ dispatch }) => {
     console.log('debug: ', 'checking local storage for cached tokens')
     const tokens = readFromLocalStorage('tokens')
 
-    if (tokens.data) {
+    if (tokens?.data) {
         dispatch(update(tokens));
         upsertTokens(tokens.data, dispatch)
     }
 }
 
 const readFromLocalStorage = (key) => {
-    console.log('debug: ', `reading [${key}] to local storage`)
+    console.log('debug: ', `reading [${key}] from local storage`)
     const item = localStorage.getItem(key)
 
     return item ? JSON.parse(item) : null;
 }
 
 const putToLocalStorage = (key, data) => {
-    console.log('debug: ', `saving [${key}] to local storage`)
-    const existing = localStorage.getItem(key) || {}
+    if (!data) throw new Error(`can not persist [${data}] to local storage`)
+    console.log('debug: ', `saving [${key}] to local storage`, { data })
+    const existing = localStorage.getItem(key) || undefined
 
     return existing
         ? localStorage.setItem(key, JSON.stringify({ ...existing, data: [ ...data ], last: data.last }))
@@ -35,24 +36,32 @@ const putToLocalStorage = (key, data) => {
 // else can be persisted to local storage
 const localstorage = (store) => (next) => (action) => {
     const { type, payload } = action;
-    switch(type) {
-        case 'tokens/init/pending': {
-            getCachedTokens(store)
-            return next(action)
+
+    try {
+        switch(type) {
+            case 'tokens/init/pending': {
+                getCachedTokens(store)
+                return next(action)
+            }
+            case 'tokens/init/fulfilled': {
+                putToLocalStorage('tokens', payload)
+                console.log('a: ', payload)
+                return next(action)
+            }
+            case 'tokens/fetch/fulfilled': {
+                putToLocalStorage('tokens', payload)
+                upsertTokens(payload.data, store.dispatch)
+                console.log('a: ', payload)
+                store.dispatch(update(payload))
+                return next(action)
+            }
+            default: return next(action)
         }
-        case 'tokens/init/fulfilled': {
-            putToLocalStorage('tokens', payload)
-            return next(action)
-        }
-        case 'tokens/fetch/fulfilled': {
-            if (!payload) return next(action)
-            upsertTokens(payload.data, store.dispatch)
-            putToLocalStorage('tokens', payload)
-            store.dispatch(update(payload))
-            return next(action)
-        }
-        default: return next(action)
+    } catch(e) {
+        console.log('debug: ', e)
+        return next(action)
     }
+
 }
 
 export default localstorage

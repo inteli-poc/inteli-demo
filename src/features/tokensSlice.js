@@ -11,6 +11,7 @@ import Api from '../utils/vitalamApi'
 const getLatestToken = async ({ getState }, returnVal = null) => {
   const id = await Api().latestToken().then(res => res.id)
   const last = getState()?.tokens?.last
+  console.log('debug: <getLastToken>', { id, last })
   if (id === last?.id) return returnVal
 
   return {
@@ -24,7 +25,7 @@ const getRefToken = async (token, position, tokens = []) => {
   console.log('checking if this token is ref: ', { token, position, tokens })
   // 1. api fails to return token with id 0, so setting first as ref
   // 2. so if ref token found, then return and carry on fetching in getData fn
-  return token.id == 1 || position + 1 == token.id || token.ref
+  return token.id === 1 || position + 1 === token.id || token.ref
     ? {
         ref: token.ref ? token : undefined,
         data: [ ...tokens, token],
@@ -57,7 +58,6 @@ const getData = async (last = { id: 0 }, tokens = {}, position = undefined) => {
 // this is a helper function to temporarly address current setup
 // only new tokens will call upsert actions
 const upsertTokens = (tokens, dispatch) => {
-  console.log(tokens, dispatch)
   const { ORDER, LAB_TEST, POWDER} = groupBy(tokens, 'metadata.type');
   if (ORDER) ORDER.map(token => dispatch(upsertOrder(token)))
   if (POWDER) POWDER.map(token => dispatch(upsertPowder(token)))
@@ -67,7 +67,7 @@ const upsertTokens = (tokens, dispatch) => {
 // this  thunk is for fetching new tokens and storing to localstorage
 const fetchTokens = createAsyncThunk('tokens/fetch', async(action, store) => {
   try {
-    const { latestToken, last } = getLatestToken(store)
+    const { latestToken, last } = await getLatestToken(store)
     return await getData(latestToken, null, last?.id)
   } catch(e) {
     console.log(e)
@@ -78,8 +78,8 @@ const fetchTokens = createAsyncThunk('tokens/fetch', async(action, store) => {
 const initTokens = createAsyncThunk('tokens/init', async (action, store) => {
   // TODO remove try catch once confirmed that promise factory can handle
   try {
-    const { tokens } = store.getItem()
-    const { latestToken, last } = getLatestToken(store, tokens)
+    const { tokens } = store.getState()
+    const { latestToken, last } = await getLatestToken(store, tokens)
     const res = await getData(latestToken, tokens, last?.id)
     upsertTokens(res.data, store.dispatch)
 
