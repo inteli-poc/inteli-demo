@@ -109,12 +109,9 @@ const VerticalTimeline = ({ order }) => {
                       {deliveryBy}
                     </Typography>
                   </Grid>
-                  <Grid item alignItems="flex-start">
-                    <Typography
-                      variant="subtitle1"
-                      className={`${classes.dateTime} ${classes.time}`}
-                    >
-                      Content Goes here
+                  <Grid item alignItems="flex-start" xs={10}>
+                    <Typography variant="subtitle1">
+                      Content Goes Here
                     </Typography>
                   </Grid>
                 </Grid>
@@ -149,11 +146,8 @@ const VerticalTimeline = ({ order }) => {
                       {deliveryBy}
                     </Typography>
                   </Grid>
-                  <Grid item alignItems="flex-start">
-                    <Typography
-                      variant="subtitle1"
-                      className={`${classes.dateTime} ${classes.time}`}
-                    >
+                  <Grid item alignItems="flex-start" xs={10}>
+                    <Typography variant="subtitle1">
                       Content Goes here
                     </Typography>
                   </Grid>
@@ -185,11 +179,8 @@ const VerticalTimeline = ({ order }) => {
                       {deliveryBy}
                     </Typography>
                   </Grid>
-                  <Grid item alignItems="flex-start">
-                    <Typography
-                      variant="subtitle1"
-                      className={`${classes.dateTime} ${classes.time}`}
-                    >
+                  <Grid item alignItems="flex-start" xs={10}>
+                    <Typography variant="subtitle1">
                       Content Goes here
                     </Typography>
                   </Grid>
@@ -226,11 +217,8 @@ const VerticalTimeline = ({ order }) => {
                       {deliveryBy}
                     </Typography>
                   </Grid>
-                  <Grid item alignItems="flex-start">
-                    <Typography
-                      variant="subtitle1"
-                      className={`${classes.dateTime} ${classes.time}`}
-                    >
+                  <Grid item alignItems="flex-start" xs={10}>
+                    <Typography variant="subtitle1">
                       Content Goes here
                     </Typography>
                   </Grid>
@@ -259,11 +247,8 @@ const VerticalTimeline = ({ order }) => {
                       {deliveryBy}
                     </Typography>
                   </Grid>
-                  <Grid item alignItems="flex-start">
-                    <Typography
-                      variant="subtitle1"
-                      className={`${classes.dateTime} ${classes.time}`}
-                    >
+                  <Grid item alignItems="flex-start" xs={10}>
+                    <Typography variant="subtitle1">
                       Content Goes here
                     </Typography>
                   </Grid>
