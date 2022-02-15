@@ -46,8 +46,10 @@ const localstorage = (store) => (next) => (action) => {
       }
       case 'tokens/fetch/fulfilled': {
         putToLocalStorage('tokens', payload)
-        upsertTokens(payload.data, store.dispatch)
-        store.dispatch(update(payload))
+        if (payload.data) {
+          upsertTokens(payload.data, store.dispatch)
+          store.dispatch(update(payload))
+        }
         return next(action)
       }
       default:

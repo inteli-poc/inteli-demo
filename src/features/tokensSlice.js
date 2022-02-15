@@ -7,13 +7,17 @@ import { upsertPowder } from './powdersSlice'
 import { PromiseStateFactory } from './utils'
 import Api from '../utils/vitalamApi'
 
-const getLatestToken = async ({ getState }, returnVal = null) => {
+const getLatestToken = async ({ getState }) => {
   const id = await Api()
     .latestToken()
     .then((res) => res.id)
   const last = getState()?.tokens?.last
-  console.log('debug: <getLastToken>', { id, last })
-  if (id === last?.id) return returnVal
+
+  if (id === last?.id)
+    return {
+      last,
+      latestToken: last,
+    }
 
   return {
     latestToken: await Api().tokenById(id),
@@ -22,14 +26,12 @@ const getLatestToken = async ({ getState }, returnVal = null) => {
 }
 
 const getRefToken = async (token, position, tokens = []) => {
-  console.log('debuu: <getRefTooken> ', { token, position, tokens })
+  const isRef = token.metadata.type === 'REFERENCE'
   // 1. api fails to return token with id 0, so setting first as ref
   // 2. so if ref token found, then return and carry on fetching in getData fn
-  return token.id === 1 ||
-    position + 1 === token.id ||
-    token.type === 'REFERENCE'
+  return token.id === 1 || position + 1 === token.id || isRef
     ? {
-        ref: token.type === 'REFERENCE' ? token : tokens.ref || undefined,
+        ref: isRef ? token : tokens.ref || undefined,
         data: [...tokens, token],
         newPosition: token.id + tokens.length,
       }
@@ -108,7 +110,7 @@ const initTokens = createAsyncThunk('tokens/init', async (action, store) => {
 
 const tokens = createSlice({
   name: 'tokens',
-  initialState: { isFetching: false, isError: false, data: [] },
+  initialState: { isFetching: true, isError: false, data: [] },
   reducers: {
     add: {
       reducer(state, { payload }) {
@@ -125,7 +127,7 @@ const tokens = createSlice({
         return {
           ...state,
           ...payload,
-          data: [...state.data, ...payload.data],
+          data: [...state.data, ...(payload.data || [])],
         }
       },
     },

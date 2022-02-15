@@ -33,7 +33,7 @@ const BlockchainWatcher = ({ children }) => {
         )
       }
     }
-    timer = setTimeout(timerFn, 1000)
+    timer = setTimeout(timerFn, 3000)
 
     // The clean-up function clears the timer (as expected) but also sets it to null to indicate to the
     // `pollFunc` that this specific effect instantiation has been canceled
@@ -41,7 +41,7 @@ const BlockchainWatcher = ({ children }) => {
       clearTimeout(timer)
       timer = null
     }
-  }, [dispatch]) // effect sensitivities.
+  }, [dispatch, isFetching]) // effect sensitivities.
 
   return <>{children}</>
 }

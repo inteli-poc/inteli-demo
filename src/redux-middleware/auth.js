@@ -27,20 +27,18 @@ const isTokenValid = () => {
   return jwtDecode(token).exp * 1000 > Date.now()
 }
 
-const auth = (store) => (next) => (action) => {
+const auth = (store) => (next) => (action) => { // eslint-disable-line
   try {
-    console.log('debug: <auth> ', { action, state: store.getState() })
-
     if (isTokenValid()) return next(action)
     localStorage.clear('token')
 
     axios(authReqParams).then(({ data }) => {
       localStorage.setItem('token', data.access_token)
-      return next(action)
+      next(action)
     })
   } catch (e) {
     localStorage.clear('token')
-    console.log('invalid token, not returning next action', e)
+    console.error('invalid token, not returning next action', e)
   }
 }
 

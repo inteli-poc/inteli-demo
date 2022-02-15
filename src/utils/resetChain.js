@@ -12,7 +12,6 @@ const createFormData = (inputs, roles, metadata) => {
         type: { type: metadataTypes.literal, value: metadata.type },
         name: { type: metadataTypes.literal, value: metadata.name },
       },
-      parent_index: 0,
     },
   ]
 
