@@ -3,7 +3,6 @@ import Api from './vitalamApi'
 import { add } from '../features/tokensSlice'
 import { metadataTypes } from './'
 
-
 const createFormData = (inputs, roles, metadata) => {
   const formData = new FormData()
   const outputs = [
