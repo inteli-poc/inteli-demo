@@ -6,7 +6,6 @@ const createRefToken = async (name, dispatch) => {
   const roles = { Owner: '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty' } // TODO get correct owner
   const metadata = {
     type: tokenTypes.reference,
-    status: 'accepted', // TODO remove
     name: name,
   }
 

@@ -20,7 +20,6 @@ const getLatestToken = async ({ getState }, returnVal = null) => {
   }
 }
 
-// TODO rename and refactor once confirmed (should be called lookForRefTOken) or smth
 const getRefToken = async (token, position, tokens = []) => {
   console.log('debuu: <getRefTooken> ', { token, position, tokens })
   // 1. api fails to return token with id 0, so setting first as ref
@@ -45,11 +44,10 @@ const getData = async (last = { id: 1 }, tokens = {}, position = undefined) => {
     return await getData(last, { ...tokens, ...rest, data: [...data, ...tokens?.data || []] }, newPosition)
   }
 
-  // TODO should be a better way then incrementing by 1
+  // TODO find a better way then incrementing by 1 also get all ids and then retrieve
   return position < last.id
     ? await getData(last, {
         ...tokens,
-        // TODO get all ids, and then await in parallel
         data: [...tokens.data, await Api().tokenById(position + 1)],
       }, position + 1)
     : { ...tokens, last }
@@ -77,7 +75,6 @@ const fetchTokens = createAsyncThunk('tokens/fetch', async(action, store) => {
 
 // init fn that reads localstorage and sorts tokens by order/powder/etc
 const initTokens = createAsyncThunk('tokens/init', async (action, store) => {
-  // TODO remove try catch once confirmed that promise factory can handle
   try {
     const { tokens } = store.getState()
     const { latestToken, last } = await getLatestToken(store, tokens)

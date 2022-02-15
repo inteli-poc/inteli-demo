@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-// TODO why do we need this?
+// QUESTION why do we need this?
 export const networkStatusSlice = createSlice({
   name: 'networkStatus',
   initialState: true,

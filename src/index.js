@@ -12,7 +12,6 @@ import BlockchainWatcher from './shared/BlockchainWatcher.js'
 import auth from './redux-middleware/auth'
 import localstorage from './redux-middleware/localstorage'
 
-// TODO move to sep file
 const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',

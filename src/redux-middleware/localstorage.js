@@ -32,9 +32,6 @@ const putToLocalStorage = (key, data) => {
         : localStorage.setItem(key, JSON.stringify(data))
 }
 
-// conditional middleware
-// TODO refactor it, ideally it should have some reducers excluded and everything
-// else can be persisted to local storage
 const localstorage = (store) => (next) => (action) => {
     const { type, payload } = action;
 

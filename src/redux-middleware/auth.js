@@ -1,7 +1,6 @@
 import jwtDecode from 'jwt-decode'
 import axios from 'axios'
 
-// TODO axios middle ware s fetching can be done within redu[[x
 const {
   REACT_APP_API_HOST,
   REACT_APP_API_PORT,
