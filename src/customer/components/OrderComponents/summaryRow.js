@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Link as RouterLink } from 'react-router-dom'
-//import moment from 'moment'
+import moment from 'moment'
 
 const useStyles = makeStyles({
   maherStyle: {
@@ -64,24 +64,7 @@ const SummaryRow = ({ order, activeItem }) => {
   } = order
   const classes = useStyles()
 
-  console.log('is Active', activeItem)
-
-  // Split the date so it can be formatted
-  var parts = deliveryBy.split('/')
-  var dt = new Date(
-    parseInt(parts[2], 10),
-    parseInt(parts[1], 10) - 1,
-    parseInt(parts[0], 10)
-  )
-
-  // Format the date to dd mmm yyyy
-  const formattedDate = dt
-    .toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    })
-    .replace(/ /g, ' ')
+  const formattedDate = moment(deliveryBy, 'DD MMM YYYY').format('DD MMM YYYY')
 
   return (
     <Paper

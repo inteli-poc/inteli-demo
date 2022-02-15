@@ -72,8 +72,6 @@ const VerticalTimeline = ({ order }) => {
     }
   }
 
-  /*   const formattedDate = deliveryBy.split('/').join('-')
-   */
   return (
     <Container id={orderId} spacing={0}>
       <Item
