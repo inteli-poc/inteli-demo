@@ -48,7 +48,7 @@ const CustomerPartItem = (props) => {
           <Typography gutterBottom variant="body1">
             {name}
           </Typography>
-          <Grid container justify="space-between" alignItems="center">
+          <Grid container justifyContent="space-between" alignItems="center">
             <Typography variant="body2" color="textSecondary">
               {partId}
             </Typography>

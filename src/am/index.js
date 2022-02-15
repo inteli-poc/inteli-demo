@@ -1,13 +1,13 @@
 import React from 'react'
 import 'reset-css'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+import { createTheme, ThemeProvider } from '@material-ui/core/styles'
 import { makeStyles, Container } from '@material-ui/core'
 import { BrowserRouter } from 'react-router-dom'
 
 import Sidebar from './components/Sidebar'
 import Router from './router'
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#8ec8c4',

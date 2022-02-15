@@ -346,7 +346,7 @@ const CustomerPart = () => {
             item
             xs={6}
             direction="column"
-            justify="space-between"
+            justifyContent="space-between"
             className={classes.contentDetails}
           >
             <CardContent>
@@ -386,7 +386,12 @@ const CustomerPart = () => {
                 {deliveryByError}
               </Typography>
             </Box>
-            <Grid container item direction="column" justify="space-between">
+            <Grid
+              container
+              item
+              direction="column"
+              justifyContent="space-between"
+            >
               <CardContent className={classes.contentForm}>
                 <Attachment name="Materials.pdf" />
                 <Attachment name="Requirements.pdf" />
@@ -399,7 +404,7 @@ const CustomerPart = () => {
             item
             xs={2}
             direction="column"
-            justify="space-between"
+            justifyContent="space-between"
             className={classes.rightColumn}
           >
             <Typography variant="h6">&#163;{totalCost}</Typography>

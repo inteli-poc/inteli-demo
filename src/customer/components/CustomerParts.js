@@ -24,7 +24,7 @@ const CustomerParts = () => {
         container
         direction="row"
         className={classes.searchFieldContainer}
-        justify="flex-start"
+        justifyContent="flex-start"
       >
         <Grid item xs={11}>
           <SearchField />
@@ -36,7 +36,13 @@ const CustomerParts = () => {
           </Typography>
         </Grid>
       </Grid>
-      <Grid container item direction="row" spacing={2} justify="flex-start">
+      <Grid
+        container
+        item
+        direction="row"
+        spacing={2}
+        justifyContent="flex-start"
+      >
         <CustomerPartItems items={customerParts} />
       </Grid>
     </Box>
