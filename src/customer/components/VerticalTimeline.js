@@ -7,7 +7,6 @@ import TimelineContent from '@material-ui/lab/TimelineContent'
 import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent/TimelineOppositeContent'
 import TimelineDot from '@material-ui/lab/TimelineDot/TimelineDot'
 import { Typography } from '@material-ui/core'
-import { Container, Item } from '../../shared/layout'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
 
@@ -71,15 +70,8 @@ const VerticalTimeline = ({ order }) => {
   }
 
   return (
-    <Container id={orderId} spacing={0}>
-      <Item
-        style={{}}
-        xs={10}
-        sx={{
-          justifyContent: 'flex-start',
-          alignItems: 'flex-start',
-        }}
-      >
+    <Grid container id={orderId} spacing={0}>
+      <Grid xs>
         <Timeline>
           <TimelineItem>
             <TimelineSeparator>
@@ -260,8 +252,8 @@ const VerticalTimeline = ({ order }) => {
             </Grid>
           </TimelineItem>
         </Timeline>
-      </Item>
-    </Container>
+      </Grid>
+    </Grid>
   )
 }
 export default VerticalTimeline
