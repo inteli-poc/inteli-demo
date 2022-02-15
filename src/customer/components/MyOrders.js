@@ -4,8 +4,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { useSelector } from 'react-redux'
-import SummaryRow from './OrderComponents/SummaryRow'
-import OrderSummary from './OrderComponents/OrderSummary'
+import SummaryRow from './SummaryRow'
+import OrderSummary from './OrderSummary'
 
 const useStyles = makeStyles((theme) => ({
   backButton: {
@@ -73,10 +73,6 @@ const MyOrders = () => {
     ? customerOrders.find(({ id }) => `${id}` === params.orderId)
     : customerOrders[customerOrders.length - 1]
 
-  console.log('Customer Orders', customerOrders)
-  console.log('Selected Order', selectedOrder)
-  console.log('Params', params.orderId)
-
   const getSelectedOrderId = () => {
     if (selectedOrder) {
       return selectedOrder.id
@@ -100,8 +96,6 @@ const MyOrders = () => {
   const classes = useStyles()
 
   useEffect(() => {
-    console.log('Use Effect', selectedId)
-
     if (isValidIdTest(selectedId)) {
       navigate({
         pathname: `/app/my-orders/${selectedId}`,

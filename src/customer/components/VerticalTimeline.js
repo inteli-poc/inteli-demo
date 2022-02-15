@@ -7,7 +7,7 @@ import TimelineContent from '@material-ui/lab/TimelineContent'
 import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent/TimelineOppositeContent'
 import TimelineDot from '@material-ui/lab/TimelineDot/TimelineDot'
 import { Typography } from '@material-ui/core'
-import { Container, Item } from '../../../shared/layout'
+import { Container, Item } from '../../shared/layout'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
 
@@ -21,6 +21,9 @@ const useStyles = makeStyles({
   },
   time: {
     paddingLeft: '20px',
+  },
+  timelineRowContent: {
+    padding: '20px 0px 40px 0px',
   },
 })
 
@@ -39,29 +42,24 @@ const VerticalTimeline = ({ order }) => {
 
   const {
     id: orderId,
-    metadata: { deliveryBy: deliveryBy, status: type },
+    metadata: { deliveryBy, status },
   } = order
-
-  console.log('Order', order)
-  console.log('Type', type)
 
   // Set the current status order. Again will eventually need updating with more states
   let statusIndex = 0
-  if (type === 'submitted') {
+  if (status === 'submitted') {
     statusIndex = 1
-  } else if (type === 'accepted') {
+  } else if (status === 'accepted') {
     statusIndex = 2
-  } else if (type === 'manufactured') {
+  } else if (status === 'manufactured') {
     statusIndex = 3
-  } else if (type === 'manufacturing') {
+  } else if (status === 'manufacturing') {
     statusIndex = 4
-  } else if (type === 'amended') {
+  } else if (status === 'amended') {
     statusIndex = 2
   } else {
     statusIndex = 0
   }
-
-  console.log('status index', statusIndex)
 
   // Helper function to decide the colour of a timeline segment
   function GetColour(index, value) {
@@ -89,12 +87,13 @@ const VerticalTimeline = ({ order }) => {
                 style={{ backgroundColor: `${GetColour(statusIndex, 1)}` }}
               />
               <TimelineConnector
-                style={{ backgroundColor: `${GetColour(statusIndex, 1)}` }}
+                style={{
+                  backgroundColor: `${GetColour(statusIndex, 1)}`,
+                }}
               />
             </TimelineSeparator>
-            <Item>
+            <Grid sm={12}>
               <TimelineContent>
-                {' '}
                 <Grid container alignItems="flex-start" xs={12}>
                   <Grid item xs={9}>
                     <Typography variant="h6">{statusLabels[0]}</Typography>
@@ -108,14 +107,15 @@ const VerticalTimeline = ({ order }) => {
                     </Typography>
                   </Grid>
                   <Grid item alignItems="flex-start" xs={10}>
-                    <Typography variant="subtitle1">
-                      Content Goes Here
-                    </Typography>
+                    <Typography
+                      className={classes.timelineRowContent}
+                      variant="subtitle1"
+                    ></Typography>
                   </Grid>
                 </Grid>
               </TimelineContent>
               <TimelineOppositeContent />
-            </Item>
+            </Grid>
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
@@ -126,12 +126,12 @@ const VerticalTimeline = ({ order }) => {
                 style={{ backgroundColor: `${GetColour(statusIndex, 2)}` }}
               />
             </TimelineSeparator>
-            <Item sm={12}>
+            <Grid sm={12}>
               <TimelineContent>
                 <Grid container alignItems="flex-start" xs={12}>
                   <Grid item xs={9}>
                     <Typography variant="h6">
-                      {type === 'amended'
+                      {status === 'amended'
                         ? statusLabels[statusLabels.length - 1]
                         : statusLabels[1]}
                     </Typography>
@@ -145,13 +145,14 @@ const VerticalTimeline = ({ order }) => {
                     </Typography>
                   </Grid>
                   <Grid item alignItems="flex-start" xs={10}>
-                    <Typography variant="subtitle1">
-                      Content Goes here
-                    </Typography>
+                    <Typography
+                      className={classes.timelineRowContent}
+                      variant="subtitle1"
+                    ></Typography>
                   </Grid>
                 </Grid>
               </TimelineContent>
-            </Item>
+            </Grid>
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
@@ -162,7 +163,7 @@ const VerticalTimeline = ({ order }) => {
                 style={{ backgroundColor: `${GetColour(statusIndex, 3)}` }}
               />
             </TimelineSeparator>
-            <Item>
+            <Grid sm={12}>
               <TimelineContent>
                 {' '}
                 <Grid container alignItems="flex-start" xs={12}>
@@ -178,14 +179,15 @@ const VerticalTimeline = ({ order }) => {
                     </Typography>
                   </Grid>
                   <Grid item alignItems="flex-start" xs={10}>
-                    <Typography variant="subtitle1">
-                      Content Goes here
-                    </Typography>
+                    <Typography
+                      className={classes.timelineRowContent}
+                      variant="subtitle1"
+                    ></Typography>
                   </Grid>
                 </Grid>
               </TimelineContent>
               <TimelineOppositeContent />
-            </Item>
+            </Grid>
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
@@ -200,7 +202,7 @@ const VerticalTimeline = ({ order }) => {
                 }}
               />
             </TimelineSeparator>
-            <Item>
+            <Grid sm={12}>
               <TimelineContent>
                 {' '}
                 <Grid container alignItems="flex-start" xs={12}>
@@ -216,14 +218,15 @@ const VerticalTimeline = ({ order }) => {
                     </Typography>
                   </Grid>
                   <Grid item alignItems="flex-start" xs={10}>
-                    <Typography variant="subtitle1">
-                      Content Goes here
-                    </Typography>
+                    <Typography
+                      className={classes.timelineRowContent}
+                      variant="subtitle1"
+                    ></Typography>
                   </Grid>
                 </Grid>
               </TimelineContent>
               <TimelineOppositeContent />
-            </Item>
+            </Grid>
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
@@ -231,7 +234,7 @@ const VerticalTimeline = ({ order }) => {
                 style={{ backgroundColor: `${GetColour(statusIndex, 5)}` }}
               />
             </TimelineSeparator>
-            <Item>
+            <Grid sm={12}>
               <TimelineContent>
                 <Grid container alignItems="flex-start" xs={12}>
                   <Grid item xs={9}>
@@ -246,14 +249,15 @@ const VerticalTimeline = ({ order }) => {
                     </Typography>
                   </Grid>
                   <Grid item alignItems="flex-start" xs={10}>
-                    <Typography variant="subtitle1">
-                      Content Goes here
-                    </Typography>
+                    <Typography
+                      className={classes.timelineRowContent}
+                      variant="subtitle1"
+                    ></Typography>
                   </Grid>
                 </Grid>
               </TimelineContent>
               <TimelineOppositeContent />
-            </Item>
+            </Grid>
           </TimelineItem>
         </Timeline>
       </Item>
