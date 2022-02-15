@@ -42,10 +42,7 @@ const AcceptAction = ({ order }) => {
         roles,
         metadata: {
           type: { type: metadataTypes.literal, value: metadata.type },
-          status: {
-            type: metadataTypes.literal,
-            value: metadata.status,
-          },
+          status: { type: metadataTypes.literal, value: metadata.status },
         },
         parent_index: 0,
       },
@@ -73,12 +70,7 @@ const AcceptAction = ({ order }) => {
 
     const formData = createFormData([order.id], roles, metadata)
     const response = await api.runProcess(formData)
-    const token = {
-      id: response[0],
-      original_id: order.id,
-      roles,
-      metadata,
-    }
+    const token = { id: response[0], original_id: order.id, roles, metadata }
 
     dispatch(upsertOrder(token))
   }

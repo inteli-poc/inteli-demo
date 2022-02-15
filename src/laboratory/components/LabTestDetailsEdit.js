@@ -90,10 +90,7 @@ const LabTestDetailsEdit = ({ id }) => {
         roles,
         metadata: {
           type: { type: metadataTypes.literal, value: metadata.type },
-          status: {
-            type: metadataTypes.literal,
-            value: metadata.status,
-          },
+          status: { type: metadataTypes.literal, value: metadata.status },
           overallResult: {
             type: metadataTypes.literal,
             value: metadata.overallResult,
@@ -157,20 +154,10 @@ const LabTestDetailsEdit = ({ id }) => {
       status: powderTestStatus.result,
       overallResult: labTestPassOrFail,
       ...(reportFile
-        ? {
-            testReport: {
-              fileName: reportFile.fileName,
-              url: reportFile.url,
-            },
-          }
+        ? { testReport: { fileName: reportFile.fileName, url: reportFile.url } }
         : {}),
       ...(reasonFile
-        ? {
-            testReason: {
-              fileName: reasonFile.fileName,
-              url: reasonFile.url,
-            },
-          }
+        ? { testReason: { fileName: reasonFile.fileName, url: reasonFile.url } }
         : {}),
     }
 

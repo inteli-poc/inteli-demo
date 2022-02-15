@@ -71,14 +71,8 @@ const ManufactureOrderAction = ({ order }) => {
       {
         roles: orderRoles,
         metadata: {
-          type: {
-            type: metadataTypes.literal,
-            value: orderMetadata.type,
-          },
-          status: {
-            type: metadataTypes.literal,
-            value: orderMetadata.status,
-          },
+          type: { type: metadataTypes.literal, value: orderMetadata.type },
+          status: { type: metadataTypes.literal, value: orderMetadata.status },
           powderId: {
             type: metadataTypes.tokenId,
             value: orderMetadata.powderId,
@@ -89,10 +83,7 @@ const ManufactureOrderAction = ({ order }) => {
       {
         roles: powderRoles,
         metadata: {
-          type: {
-            type: metadataTypes.literal,
-            value: powderMetadata.type,
-          },
+          type: { type: metadataTypes.literal, value: powderMetadata.type },
           quantityKg: {
             type: metadataTypes.literal,
             value: powderMetadata.quantityKg,
@@ -135,7 +126,7 @@ const ManufactureOrderAction = ({ order }) => {
 
     const response = await api.runProcess(manufacturingFormData)
 
-    const manufacturingToken = {
+    const orderToken = {
       id: response[0],
       original_id: order.original_id,
       roles: orderRoles,
@@ -149,7 +140,7 @@ const ManufactureOrderAction = ({ order }) => {
       metadata: powderMetadata,
     }
 
-    dispatch(upsertOrder(manufacturingToken))
+    dispatch(upsertOrder(orderToken))
     dispatch(upsertPowder(powderToken))
 
     return response
@@ -161,14 +152,8 @@ const ManufactureOrderAction = ({ order }) => {
       {
         roles: orderRoles,
         metadata: {
-          type: {
-            type: metadataTypes.literal,
-            value: orderMetadata.type,
-          },
-          status: {
-            type: metadataTypes.literal,
-            value: orderMetadata.status,
-          },
+          type: { type: metadataTypes.literal, value: orderMetadata.type },
+          status: { type: metadataTypes.literal, value: orderMetadata.status },
         },
         parent_index: 0,
       },

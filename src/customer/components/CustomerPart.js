@@ -184,35 +184,17 @@ const CustomerPart = () => {
         roles,
         metadata: {
           type: { type: metadataTypes.literal, value: metadata.type },
-          status: {
-            type: metadataTypes.literal,
-            value: metadata.status,
-          },
+          status: { type: metadataTypes.literal, value: metadata.status },
           orderReference: {
             type: metadataTypes.literal,
             value: metadata.orderReference,
           },
-          partId: {
-            type: metadataTypes.literal,
-            value: metadata.partId,
-          },
+          partId: { type: metadataTypes.literal, value: metadata.partId },
           name: { type: metadataTypes.literal, value: metadata.name },
-          material: {
-            type: metadataTypes.literal,
-            value: metadata.material,
-          },
-          alloy: {
-            type: metadataTypes.literal,
-            value: metadata.alloy,
-          },
-          price: {
-            type: metadataTypes.literal,
-            value: metadata.price,
-          },
-          quantity: {
-            type: metadataTypes.literal,
-            value: metadata.quantity,
-          },
+          material: { type: metadataTypes.literal, value: metadata.material },
+          alloy: { type: metadataTypes.literal, value: metadata.alloy },
+          price: { type: metadataTypes.literal, value: metadata.price },
+          quantity: { type: metadataTypes.literal, value: metadata.quantity },
           deliveryBy: {
             type: metadataTypes.literal,
             value: metadata.deliveryBy,
@@ -386,7 +368,9 @@ const CustomerPart = () => {
                 onChange={handleChange('quantity')}
                 value={quantity}
               />
-              <div className={classes.errorText}>{quantityError}</div>
+              <Typography variant="subtitle1" className={classes.errorText}>
+                {quantityError}
+              </Typography>
             </Box>
             <Box className={classes.deliveryByContainer}>
               <InputLabel className={classes.deliveryByLabel}>
@@ -398,7 +382,9 @@ const CustomerPart = () => {
                 placeholder={DATE_FORMAT}
                 onChange={handleChange('deliveryBy')}
               />
-              <div className={classes.errorText}>{deliveryByError}</div>
+              <Typography variant="subtitle1" className={classes.errorText}>
+                {deliveryByError}
+              </Typography>
             </Box>
             <Grid container item direction="column" justify="space-between">
               <CardContent className={classes.contentForm}>

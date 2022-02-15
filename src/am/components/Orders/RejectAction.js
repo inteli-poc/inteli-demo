@@ -42,14 +42,8 @@ const RejectAction = ({ order, quantity, deliveryBy, formReady }) => {
         roles,
         metadata: {
           type: { type: metadataTypes.literal, value: metadata.type },
-          status: {
-            type: metadataTypes.literal,
-            value: metadata.status,
-          },
-          quantity: {
-            type: metadataTypes.literal,
-            value: metadata.quantity,
-          },
+          status: { type: metadataTypes.literal, value: metadata.status },
+          quantity: { type: metadataTypes.literal, value: metadata.quantity },
           deliveryBy: {
             type: metadataTypes.literal,
             value: metadata.deliveryBy,

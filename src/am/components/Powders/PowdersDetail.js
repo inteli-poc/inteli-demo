@@ -143,14 +143,8 @@ const PowdersDetail = () => {
       {
         roles: testRoles,
         metadata: {
-          type: {
-            type: metadataTypes.literal,
-            value: testMetadata.type,
-          },
-          status: {
-            type: metadataTypes.literal,
-            value: testMetadata.status,
-          },
+          type: { type: metadataTypes.literal, value: testMetadata.type },
+          status: { type: metadataTypes.literal, value: testMetadata.status },
           powderId: {
             type: metadataTypes.tokenId,
             value: testMetadata.powderId,
@@ -168,10 +162,7 @@ const PowdersDetail = () => {
       {
         roles: powderRoles,
         metadata: {
-          type: {
-            type: metadataTypes.literal,
-            value: powderMetadata.type,
-          },
+          type: { type: metadataTypes.literal, value: powderMetadata.type },
           quantityKg: {
             type: metadataTypes.literal,
             value: powderMetadata.quantityKg,

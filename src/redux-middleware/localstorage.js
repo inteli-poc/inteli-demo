@@ -26,7 +26,7 @@ const putToLocalStorage = (key, data) => {
     const existing = localStorage.getItem(key) || {}
 
     return existing
-        ? localStorage.setItem(key, JSON.stringify({ ...existing, data: [ ...data ], last }))
+        ? localStorage.setItem(key, JSON.stringify({ ...existing, data: [ ...data ], last: data.last }))
         : localStorage.setItem(key, JSON.stringify(data))
 }
 
