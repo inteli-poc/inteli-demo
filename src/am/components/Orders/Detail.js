@@ -161,6 +161,7 @@ const OrderDetail = ({ order }) => {
       material,
       alloy,
       price,
+      quantity: quantityOnChain,
       type,
       status,
       orderReference,
@@ -178,7 +179,7 @@ const OrderDetail = ({ order }) => {
   const setQuantityValue = (value) => {
     const quantityValue = value.replace(/\D/g, '')
 
-    setQuantityError(isQuantityInvalid(quantityValue, order.metadata.quantity))
+    setQuantityError(isQuantityInvalid(quantityValue, quantityOnChain))
     setQuantity(parseInt(quantityValue, 10) || quantityValue)
   }
 
@@ -200,7 +201,7 @@ const OrderDetail = ({ order }) => {
 
   const isFormReady = () => {
     return (
-      !isQuantityInvalid(quantity, order.metadata.quantity) &&
+      !isQuantityInvalid(quantity, quantityOnChain) &&
       !isDeliveryByInvalid(deliveryBy)
     )
   }
@@ -266,10 +267,7 @@ const OrderDetail = ({ order }) => {
               <Box>
                 <DetailRow title="Part name" value={name}></DetailRow>
                 <DetailRow title="Part Number" value={partId}></DetailRow>
-                <DetailRow
-                  title="Quantity"
-                  value={order.metadata.quantity}
-                ></DetailRow>
+                <DetailRow title="Quantity" value={quantityOnChain}></DetailRow>
                 <DetailRow title="Material" value={material}></DetailRow>
                 <DetailRow title="Alloy" value={alloy}></DetailRow>
                 <DetailRow
@@ -279,7 +277,7 @@ const OrderDetail = ({ order }) => {
                 <DetailRow title="Unit Price" value={price}></DetailRow>
                 <DetailRow
                   title="Total Cost"
-                  value={getTotalCost(price, order.quantity)}
+                  value={getTotalCost(price, quantityOnChain)}
                 ></DetailRow>
               </Box>
             </Grid>
@@ -331,14 +329,16 @@ const OrderDetail = ({ order }) => {
               className={`${classes.rejectAndNegotiateTitle} ${classes.rejectAndNegotiateToggle}`}
               onClick={toggleNegotiationDisplay}
             >
-              Reject &amp; negotiate
+              <Typography variant="subtitle1">
+                Reject &amp; negotiate
+              </Typography>
             </Grid>
             <Grid
               item
               className={
                 displayNegotiation
-                  ? classes.rejectAndNegotiateDownArrow
-                  : classes.rejectAndNegotiateUpArrow
+                  ? classes.rejectAndNegotiateUpArrow
+                  : classes.rejectAndNegotiateDownArrow
               }
             ></Grid>
           </Grid>
