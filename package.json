@@ -16,7 +16,7 @@
   "scripts": {
     "lint": "eslint --ext .js .",
     "depcheck": "depcheck",
-    "start": "REACT_APP_VITALAM_DEMO_PERSONA=cust react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "eject": "react-scripts eject"
@@ -33,7 +33,6 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.0",
     "redux": "^4.1.2",
-    "redux-devtools-extension": "^2.13.9",
     "reset-css": "^5.0.1",
     "styled-components": "^5.3.3"
   },
