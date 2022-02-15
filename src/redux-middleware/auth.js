@@ -34,15 +34,14 @@ const auth = (store) => (next) => (action) => {
 
     if (isTokenValid()) return next(action)
     localStorage.clear('token')
+
     axios(authReqParams).then(({ data }) => {
       localStorage.setItem('token', data.access_token)
       return next(action)
     })
   } catch (e) {
     localStorage.clear('token')
-    // block action, reset state, and ..
-    // dispatch a destruction action
-    console.log('invalid token, not return next action', e)
+    console.log('invalid token, not returning next action', e)
   }
 }
 

@@ -4,6 +4,13 @@ const API_PORT = process.env.REACT_APP_API_PORT || '3001'
 const wrappedFetch = (url, options) =>
   fetch(url, options).then((res) => res.json())
 
+const svgMimeUrl = async (imageUrl) => {
+  const response = await fetch(imageUrl)
+  const oldBlob = await response.blob()
+  const blob = new Blob([oldBlob], { type: 'image/svg+xml' })
+  return URL.createObjectURL(blob)
+}
+
 const useNewFetchWrapper = () => {
   const newWrappedFetch = async (url, options) => {
     let response = await fetch(url, options)
@@ -86,11 +93,19 @@ const useApi = () => {
         )
       }
     } else {
-      return {
+      const metadata = await getNewMetadata(token)
+      if (metadata?.orderImage) return {
         ...token,
-        metadata:
-        await getNewMetadata(token)
+        metadata: {
+          ...metadata,
+          orderImage: {
+            ...metadata.orderImage,
+            url: await svgMimeUrl(metadata.orderImage.url) 
+          }
+        }
       }
+      
+      return { ...token, metadata }
     }
   }
 
