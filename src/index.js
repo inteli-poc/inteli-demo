@@ -15,9 +15,9 @@ import localstorage from './redux-middleware/localstorage'
 const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([auth, localstorage])
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat([auth, localstorage]),
 })
-
 
 let App = null
 let props = {}

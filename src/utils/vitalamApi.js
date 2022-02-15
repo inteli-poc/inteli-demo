@@ -44,7 +44,7 @@ const useNewFetchWrapper = () => {
 const useApi = () => {
   const newWrappedFetch = useNewFetchWrapper()
   const authToken = localStorage.getItem('token')
-  
+
   const runProcess = async (body) =>
     wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/run-process`, {
       method: 'POST',
@@ -82,7 +82,8 @@ const useApi = () => {
       return {
         ...token,
         metadata: await wrappedFetch(
-          `http://${API_HOST}:${API_PORT}/v2/item/${id}/metadata`, {
+          `http://${API_HOST}:${API_PORT}/v2/item/${id}/metadata`,
+          {
             method: 'GET',
             mode: 'cors',
             cache: 'no-cache',
@@ -90,28 +91,29 @@ const useApi = () => {
               Authorization: `Bearer ${authToken}`,
             },
           }
-        )
+        ),
       }
     } else {
       const metadata = await getNewMetadata(token)
-      if (metadata?.orderImage) return {
-        ...token,
-        metadata: {
-          ...metadata,
-          orderImage: {
-            ...metadata.orderImage,
-            url: await svgMimeUrl(metadata.orderImage.url) 
-          }
+      if (metadata?.orderImage)
+        return {
+          ...token,
+          metadata: {
+            ...metadata,
+            orderImage: {
+              ...metadata.orderImage,
+              url: await svgMimeUrl(metadata.orderImage.url),
+            },
+          },
         }
-      }
-      
+
       return { ...token, metadata }
     }
   }
 
   const getNewMetadata = async (token) => {
     // recursive function?
-    const metadata = {};
+    const metadata = {}
     await Promise.all(
       token.metadata_keys.map(async (metadata_key) => {
         metadata[metadata_key] = await newWrappedFetch(

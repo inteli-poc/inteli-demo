@@ -3,10 +3,10 @@
 export const PromiseStateFactory = [
   ({ addCase }, fn) =>
     addCase(fn['fulfilled'], (state, { payload }) => ({
-        ...state,
-        ...payload,
-        isFetching: false,
-        isError: false,
+      ...state,
+      ...payload,
+      isFetching: false,
+      isError: false,
     })),
   ({ addCase }, fn) =>
     addCase(fn['pending'], (state) => ({

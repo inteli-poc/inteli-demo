@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initTokens } from '../features/tokensSlice'
 import { fetchTokens } from '../features/tokensSlice'
 
-
 // temporary version of the component that will poll the API
 const BlockchainWatcher = ({ children }) => {
   const dispatch = useDispatch()

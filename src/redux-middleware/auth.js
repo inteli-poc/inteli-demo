@@ -16,12 +16,12 @@ const authReqParams = {
   data: {
     client_id: REACT_APP_AUTH_CLIENT_ID,
     client_secret: REACT_APP_AUTH_CLIENT_SECRET,
-  }
+  },
 }
 
 const isTokenValid = () => {
   // TODO move to redux store
-  // have one reducer for app's state 
+  // have one reducer for app's state
   const token = localStorage.getItem('token')
   if (!token || token === 'undefined') return false
   return jwtDecode(token).exp * 1000 > Date.now()
