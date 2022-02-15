@@ -62,46 +62,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const getSelectedOrder = (orders, paramsId) => {
+  if (orders.length > 0) {
+    return paramsId
+      ? orders.find(({ id }) => `${id}` === paramsId)
+      : orders[orders.length - 1]
+  } else {
+    return null
+  }
+}
+
 const MyOrders = () => {
   const params = useParams()
   const navigate = useNavigate()
 
   //This is where the ID from a previously selected item is stored
   const customerOrders = useSelector((state) => state.customerOrders)
-
-  const selectedOrder = params.orderId
-    ? customerOrders.find(({ id }) => `${id}` === params.orderId)
-    : customerOrders[customerOrders.length - 1]
-
-  const getSelectedOrderId = () => {
-    if (selectedOrder) {
-      return selectedOrder.id
-    } else if (customerOrders.length > 0) {
-      return customerOrders[customerOrders.length - 1].id
-    } else {
-      return -1
-    }
-  }
-
-  const selectedId = getSelectedOrderId()
-
-  const isValidIdTest = (idToTest) => {
-    if (idToTest != -1 && idToTest != undefined && !idToTest.isNaN) {
-      return true
-    } else {
-      false
-    }
-  }
+  const selectedOrder = getSelectedOrder(customerOrders, params.orderId)
 
   const classes = useStyles()
 
   useEffect(() => {
-    if (isValidIdTest(selectedId)) {
+    if (selectedOrder) {
       navigate({
-        pathname: `/app/my-orders/${selectedId}`,
+        pathname: `/app/my-orders/${selectedOrder.id}`,
       })
     }
-  }, [])
+  }, [selectedOrder])
 
   return (
     <Grid container className={classes.containerWidth}>
@@ -110,7 +97,7 @@ const MyOrders = () => {
           <SummaryRow
             key={order.id}
             order={order}
-            activeItem={selectedId === order.id}
+            activeItem={selectedOrder && selectedOrder.id === order.id}
           />
         ))}
       </Grid>

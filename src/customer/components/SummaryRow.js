@@ -70,7 +70,7 @@ const SummaryRow = ({ order, activeItem }) => {
     <Paper
       id={orderId}
       elevation={0}
-      className={`${classes.root}  ${
+      className={`${classes.root} ${
         activeItem ? classes.isActive : classes.isNotActive
       }`}
     >
