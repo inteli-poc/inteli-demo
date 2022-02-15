@@ -9,6 +9,7 @@ import TimelineDot from '@material-ui/lab/TimelineDot/TimelineDot'
 import { Typography } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
+import { orderStatus } from '../../utils/statuses'
 
 const useStyles = makeStyles({
   dateTime: {
@@ -46,22 +47,22 @@ const VerticalTimeline = ({ order }) => {
 
   // Set the current status order. Again will eventually need updating with more states
   let statusIndex = 0
-  if (status === 'submitted') {
+  if (status === orderStatus.submitted) {
     statusIndex = 1
-  } else if (status === 'accepted') {
+  } else if (status === orderStatus.accepted) {
     statusIndex = 2
-  } else if (status === 'manufactured') {
+  } else if (status === orderStatus.manufactured) {
     statusIndex = 3
-  } else if (status === 'manufacturing') {
+  } else if (status === orderStatus.manufacturing) {
     statusIndex = 4
-  } else if (status === 'amended') {
+  } else if (status === orderStatus.amended) {
     statusIndex = 2
   } else {
     statusIndex = 0
   }
 
   // Helper function to decide the colour of a timeline segment
-  function GetColour(index, value) {
+  const getTimelineColour = (index, value) => {
     if (index >= value) {
       return '#FF9900'
     } else {
@@ -76,11 +77,13 @@ const VerticalTimeline = ({ order }) => {
           <TimelineItem>
             <TimelineSeparator>
               <TimelineDot
-                style={{ backgroundColor: `${GetColour(statusIndex, 1)}` }}
+                style={{
+                  backgroundColor: `${getTimelineColour(statusIndex, 1)}`,
+                }}
               />
               <TimelineConnector
                 style={{
-                  backgroundColor: `${GetColour(statusIndex, 1)}`,
+                  backgroundColor: `${getTimelineColour(statusIndex, 1)}`,
                 }}
               />
             </TimelineSeparator>
@@ -112,10 +115,14 @@ const VerticalTimeline = ({ order }) => {
           <TimelineItem>
             <TimelineSeparator>
               <TimelineDot
-                style={{ backgroundColor: `${GetColour(statusIndex, 2)}` }}
+                style={{
+                  backgroundColor: `${getTimelineColour(statusIndex, 2)}`,
+                }}
               />
               <TimelineConnector
-                style={{ backgroundColor: `${GetColour(statusIndex, 2)}` }}
+                style={{
+                  backgroundColor: `${getTimelineColour(statusIndex, 2)}`,
+                }}
               />
             </TimelineSeparator>
             <Grid item sm={12}>
@@ -149,10 +156,14 @@ const VerticalTimeline = ({ order }) => {
           <TimelineItem>
             <TimelineSeparator>
               <TimelineDot
-                style={{ backgroundColor: `${GetColour(statusIndex, 3)}` }}
+                style={{
+                  backgroundColor: `${getTimelineColour(statusIndex, 3)}`,
+                }}
               />
               <TimelineConnector
-                style={{ backgroundColor: `${GetColour(statusIndex, 3)}` }}
+                style={{
+                  backgroundColor: `${getTimelineColour(statusIndex, 3)}`,
+                }}
               />
             </TimelineSeparator>
             <Grid item sm={12}>
@@ -184,13 +195,13 @@ const VerticalTimeline = ({ order }) => {
           <TimelineItem>
             <TimelineSeparator>
               <TimelineDot
-                style={{ backgroundColor: `${GetColour(statusIndex, 4)}` }}
+                style={{
+                  backgroundColor: `${getTimelineColour(statusIndex, 4)}`,
+                }}
               />
               <TimelineConnector
                 style={{
-                  backgroundColor: `${
-                    statusIndex >= 4 ? '#FF9900' : '#CCCCCC'
-                  }`,
+                  backgroundColor: `${getTimelineColour(statusIndex, 4)}`,
                 }}
               />
             </TimelineSeparator>
@@ -223,7 +234,9 @@ const VerticalTimeline = ({ order }) => {
           <TimelineItem>
             <TimelineSeparator>
               <TimelineDot
-                style={{ backgroundColor: `${GetColour(statusIndex, 5)}` }}
+                style={{
+                  backgroundColor: `${getTimelineColour(statusIndex, 5)}`,
+                }}
               />
             </TimelineSeparator>
             <Grid item sm={12}>
