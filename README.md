@@ -1,4 +1,4 @@
-# VITALam Demo Client
+# INTELI Demo
 
 ## Description
 
@@ -23,7 +23,7 @@ Each persona has four containers in its stack:
 
 ### Authentication
 
-The [API](https://github.com/digicatapult/vitalam-api) uses an [Auth0](https://auth0.com/) Machine to Machine API to issue a JSON Web Token for authentication on its endpoints. First, you will need to create your own Auth0 API, which can be done for free. Then, so that the React clients can successfully authenticate with their respective APIs you need to set the following environment variables in a `.env` saved at the root of the `vitalam-demo-client` repository.
+The [API](https://github.com/digicatapult/vitalam-api) uses an [Auth0](https://auth0.com/) Machine to Machine API to issue a JSON Web Token for authentication on its endpoints. First, you will need to create your own Auth0 API, which can be done for free. Then, so that the React clients can successfully authenticate with their respective APIs you need to set the following environment variables in a `.env` saved at the root of the `inteli-demo` repository.
 
 | variable                     | required |                       default                       | description                                                           |
 | :--------------------------- | :------: | :-------------------------------------------------: | :-------------------------------------------------------------------- |
@@ -48,7 +48,7 @@ It's recommended to set your Docker resources higher than the default allocation
 
 ### Building the required images
 
-Build the images for each persona's client and IPFS node. This can be done most easily using the [build.sh](./scripts/build.sh) script.
+Build the images for each persona's client. This can be done most easily using the [build.sh](./scripts/build.sh) script.
 
 To rebuild all the different persona images, from the root directory of this repository run:
 
