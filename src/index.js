@@ -9,7 +9,6 @@ import AdditiveManufacturerApp from './am'
 import LaboratoryApp from './laboratory'
 import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
-import { initTokens } from './features/tokensSlice'
 import auth from './redux-middleware/auth'
 import localstorage from './redux-middleware/localstorage'
 
@@ -20,8 +19,6 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([auth, localstorage])
 })
 
-// move to middleware along with the new prop 'loaded: false' and update once don[e
-store.dispatch(initTokens())
 
 let App = null
 let props = {}

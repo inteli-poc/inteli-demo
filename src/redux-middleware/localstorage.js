@@ -25,9 +25,10 @@ const putToLocalStorage = (key, data) => {
     if (!data) throw new Error(`can not persist [${data}] to local storage`)
     console.log('debug: ', `saving [${key}] to local storage`, { data })
     const existing = localStorage.getItem(key) || undefined
+    console.log('debug: <existing> ', { existing, data })
 
     return existing
-        ? localStorage.setItem(key, JSON.stringify({ ...existing, data: [ ...data ], last: data.last }))
+        ? localStorage.setItem(key, JSON.stringify({ ...JSON.parse(existing), ...data }))
         : localStorage.setItem(key, JSON.stringify(data))
 }
 
