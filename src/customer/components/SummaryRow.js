@@ -79,7 +79,7 @@ const SummaryRow = ({ order, activeItem }) => {
         component={RouterLink}
         to={`/app/my-orders/${orderId}`}
       >
-        <Grid container xs={12} className={classes.listItemMargin}>
+        <Grid container className={classes.listItemMargin}>
           <Grid item xs={3}>
             <CardMedia
               component="img"

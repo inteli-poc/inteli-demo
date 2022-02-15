@@ -79,14 +79,14 @@ const Navigation = () => {
       <NavLink
         to="/app/customer-parts"
         className={`${classes.navButton} ${classes.navHover}`}
-        activeClassName={classes.navActive}
+        activeclassname={classes.navActive}
       >
         <Typography variant="subtitle2">Part inventory</Typography>
       </NavLink>
       <NavLink
         to="/app/my-orders"
         className={`${classes.navButton} ${classes.navHover}`}
-        activeClassName={classes.navActive}
+        activeclassname={classes.navActive}
       >
         <Typography variant="subtitle2">My orders</Typography>
       </NavLink>

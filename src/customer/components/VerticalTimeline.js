@@ -71,7 +71,7 @@ const VerticalTimeline = ({ order }) => {
 
   return (
     <Grid container id={orderId} spacing={0}>
-      <Grid xs>
+      <Grid item xs>
         <Timeline>
           <TimelineItem>
             <TimelineSeparator>
@@ -84,13 +84,13 @@ const VerticalTimeline = ({ order }) => {
                 }}
               />
             </TimelineSeparator>
-            <Grid sm={12}>
+            <Grid item sm={12}>
               <TimelineContent>
-                <Grid container alignItems="flex-start" xs={12}>
+                <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
                     <Typography variant="h6">{statusLabels[0]}</Typography>
                   </Grid>
-                  <Grid item xs={3} alignItems="flex-end">
+                  <Grid item xs={3}>
                     <Typography
                       variant="subtitle1"
                       className={`${classes.dateTime} ${classes.time}`}
@@ -98,7 +98,7 @@ const VerticalTimeline = ({ order }) => {
                       {deliveryBy}
                     </Typography>
                   </Grid>
-                  <Grid item alignItems="flex-start" xs={10}>
+                  <Grid item xs={10}>
                     <Typography
                       className={classes.timelineRowContent}
                       variant="subtitle1"
@@ -118,9 +118,9 @@ const VerticalTimeline = ({ order }) => {
                 style={{ backgroundColor: `${GetColour(statusIndex, 2)}` }}
               />
             </TimelineSeparator>
-            <Grid sm={12}>
+            <Grid item sm={12}>
               <TimelineContent>
-                <Grid container alignItems="flex-start" xs={12}>
+                <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
                     <Typography variant="h6">
                       {status === 'amended'
@@ -128,7 +128,7 @@ const VerticalTimeline = ({ order }) => {
                         : statusLabels[1]}
                     </Typography>
                   </Grid>
-                  <Grid item xs={3} alignItems="flex-end">
+                  <Grid item xs={3}>
                     <Typography
                       variant="subtitle1"
                       className={`${classes.dateTime} ${classes.time}`}
@@ -136,7 +136,7 @@ const VerticalTimeline = ({ order }) => {
                       {deliveryBy}
                     </Typography>
                   </Grid>
-                  <Grid item alignItems="flex-start" xs={10}>
+                  <Grid item xs={10}>
                     <Typography
                       className={classes.timelineRowContent}
                       variant="subtitle1"
@@ -155,14 +155,14 @@ const VerticalTimeline = ({ order }) => {
                 style={{ backgroundColor: `${GetColour(statusIndex, 3)}` }}
               />
             </TimelineSeparator>
-            <Grid sm={12}>
+            <Grid item sm={12}>
               <TimelineContent>
                 {' '}
-                <Grid container alignItems="flex-start" xs={12}>
+                <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
                     <Typography variant="h6">{statusLabels[2]}</Typography>
                   </Grid>
-                  <Grid item xs={3} alignItems="flex-end">
+                  <Grid item xs={3}>
                     <Typography
                       variant="subtitle1"
                       className={`${classes.dateTime} ${classes.time}`}
@@ -170,7 +170,7 @@ const VerticalTimeline = ({ order }) => {
                       {deliveryBy}
                     </Typography>
                   </Grid>
-                  <Grid item alignItems="flex-start" xs={10}>
+                  <Grid item xs={10}>
                     <Typography
                       className={classes.timelineRowContent}
                       variant="subtitle1"
@@ -194,14 +194,14 @@ const VerticalTimeline = ({ order }) => {
                 }}
               />
             </TimelineSeparator>
-            <Grid sm={12}>
+            <Grid item sm={12}>
               <TimelineContent>
                 {' '}
-                <Grid container alignItems="flex-start" xs={12}>
+                <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
                     <Typography variant="h6">{statusLabels[3]}</Typography>
                   </Grid>
-                  <Grid item xs={3} alignItems="flex-end">
+                  <Grid item xs={3}>
                     <Typography
                       variant="subtitle1"
                       className={`${classes.dateTime} ${classes.time}`}
@@ -209,7 +209,7 @@ const VerticalTimeline = ({ order }) => {
                       {deliveryBy}
                     </Typography>
                   </Grid>
-                  <Grid item alignItems="flex-start" xs={10}>
+                  <Grid item xs={10}>
                     <Typography
                       className={classes.timelineRowContent}
                       variant="subtitle1"
@@ -226,13 +226,13 @@ const VerticalTimeline = ({ order }) => {
                 style={{ backgroundColor: `${GetColour(statusIndex, 5)}` }}
               />
             </TimelineSeparator>
-            <Grid sm={12}>
+            <Grid item sm={12}>
               <TimelineContent>
-                <Grid container alignItems="flex-start" xs={12}>
+                <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
                     <Typography variant="h6">{statusLabels[4]}</Typography>
                   </Grid>
-                  <Grid item xs={3} alignItems="flex-end">
+                  <Grid item xs={3}>
                     <Typography
                       variant="subtitle1"
                       className={`${classes.dateTime} ${classes.time}`}
@@ -240,7 +240,7 @@ const VerticalTimeline = ({ order }) => {
                       {deliveryBy}
                     </Typography>
                   </Grid>
-                  <Grid item alignItems="flex-start" xs={10}>
+                  <Grid item xs={10}>
                     <Typography
                       className={classes.timelineRowContent}
                       variant="subtitle1"
