@@ -21,7 +21,6 @@ const useStyles = makeStyles({
     marginRight: '187px',
     marginLeft: '187px',
     marginBottom: '87px',
-    //maxWidth: '1350px',
   },
 })
 

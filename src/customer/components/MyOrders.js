@@ -7,8 +7,6 @@ import { useSelector } from 'react-redux'
 import SummaryRow from './OrderComponents/SummaryRow'
 import OrderSummary from './OrderComponents/OrderSummary'
 
-import uniqid from 'uniqid'
-
 const useStyles = makeStyles((theme) => ({
   backButton: {
     textDecoration: 'none',
@@ -17,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   order: {
     width: '100%',
     border: 'solid #ccc 1px',
-    paddingTop: '20px 20px 20px 0px',
+    paddingTop: '20px',
     marginBottom: '8px',
   },
   detailText: {
@@ -26,9 +24,6 @@ const useStyles = makeStyles((theme) => ({
   name: {
     marginBottom: '20px',
   },
-  details: {
-    // marginRight: 24,
-  },
   mainPadding: {
     paddingTop: '130px',
   },
@@ -36,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
     width: '390px',
   },
   rightColumn: {
-    /* width: '880px', */
     width: '1146px',
     borderRadius: '8px',
   },
@@ -58,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: '80px',
   },
   containerWidth: {
-    /* width: '1280px', */
     width: '1546px',
   },
   active: {
@@ -121,7 +114,7 @@ const MyOrders = () => {
       <Grid item className={classes.leftColumn}>
         {[...customerOrders].reverse().map((order) => (
           <SummaryRow
-            key={uniqid()}
+            key={order.id}
             order={order}
             activeItem={selectedId === order.id}
           />
