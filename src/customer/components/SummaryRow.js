@@ -61,12 +61,14 @@ const SummaryRow = ({ order, activeItem }) => {
   const {
     id: orderId,
     metadata: { name, orderImage: image, quantity },
+    timeStamp,
   } = order
   const classes = useStyles()
-
   const todaysDate = new Date()
-  const formattedDate = moment(todaysDate, 'DD MMM YYYY').format('DD MMM YYYY')
-
+  const formattedTimeStamp = new Date(timeStamp)
+  const formattedDate = formattedTimeStamp
+    ? moment(formattedTimeStamp, 'DD MMM YYYY').format('DD MMM YYYY')
+    : moment(todaysDate, 'DD MMM YYYY').format('DD MMM YYYY')
   return (
     <Paper
       id={orderId}
