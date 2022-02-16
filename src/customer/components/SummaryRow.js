@@ -60,11 +60,12 @@ const useStyles = makeStyles({
 const SummaryRow = ({ order, activeItem }) => {
   const {
     id: orderId,
-    metadata: { name, orderImage: image, deliveryBy, quantity },
+    metadata: { name, orderImage: image, quantity },
   } = order
   const classes = useStyles()
 
-  const formattedDate = moment(deliveryBy, 'DD MMM YYYY').format('DD MMM YYYY')
+  const todaysDate = new Date()
+  const formattedDate = moment(todaysDate, 'DD MMM YYYY').format('DD MMM YYYY')
 
   return (
     <Paper
