@@ -15,7 +15,6 @@ const Orders = () => {
   const selectedOrder = params.orderId
     ? customerOrders.find(({ id }) => `${id}` === params.orderId)
     : null
-
   return (
     <Box>
       <Header title="Orders" />

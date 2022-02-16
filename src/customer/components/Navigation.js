@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     width: '32px',
     height: '32px',
-    color: theme.palette.primary.main,
+    color: '#f03',
     background: theme.palette.primary.contrastText,
     borderRadius: '50%',
     fontSize: '1.2rem',
@@ -79,14 +79,14 @@ const Navigation = () => {
       <NavLink
         to="/app/customer-parts"
         className={`${classes.navButton} ${classes.navHover}`}
-        activeClassName={classes.navActive}
+        activeclassname={classes.navActive}
       >
         <Typography variant="subtitle2">Part inventory</Typography>
       </NavLink>
       <NavLink
         to="/app/my-orders"
         className={`${classes.navButton} ${classes.navHover}`}
-        activeClassName={classes.navActive}
+        activeclassname={classes.navActive}
       >
         <Typography variant="subtitle2">My orders</Typography>
       </NavLink>

@@ -44,7 +44,7 @@ const DownloadButton = (props) => {
         container
         item
         direction="row"
-        justify="space-between"
+        justifyContent="space-between"
         className={classes.download}
       >
         <Grid container item xs={8} spacing={1}>

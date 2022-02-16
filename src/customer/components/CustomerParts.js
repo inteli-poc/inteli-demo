@@ -64,7 +64,7 @@ const CustomerParts = () => {
         container
         direction="row"
         className={classes.searchFieldContainer}
-        justify="flex-start"
+        justifyContent="flex-start"
       >
         <Grid item xs={11}>
           <SearchField handleChange={searchBy} />
