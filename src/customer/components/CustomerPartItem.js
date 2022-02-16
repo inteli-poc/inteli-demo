@@ -66,7 +66,7 @@ const CustomerPartItem = (props) => {
           </Grid>
           <Grid
             container
-            justify="space-between"
+            justifyContent="space-between"
             alignItems="center"
             className={classes.lastPartDetailsRow}
           >
