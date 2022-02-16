@@ -1,8 +1,8 @@
 import { update, upsertTokens } from '../features/tokensSlice'
 
 /*
-    at the moment localstorage middleware is more like a helper function
-    once reducer have been updated sort this so it just persists and reads
+  at the moment localstorage middleware is more like a helper function
+  once reducers have been updated sort this so it just persists and reads
 */
 const getCachedTokens = ({ dispatch }) => {
   const tokens = readFromLocalStorage('tokens')

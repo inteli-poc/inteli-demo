@@ -8,12 +8,13 @@ import { fetchTokens } from '../features/tokensSlice'
 const BlockchainWatcher = ({ children }) => {
   const dispatch = useDispatch()
   const isFetching = useSelector((state) => state.tokens.isFetching)
-  // move to middleware along with the new prop 'loaded: false' and update once don[e
+
   useEffect(() => {
     dispatch(initTokens())
   }, [])
 
   // This effect manages the polling for new tokens
+  // TODO refactor chain watcher
   useEffect(() => {
     // will store the timeout id. This will be set for the first time lower down
     // note when this is null it means the timer has been cancelled which is caused

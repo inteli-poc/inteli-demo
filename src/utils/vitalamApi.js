@@ -77,37 +77,19 @@ const useApi = () => {
         },
       }
     )
-    // temporary catch old style metadata
-    if (token.metadata_keys.includes('')) {
-      return {
-        ...token,
-        metadata: await wrappedFetch(
-          `http://${API_HOST}:${API_PORT}/v2/item/${id}/metadata`,
-          {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'no-cache',
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        ),
-      }
-    } else {
-      const metadata = await getNewMetadata(token)
-      if (metadata?.orderImage)
-        return {
-          ...token,
-          metadata: {
-            ...metadata,
-            orderImage: {
+
+    const metadata = await getNewMetadata(token)
+    return {
+      ...token,
+      metadata: {
+        ...metadata,
+        orderImage: metadata?.orderImage
+          ? {
               ...metadata.orderImage,
               url: await svgMimeUrl(metadata.orderImage.url),
-            },
-          },
-        }
-
-      return { ...token, metadata }
+            }
+          : undefined,
+      },
     }
   }
 
