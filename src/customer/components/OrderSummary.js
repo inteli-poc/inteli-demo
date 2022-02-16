@@ -113,13 +113,13 @@ const OrderSummary = ({ order }) => {
   const {
     id: orderId,
     metadata: {
-      name: name,
+      name,
       orderImage: image,
-      alloy: alloy,
-      material: material,
-      partId: partId,
-      price: price,
-      quantity: quantity,
+      alloy,
+      material,
+      partId,
+      price,
+      quantity,
     },
   } = order
 

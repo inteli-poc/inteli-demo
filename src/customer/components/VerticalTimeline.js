@@ -51,9 +51,9 @@ const VerticalTimeline = ({ order }) => {
     statusIndex = 1
   } else if (status === orderStatus.accepted) {
     statusIndex = 2
-  } else if (status === orderStatus.manufactured) {
-    statusIndex = 3
   } else if (status === orderStatus.manufacturing) {
+    statusIndex = 3
+  } else if (status === orderStatus.manufactured) {
     statusIndex = 4
   } else if (status === orderStatus.amended) {
     statusIndex = 2

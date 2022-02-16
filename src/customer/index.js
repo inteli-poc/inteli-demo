@@ -17,10 +17,7 @@ const theme = createTheme({
 
 const useStyles = makeStyles({
   content: {
-    marginTop: '130px',
-    marginRight: '187px',
-    marginLeft: '187px',
-    marginBottom: '87px',
+    margin: '130px 187px 87px 187px',
   },
 })
 
