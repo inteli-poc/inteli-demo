@@ -235,8 +235,6 @@ const CustomerPart = () => {
     if (isFormReady()) {
       setIsOrdering(true)
 
-      const originalOrderDate = new Date().toDateString()
-
       const orderImageFile = await createOrderImageFile(image)
 
       const roles = { Owner: identities.am }
@@ -257,20 +255,13 @@ const CustomerPart = () => {
         },
       }
 
-      const formData = createFormData(
-        [],
-        roles,
-        metadata,
-        orderImageFile,
-        originalOrderDate
-      )
+      const formData = createFormData([], roles, metadata, orderImageFile)
       const response = await api.runProcess(formData)
       const token = {
         id: response[0],
         original_id: response[0],
         roles,
         metadata,
-        originalOrderDate,
       }
 
       dispatch(upsertOrder(token))

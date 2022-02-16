@@ -64,12 +64,8 @@ const SummaryRow = ({ order, activeItem }) => {
   } = order
   const classes = useStyles()
 
-  console.log(order)
-
   const todaysDate = new Date()
-  const formattedDate = order.originalOrderDate
-    ? moment(order.originalOrderDate, 'DD MMM YYYY').format('DD MMM YYYY')
-    : moment(todaysDate, 'DD MMM YYYY').format('DD MMM YYYY')
+  const formattedDate = moment(todaysDate, 'DD MMM YYYY').format('DD MMM YYYY')
 
   return (
     <Paper
