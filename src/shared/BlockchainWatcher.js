@@ -4,12 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchTokens, initTokens } from '../features/tokensSlice'
 // import createRefToken from '../utils/resetChain'
 
-// so metadata files that are JSON can be used, change from default MIME of 'application/octet-stream'
-const toJSON = async (url) => {
-  const response = await fetch(url)
-  return response.json()
-}
-
 // temporary version of the component that will poll the API
 const BlockchainWatcher = ({ children }) => {
   const dispatch = useDispatch()
@@ -33,71 +27,12 @@ const BlockchainWatcher = ({ children }) => {
           if (!isFetching) {
             dispatch(fetchTokens())
           }
-<<<<<<< HEAD
         } catch (err) {
           console.error(
             `Error polling for blockchain state. Error was ${
               `"${err.message}"` || JSON.stringify(err, null, 2)
             }`
           )
-=======
-
-          if (
-            token.metadata.type === tokenTypes.order &&
-            token.metadata.requiredCerts
-          ) {
-            token.metadata.requiredCerts = await toJSON(
-              token.metadata.requiredCerts.url
-            )
-          }
-
-          // if state has been modified and the effect canceled bail. The re-render will
-          // generate the effect again with the correct state context. Note nothing asynchronous
-          // should follow this point in the loop
-          if (timer === null) {
-            return
-          }
-
-          // Handle each token based on type
-          switch (token.metadata.type) {
-            case tokenTypes.order: {
-              dispatch(
-                upsertOrder({
-                  id: token.id,
-                  original_id: token.original_id,
-                  roles: token.roles,
-                  metadata: token.metadata,
-                  timeStamp: token.timestamp,
-                })
-              )
-              break
-            }
-            case tokenTypes.powder:
-              dispatch(
-                upsertPowder({
-                  id: token.id,
-                  original_id: token.original_id,
-                  roles: token.roles,
-                  metadata: token.metadata,
-                })
-              )
-              break
-            case tokenTypes.powderTest:
-              dispatch(
-                upsertLabTest({
-                  id: token.id,
-                  original_id: token.original_id,
-                  roles: token.roles,
-                  metadata: token.metadata,
-                })
-              )
-              break
-            default:
-              console.error(`Unknown token type ${token.metadata.type}`)
-          }
-          // update the `lastProcessedId` now we've processed the token
-          lastProcessedId.current = i
->>>>>>> main
         }
       }
       const timer = setTimeout(timerFn, 13000)
