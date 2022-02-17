@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { CardMedia, Box, Grid, Paper, Typography } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useDispatch } from 'react-redux'
@@ -7,13 +7,10 @@ import { markOrderRead } from '../../../features/readOrdersSlice'
 import { orderStatus } from '../../../utils'
 import OrderStatus from './Status'
 import AcceptOrderAction from './AcceptAction'
-import RejectOrderAction from './RejectAction'
 import ManufactureOrderAction from './ManufactureAction'
 import Attachment from '../Attachment'
-import rejectAndNegotiateCloseX from '../../../images/close-x-black-icon.svg'
-import OrderQuantityInput from '../../../shared/OrderQuantityInput'
-import OrderDeliveryByDatePicker from '../../../shared/OrderDeliveryByDatePicker'
-import { isDeliveryByInvalid, isQuantityInvalid } from '../../../utils/forms'
+import Negotiate from './Negotiate'
+import Certification from './Certification'
 
 const useStyles = makeStyles({
   root: {
@@ -43,47 +40,6 @@ const useStyles = makeStyles({
   attachment: {
     width: '100%',
   },
-  rejectAndNegotiateContainer: {
-    padding: '24px 28px',
-    margin: '32px 0px',
-    width: '100%',
-  },
-  rejectAndNegotiateToggle: {
-    '&&:hover': {
-      cursor: 'pointer',
-    },
-  },
-  rejectAndNegotiateX: {
-    width: '16px',
-    height: '16px',
-    '&&:hover': {
-      cursor: 'pointer',
-    },
-  },
-  rejectAndNegotiateTitle: {
-    textDecoration: 'underline',
-    fontWeight: '600',
-  },
-  rejectAndNegotiateDownArrow: {
-    margin: '6px',
-    width: '0px',
-    height: '0px',
-    borderLeft: '6px solid transparent',
-    borderRight: '6px solid transparent',
-    borderTop: '6px solid #000',
-  },
-  rejectAndNegotiateUpArrow: {
-    margin: '6px',
-    width: '0px',
-    height: '0px',
-    borderLeft: '6px solid transparent',
-    borderRight: '6px solid transparent',
-    borderBottom: '6px solid #000',
-  },
-  rejectAndNegotiateText: {
-    margin: '32px 0px',
-    fontSize: '0.9rem',
-  },
   contentForm: {
     margin: '0px 64px 0px -8px',
     padding: '0px',
@@ -107,9 +63,6 @@ const useStyles = makeStyles({
     color: '#ff0000',
     fontSize: '1rem',
     margin: '8px 0px',
-  },
-  negotiationButtonWrapper: {
-    margin: '24px 0px 8px 0px',
   },
 })
 
@@ -147,12 +100,6 @@ const OrderDetail = ({ order }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const [quantity, setQuantity] = useState(1)
-  const [quantityError, setQuantityError] = useState('')
-  const [deliveryBy, setDeliveryBy] = useState('')
-  const [deliveryByError, setDeliveryByError] = useState('')
-  const [displayNegotiation, setDisplayNegotiation] = useState(true)
-
   const {
     metadata: {
       partId,
@@ -165,46 +112,13 @@ const OrderDetail = ({ order }) => {
       type,
       status,
       orderReference,
+      requiredCerts,
     },
   } = order
 
   useEffect(() => {
     dispatch(markOrderRead(order.id))
   }, [order, dispatch])
-
-  const toggleNegotiationDisplay = () => {
-    setDisplayNegotiation(!displayNegotiation)
-  }
-
-  const setQuantityValue = (value) => {
-    const quantityValue = value.replace(/\D/g, '')
-
-    setQuantityError(isQuantityInvalid(quantityValue, quantityOnChain))
-    setQuantity(parseInt(quantityValue, 10) || quantityValue)
-  }
-
-  const setDeliveryByValue = (value) => {
-    setDeliveryByError(isDeliveryByInvalid(value))
-    setDeliveryBy(value)
-  }
-
-  const handleChange = (name) => (event) => {
-    switch (name) {
-      case 'quantity':
-        setQuantityValue(event.target.value)
-        break
-      case 'deliveryBy':
-        setDeliveryByValue(event.target.value)
-        break
-    }
-  }
-
-  const isFormReady = () => {
-    return (
-      !isQuantityInvalid(quantity, quantityOnChain) &&
-      !isDeliveryByInvalid(deliveryBy)
-    )
-  }
 
   const EmptyAction = () => {
     return <></>
@@ -317,72 +231,10 @@ const OrderDetail = ({ order }) => {
           <Action order={order} />
         </Grid>
       </Grid>
-      <Grid
-        container
-        justify="space-between"
-        className={classes.rejectAndNegotiateContainer}
-      >
-        <Grid item>
-          <Grid container>
-            <Grid
-              item
-              className={`${classes.rejectAndNegotiateTitle} ${classes.rejectAndNegotiateToggle}`}
-              onClick={toggleNegotiationDisplay}
-            >
-              <Typography variant="subtitle1">
-                Reject &amp; negotiate
-              </Typography>
-            </Grid>
-            <Grid
-              item
-              className={
-                displayNegotiation
-                  ? classes.rejectAndNegotiateUpArrow
-                  : classes.rejectAndNegotiateDownArrow
-              }
-            ></Grid>
-          </Grid>
-        </Grid>
-        {displayNegotiation && (
-          <Grid item>
-            <CardMedia
-              image={rejectAndNegotiateCloseX}
-              className={`${classes.rejectAndNegotiateX} ${classes.rejectAndNegotiateToggle}`}
-              onClick={toggleNegotiationDisplay}
-            />
-          </Grid>
-        )}
-        {displayNegotiation && (
-          <Grid container>
-            <Grid item className={classes.rejectAndNegotiateText}>
-              <Typography item variant="subtitle1" color="textSecondary">
-                In the case you can&apos;t meet the requirements of the purchase
-                order, you may negotiate the quantity and set a delivery date of
-                the remaining items.
-              </Typography>
-            </Grid>
-            <OrderQuantityInput
-              handleChange={handleChange}
-              label="*Processed Quantity:"
-              quantity={quantity}
-              errorMessage={quantityError}
-            />
-            <OrderDeliveryByDatePicker
-              handleChange={handleChange}
-              label="*Delivery date of remaining items:"
-              errorMessage={deliveryByError}
-            />
-            <Grid className={classes.negotiationButtonWrapper}>
-              <RejectOrderAction
-                order={order}
-                quantity={quantity}
-                deliveryBy={deliveryBy}
-                formReady={isFormReady()}
-              />
-            </Grid>
-          </Grid>
-        )}
-      </Grid>
+      {status === orderStatus.submitted && <Negotiate order={order} />}
+      {requiredCerts && status === orderStatus.accepted && (
+        <Certification order={order} />
+      )}
     </Paper>
   )
 }

@@ -1,13 +1,13 @@
 import React from 'react'
 import 'reset-css'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+import { createTheme, ThemeProvider } from '@material-ui/core/styles'
 import { Container, makeStyles } from '@material-ui/core'
 import { BrowserRouter } from 'react-router-dom'
 
 import Header from './components/Header'
 import Router from './router'
 
-const labTheme = createMuiTheme({
+const labTheme = createTheme({
   props: {
     MuiContainer: {
       maxWidth: 'xl',
@@ -37,7 +37,7 @@ const labTheme = createMuiTheme({
   },
 })
 
-const amLabTheme = createMuiTheme({
+const amLabTheme = createTheme({
   props: {
     MuiContainer: {
       maxWidth: 'xl',

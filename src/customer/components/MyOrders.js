@@ -1,16 +1,11 @@
-import React from 'react'
-import {
-  Paper,
-  Grid,
-  CardMedia,
-  Typography,
-  Box,
-  Container,
-} from '@material-ui/core'
-import BackButton from './BackButton'
+import React, { useEffect } from 'react'
+import { Grid } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
+import { useNavigate, useParams } from 'react-router-dom'
+
 import { useSelector } from 'react-redux'
-import OrderStatusProgressBar from './OrderStatusProgressBar'
+import SummaryRow from './SummaryRow'
+import OrderSummary from './OrderSummary'
 
 const useStyles = makeStyles((theme) => ({
   backButton: {
@@ -20,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   order: {
     width: '100%',
     border: 'solid #ccc 1px',
-    padding: '20px 20px 20px 0px',
+    paddingTop: '20px',
     marginBottom: '8px',
   },
   detailText: {
@@ -29,96 +24,87 @@ const useStyles = makeStyles((theme) => ({
   name: {
     marginBottom: '20px',
   },
-  details: {
-    marginRight: 24,
+  mainPadding: {
+    paddingTop: '130px',
+  },
+  leftColumn: {
+    width: '390px',
+  },
+  rightColumn: {
+    width: '1146px',
+    borderRadius: '8px',
+  },
+  maherStyle: {
+    backgroundColor: '#0C74BB',
+    color: '#ffff',
+    padding: '5px',
+    border: ' 1px solid 0C74BB',
+    borderRadius: '3px',
+    marginRight: '20px',
+  },
+  listPadding: {
+    marginBottom: '10px',
+  },
+  listItemMargin: {
+    marginBottom: '60px',
+  },
+  datePadding: {
+    paddingLeft: '80px',
+  },
+  containerWidth: {
+    width: '1546px',
+  },
+  active: {
+    background: 'green',
+  },
+  notActive: {
+    background: 'red',
   },
 }))
 
-const DetailRow = ({ title, value }) => {
-  const classes = useStyles()
-  return (
-    <Box>
-      <Typography className={classes.detailText} variant="body1">
-        {title}:
-      </Typography>
-      &nbsp;
-      <Typography
-        className={classes.detailText}
-        variant="body2"
-        color="textSecondary"
-      >
-        {value}
-      </Typography>
-    </Box>
-  )
+const getSelectedOrder = (orders, paramsId) => {
+  if (orders.length > 0) {
+    return paramsId
+      ? orders.find(({ id }) => `${id}` === paramsId)
+      : orders[orders.length - 1]
+  } else {
+    return null
+  }
 }
 
 const MyOrders = () => {
+  const params = useParams()
+  const navigate = useNavigate()
+
+  //This is where the ID from a previously selected item is stored
   const customerOrders = useSelector((state) => state.customerOrders)
+  const selectedOrder = getSelectedOrder(customerOrders, params.orderId)
+
   const classes = useStyles()
 
+  useEffect(() => {
+    if (selectedOrder) {
+      navigate({
+        pathname: `/app/my-orders/${selectedOrder.id}`,
+      })
+    }
+  }, [navigate, selectedOrder])
+
   return (
-    <Container>
-      <BackButton
-        buttonClass={classes.backButton}
-        backToLocation="/app/customer-parts"
-        value="< Back"
-      />
-      <Container>
-        {customerOrders.length ? (
-          [...customerOrders].reverse().map((order) => {
-            const {
-              metadata: {
-                status,
-                powderId,
-                orderImage,
-                name,
-                partId,
-                material,
-                alloy,
-                orderReference,
-              },
-            } = order
-            return (
-              <Paper
-                elevation={0}
-                key={orderReference}
-                className={classes.order}
-              >
-                <Grid container item direction="row" alignItems="center">
-                  <Grid item xs={2}>
-                    <CardMedia
-                      component="img"
-                      alt={name}
-                      image={orderImage.url}
-                      title={name}
-                    />
-                  </Grid>
-                  <Grid item xs={2} className={classes.details}>
-                    <Typography variant="h6" className={classes.name}>
-                      {name}
-                    </Typography>
-                    <DetailRow title="Part Number" value={partId} />
-                    <DetailRow title="Material" value={material} />
-                    <DetailRow title="Alloy" value={alloy} />
-                  </Grid>
-                  <Grid item>
-                    <OrderStatusProgressBar
-                      status={status}
-                      orderPowderId={powderId}
-                    />
-                  </Grid>
-                </Grid>
-              </Paper>
-            )
-          })
-        ) : (
-          <Grid container direction="row" justify="center">
-            {'There are no orders'}
-          </Grid>
-        )}
-      </Container>
-    </Container>
+    <Grid container className={classes.containerWidth}>
+      <Grid item className={classes.leftColumn}>
+        {[...customerOrders].reverse().map((order) => (
+          <SummaryRow
+            key={order.id}
+            order={order}
+            activeItem={selectedOrder && selectedOrder.id === order.id}
+          />
+        ))}
+      </Grid>
+      <Grid item className={classes.rightColumn}>
+        {selectedOrder && <OrderSummary order={selectedOrder} />}
+      </Grid>
+    </Grid>
   )
 }
 

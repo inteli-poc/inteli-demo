@@ -1,13 +1,13 @@
 import React from 'react'
 import 'reset-css'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+import { createTheme, ThemeProvider } from '@material-ui/core/styles'
 import { makeStyles, Container } from '@material-ui/core'
 import { BrowserRouter } from 'react-router-dom'
 
 import Header from './components/Header'
 import Router from './router'
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#1f918b',
@@ -17,8 +17,7 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles({
   content: {
-    margin: '20px auto',
-    maxWidth: '1350px',
+    margin: '130px 187px 87px 187px',
   },
 })
 

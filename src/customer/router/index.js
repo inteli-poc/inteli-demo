@@ -10,6 +10,7 @@ const Routing = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/app/customer-parts" />} />
       <Route path="/app/my-orders" element={<MyOrders />} />
+      <Route path="/app/my-orders/:orderId" element={<MyOrders />} />
       <Route path="/app/customer-part/:partId" element={<CustomerPart />} />
       <Route path="/app/customer-parts" element={<CustomerParts />} />
     </Routes>

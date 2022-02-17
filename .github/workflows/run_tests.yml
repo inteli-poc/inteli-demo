@@ -1,6 +1,6 @@
 name: Run Lint and Depcheck
 
-on: [pull_request]
+on: [push]
 
 jobs:
   lint:
