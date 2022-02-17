@@ -47,12 +47,6 @@ const getData = async (last = { id: 1 }, tokens = {}, position) => {
   if (!position || last.id > position) {
     const { newPosition, data, ref } = await getRefToken(last, position)
 
-    if (ref) {
-      // TODO
-      // clear all tokens before ref
-      // set new ref and persist, maybe a new reducer
-    }
-
     return await getData(
       last,
       { ...tokens, data: [...data, ...(tokens?.data || [])] },
@@ -74,7 +68,6 @@ const getData = async (last = { id: 1 }, tokens = {}, position) => {
 // only new tokens will call upsert actions
 const upsertTokens = (tokens, dispatch) => {
   const { ORDER, LAB_TEST, POWDER } = groupBy(tokens, 'metadata.type')
-  // TODO comeup with a nicer way so they can be rendered one by one while loading
   if (ORDER) ORDER.map((token) => dispatch(upsertOrder(token)))
   if (POWDER) POWDER.map((token) => dispatch(upsertPowder(token)))
   if (LAB_TEST) LAB_TEST.map((token) => dispatch(upsertLabTest(token)))
@@ -125,7 +118,7 @@ const tokens = createSlice({
     addRef: {
       reducer(state, { payload }) {
         const { id } = payload
-        // TODO add middleware for clearing orders
+        
         return {
           ...state,
           ref: payload,
