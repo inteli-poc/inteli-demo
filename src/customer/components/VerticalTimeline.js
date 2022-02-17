@@ -10,6 +10,8 @@ import { Typography } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
 import { orderStatus } from '../../utils/statuses'
+import moment from 'moment'
+import Button from '@material-ui/core/Button'
 
 const useStyles = makeStyles({
   dateTime: {
@@ -25,6 +27,42 @@ const useStyles = makeStyles({
   timelineRowContent: {
     padding: '20px 0px 40px 0px',
   },
+  actionRowWarning: {
+    color: '#C5052B',
+    fontWeight: '700',
+    paddingBottom: '15px',
+    paddingTop: '40px',
+  },
+  rejectedWarningBox: {
+    backgroundColor: '#ff003308',
+    minHeight: '150px',
+    borderLeft: '3px solid #C5052B',
+    marginBottom: '60px',
+  },
+  proposedQuantity: {
+    padding: '32px 40px 8px ',
+  },
+  proposedDeliveryDate: {
+    paddingTop: '32px',
+    paddingLeft: '40px',
+  },
+  proposedTextStyle: {
+    fontWeight: '700',
+    fontSize: '16px',
+    lineHeight: '18.75px',
+    paddingBottom: '8px',
+  },
+  acceptProposedButton: {
+    backgroundColor: '#17AE93',
+    color: '#fff',
+    width: '125px',
+    marginBottom: '15px',
+  },
+  rejectProposedButton: {
+    backgroundColor: '#CCCCCC',
+    color: '#fff',
+    width: '125px',
+  },
 })
 
 // Inital labels to be used on the timeline, will need refactoring when alternatives are added
@@ -34,7 +72,7 @@ const statusLabels = [
   'Certification',
   'Dispatched',
   'Delivered',
-  'Amended',
+  'Order Rejected',
 ]
 
 const VerticalTimeline = ({ order }) => {
@@ -42,9 +80,14 @@ const VerticalTimeline = ({ order }) => {
 
   const {
     id: orderId,
-    metadata: { deliveryBy, status },
+    metadata: { deliveryBy, status, quantity },
+    timeStamp,
   } = order
 
+  const timestamp = new Date(timeStamp)
+  const formattedDate = moment(timestamp, 'DD-MM-YYYY hh:mm').format(
+    'DD-MM-YYYY hh:mm'
+  )
   // Set the current status order. Again will eventually need updating with more states
   let statusIndex = 0
   if (status === orderStatus.submitted) {
@@ -140,15 +183,74 @@ const VerticalTimeline = ({ order }) => {
                       variant="subtitle1"
                       className={`${classes.dateTime} ${classes.time}`}
                     >
-                      {deliveryBy}
+                      {formattedDate}
                     </Typography>
                   </Grid>
-                  <Grid item xs={10}>
-                    <Typography
-                      className={classes.timelineRowContent}
-                      variant="subtitle1"
-                    ></Typography>
-                  </Grid>
+                  {status === orderStatus.amended && (
+                    <>
+                      <Typography
+                        variant="subtitle2"
+                        className={classes.actionRowWarning}
+                      >
+                        Action Required
+                      </Typography>
+
+                      <Grid
+                        container
+                        xs={12}
+                        className={classes.rejectedWarningBox}
+                      >
+                        <Grid item xs={4} className={classes.proposedQuantity}>
+                          <Typography
+                            variant="subtitle1"
+                            className={classes.proposedTextStyle}
+                          >
+                            Proposed quantity:
+                          </Typography>
+                          <Typography variant="body1">{quantity}</Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          xs={5}
+                          className={classes.proposedDeliveryDate}
+                        >
+                          <Typography
+                            variant="subtitle1"
+                            className={classes.proposedTextStyle}
+                          >
+                            Delivery date of remaining items:
+                          </Typography>
+                          <Typography variant="body1">
+                            {moment(deliveryBy, 'DD - MM - YYYY').format(
+                              'DD - MM - YYYY'
+                            )}
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          xs={3}
+                          className={classes.proposedDeliveryDate}
+                          alignItems="flex-end"
+                        >
+                          <Button
+                            variant="contained"
+                            size="medium"
+                            className={classes.acceptProposedButton}
+                          >
+                            Accept
+                          </Button>
+                          <br />
+                          <Button
+                            variant="contained"
+                            size="medium"
+                            className={classes.rejectProposedButton}
+                          >
+                            Reject
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </>
+                  )}
                 </Grid>
               </TimelineContent>
             </Grid>

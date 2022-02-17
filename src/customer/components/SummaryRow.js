@@ -63,6 +63,7 @@ const SummaryRow = ({ order, activeItem }) => {
     metadata: { name, orderImage: image, quantity },
     timeStamp,
   } = order
+  console.log(order)
   const classes = useStyles()
   const todaysDate = new Date()
   const formattedTimeStamp = new Date(timeStamp)
