@@ -14,6 +14,12 @@ const svgMimeUrl = async (imageUrl) => {
   return URL.createObjectURL(blob)
 }
 
+// so metadata files that are JSON can be used, change from default MIME of 'application/octet-stream'
+const toJSON = async (url) => {
+  const response = await fetch(url)
+  return response.json()
+}
+
 // temporary version of the component that will poll the API
 const BlockchainWatcher = ({ children }) => {
   const dispatch = useDispatch()
@@ -50,6 +56,15 @@ const BlockchainWatcher = ({ children }) => {
           ) {
             token.metadata.orderImage.url = await svgMimeUrl(
               token.metadata.orderImage.url
+            )
+          }
+
+          if (
+            token.metadata.type === tokenTypes.order &&
+            token.metadata.requiredCerts
+          ) {
+            token.metadata.requiredCerts = await toJSON(
+              token.metadata.requiredCerts.url
             )
           }
 
