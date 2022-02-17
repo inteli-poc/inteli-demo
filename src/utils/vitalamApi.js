@@ -56,7 +56,7 @@ const useApi = () => {
     })
 
   const latestToken = async () => {
-    return await wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/last-token`, {
+    return wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/last-token`, {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',

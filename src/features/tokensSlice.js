@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { groupBy } from 'lodash'
 
 import { upsertLabTest } from './labTestsSlice'
 import { upsertOrder } from './ordersSlice'
@@ -7,12 +6,21 @@ import { upsertPowder } from './powdersSlice'
 import { PromiseStateFactory } from './utils'
 import Api from '../utils/vitalamApi'
 
+const upsertMap = {
+  ORDER: (token, dispatch) => dispatch(upsertOrder(token)),
+  LAB_TEST: (token, dispatch) => dispatch(upsertLabTest(token)),
+  POWDER: (token, dispatch) => dispatch(upsertPowder(token)),
+}
+
 const getLatestToken = async ({ getState }) => {
   const id = await Api()
     .latestToken()
     .then((res) => res.id)
-  const last = getState()?.tokens?.last
+  if (!id) {
+    return console.error(`there are no tokens to fetch. Latet: ${id}`)
+  }
 
+  const last = getState()?.tokens?.last
   if (id === last?.id) {
     return {
       last,
@@ -28,19 +36,19 @@ const getLatestToken = async ({ getState }) => {
 
 const getRefToken = async (token, position, tokens = []) => {
   const isRef = token.metadata.type === 'REFERENCE'
-  // 1. api fails to return token with id 0, so setting first as ref
-  // 2. so if ref token found, then return and carry on fetching in getData fn
   const isFirst = token.id === 1 || position + 1 === token.id
-  return isFirst || isRef
-    ? {
-        ref: isRef ? token : tokens.ref || undefined,
-        data: [...tokens, token],
-        newPosition: token.id + tokens.length,
-      }
-    : await getRefToken(await Api().tokenById(token.id - 1), position, [
-        ...tokens,
-        token,
-      ])
+  const data = [...tokens, token]
+
+  if (isFirst || isRef) {
+    return {
+      ref: isRef ? token : tokens.ref || undefined,
+      data,
+      newPosition: token.id + tokens.length,
+    }
+  }
+
+  const prevToken = await Api().tokenById(token.id - 1)
+  return getRefToken(prevToken, position, data)
 }
 
 const getData = async (last = { id: 1 }, tokens = {}, position) => {
@@ -59,7 +67,7 @@ const getData = async (last = { id: 1 }, tokens = {}, position) => {
     const newToken = await Api().tokenById(position + 1)
     const updatedTokens = { ...tokens, data: [...tokens.data, newToken] }
 
-    return await getData(last, updatedTokens, position + 1)
+    return getData(last, updatedTokens, position + 1)
   }
 
   return { ...tokens, last }
@@ -67,11 +75,11 @@ const getData = async (last = { id: 1 }, tokens = {}, position) => {
 
 // this is a helper function to temporarly address current setup
 // only new tokens will call upsert actions
-const upsertTokens = (tokens, dispatch) => {
-  const { ORDER, LAB_TEST, POWDER } = groupBy(tokens, 'metadata.type')
-  if (ORDER) ORDER.map((token) => dispatch(upsertOrder(token)))
-  if (POWDER) POWDER.map((token) => dispatch(upsertPowder(token)))
-  if (LAB_TEST) LAB_TEST.map((token) => dispatch(upsertLabTest(token)))
+const upsertTokens = (tokens = [], dispatch) => {
+  tokens.forEach((token) => {
+    const type = token.metadata.type
+    upsertMap[type](token, dispatch)
+  })
 }
 
 // this thunk is for fetching new tokens and storing to localstorage

@@ -16,8 +16,7 @@ const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',
   preloadedState: loadState(),
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(auth),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(auth),
 })
 
 store.subscribe(() => {
