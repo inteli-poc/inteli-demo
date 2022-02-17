@@ -24,6 +24,9 @@ const useStyles = makeStyles({
   time: {
     paddingLeft: '20px',
   },
+  columnMinHeight: {
+    minHeight: '110px',
+  },
   timelineRowContent: {
     padding: '20px 0px 40px 0px',
   },
@@ -85,9 +88,7 @@ const VerticalTimeline = ({ order }) => {
   } = order
 
   const timestamp = new Date(timeStamp)
-  const formattedDate = moment(timestamp, 'DD-MM-YYYY hh:mm').format(
-    'DD-MM-YYYY hh:mm'
-  )
+  const formattedDate = moment(timestamp).format('DD-MM-YYYY hh:mm')
   // Set the current status order. Again will eventually need updating with more states
   let statusIndex = 0
   if (status === orderStatus.submitted) {
@@ -156,15 +157,28 @@ const VerticalTimeline = ({ order }) => {
             </Grid>
           </TimelineItem>
           <TimelineItem>
-            <TimelineSeparator>
+            <TimelineSeparator className={classes.columnMinHeight}>
               <TimelineDot
                 style={{
-                  backgroundColor: `${getTimelineColour(statusIndex, 2)}`,
+                  backgroundColor: `${
+                    status === 'amended'
+                      ? '#fff'
+                      : getTimelineColour(statusIndex, 2)
+                  }`,
+                  borderColor: `${
+                    status === 'amended'
+                      ? '#C5052B'
+                      : getTimelineColour(statusIndex, 2)
+                  }`,
                 }}
               />
               <TimelineConnector
                 style={{
-                  backgroundColor: `${getTimelineColour(statusIndex, 2)}`,
+                  backgroundColor: `${
+                    status === 'amended'
+                      ? '#bdbdbd'
+                      : getTimelineColour(statusIndex, 2)
+                  }`,
                 }}
               />
             </TimelineSeparator>
@@ -195,11 +209,7 @@ const VerticalTimeline = ({ order }) => {
                         Action Required
                       </Typography>
 
-                      <Grid
-                        container
-                        xs={12}
-                        className={classes.rejectedWarningBox}
-                      >
+                      <Grid container className={classes.rejectedWarningBox}>
                         <Grid item xs={4} className={classes.proposedQuantity}>
                           <Typography
                             variant="subtitle1"
@@ -221,7 +231,7 @@ const VerticalTimeline = ({ order }) => {
                             Delivery date of remaining items:
                           </Typography>
                           <Typography variant="body1">
-                            {moment(deliveryBy, 'DD - MM - YYYY').format(
+                            {moment(deliveryBy, 'YYYY-MM-DD').format(
                               'DD - MM - YYYY'
                             )}
                           </Typography>
@@ -230,7 +240,6 @@ const VerticalTimeline = ({ order }) => {
                           item
                           xs={3}
                           className={classes.proposedDeliveryDate}
-                          alignItems="flex-end"
                         >
                           <Button
                             variant="contained"
