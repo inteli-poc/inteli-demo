@@ -43,7 +43,7 @@ const BlockchainWatcher = ({ children }) => {
         clearTimeout(timer)
       }
     }
-  }, [dispatch, isFetching]) // effect sensitivities.
+  }, [dispatch, isFetching, isLoaded]) // effect sensitivities.
 
   return <>{children}</>
 }
