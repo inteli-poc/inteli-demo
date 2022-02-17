@@ -30,18 +30,17 @@ const getRefToken = async (token, position, tokens = []) => {
   const isRef = token.metadata.type === 'REFERENCE'
   // 1. api fails to return token with id 0, so setting first as ref
   // 2. so if ref token found, then return and carry on fetching in getData fn
-  return token.id === 1 || position + 1 === token.id || isRef
+  const isFirst = token.id === 1 || position + 1 === token.id
+  return isFirst || isRef
     ? {
         ref: isRef ? token : tokens.ref || undefined,
         data: [...tokens, token],
         newPosition: token.id + tokens.length,
       }
-    : await getRefToken(
-        // TODO get all ids, and then await in parallel
-        await Api().tokenById(token.id - 1),
-        position,
-        [...tokens, token]
-      )
+    : await getRefToken(await Api().tokenById(token.id - 1), position, [
+        ...tokens,
+        token,
+      ])
 }
 
 const getData = async (last = { id: 1 }, tokens = {}, position) => {
@@ -50,6 +49,7 @@ const getData = async (last = { id: 1 }, tokens = {}, position) => {
 
     return await getData(
       last,
+      ref,
       { ...tokens, data: [...data, ...(tokens?.data || [])] },
       newPosition
     )
