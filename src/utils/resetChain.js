@@ -1,8 +1,15 @@
 import tokenTypes from './tokenTypes'
 import Api from './vitalamApi'
-import { add } from '../features/tokensSlice'
+import { addRef } from '../features/tokensSlice'
 import { metadataTypes } from './'
+import { resetOrder } from '../features/ordersSlice'
+import { resetCustomerParts } from '../features/partsSlice'
+import { resetLabTest } from '../features/labTestsSlice'
+import { resetPowder } from '../features/powdersSlice'
 
+// create new form data for the new ref token
+// TODO we are using this across the board
+// convert into a shared util
 const createFormData = (inputs, roles, metadata) => {
   const formData = new FormData()
   const outputs = [
@@ -41,7 +48,11 @@ const createRefToken = async (name, dispatch) => {
     metadata,
   }
 
-  dispatch(add(token))
+  dispatch(addRef(token))
+  dispatch(resetOrder())
+  dispatch(resetCustomerParts())
+  dispatch(resetLabTest())
+  dispatch(resetPowder())
 }
 
 export default createRefToken

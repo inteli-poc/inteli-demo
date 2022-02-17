@@ -10,13 +10,19 @@ import LaboratoryApp from './laboratory'
 import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
 import auth from './redux-middleware/auth'
-import localstorage from './redux-middleware/localstorage'
+import { loadState, saveState } from './utils/localStorage'
 
 const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',
+  preloadedState: loadState(),
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([auth, localstorage]),
+    getDefaultMiddleware().concat(auth),
+})
+
+store.subscribe(() => {
+  const state = store.getState()
+  saveState(state)
 })
 
 let App = null

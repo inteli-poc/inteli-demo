@@ -34,7 +34,8 @@ const auth = (store) => (next) => (action) => { // eslint-disable-line
 
     axios(authReqParams).then(({ data }) => {
       localStorage.setItem('token', data.access_token)
-      next(action)
+      store.dispatch({ type: 'some/type', payload: undefined })
+      return next(action)
     })
   } catch (e) {
     localStorage.clear('token')

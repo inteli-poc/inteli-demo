@@ -3,13 +3,16 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { initTokens } from '../features/tokensSlice'
 import { fetchTokens } from '../features/tokensSlice'
+// import createRefToken from '../utils/resetChain'
 
 // temporary version of the component that will poll the API
 const BlockchainWatcher = ({ children }) => {
   const dispatch = useDispatch()
   const isFetching = useSelector((state) => state.tokens.isFetching)
 
+  // will call initTokens to check if there is a new reference token
   useEffect(() => {
+    // createRefToken('resetTest-2-[2', dispatch)
     dispatch(initTokens())
   }, [])
 
@@ -19,11 +22,9 @@ const BlockchainWatcher = ({ children }) => {
     // will store the timeout id. This will be set for the first time lower down
     // note when this is null it means the timer has been cancelled which is caused
     // by a component render
-    let timer = undefined
     const timerFn = async () => {
       try {
         if (!isFetching) {
-          console.log('debug: ', 'fetching new tokens...')
           dispatch(fetchTokens())
         }
       } catch (err) {
@@ -34,13 +35,12 @@ const BlockchainWatcher = ({ children }) => {
         )
       }
     }
-    timer = setTimeout(timerFn, 3000)
+    const timer = setTimeout(timerFn, 13000)
 
     // The clean-up function clears the timer (as expected) but also sets it to null to indicate to the
     // `pollFunc` that this specific effect instantiation has been canceled
     return () => {
       clearTimeout(timer)
-      timer = null
     }
   }, [dispatch, isFetching]) // effect sensitivities.
 

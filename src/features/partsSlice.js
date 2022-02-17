@@ -78,6 +78,9 @@ export const partsSlice = createSlice({
     },
   ],
   reducers: {
+    resetCustomerParts(state) {
+      return state.customerParts
+    },
     getCustomerParts(state) {
       return state.customerParts
     },
@@ -86,6 +89,6 @@ export const partsSlice = createSlice({
 
 export const { actions, reducer } = partsSlice
 
-export const { getCustomerParts } = actions
+export const { getCustomerParts, resetCustomerParts } = actions
 
 export default reducer

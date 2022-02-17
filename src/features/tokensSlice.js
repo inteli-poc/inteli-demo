@@ -43,27 +43,31 @@ const getRefToken = async (token, position, tokens = []) => {
       )
 }
 
-const getData = async (last = { id: 1 }, tokens = {}, position = undefined) => {
+const getData = async (last = { id: 1 }, tokens = {}, position) => {
   if (!position || last.id > position) {
-    const { newPosition, data, ...rest } = await getRefToken(last, position)
+    const { newPosition, data, ref } = await getRefToken(last, position)
+
+    if (ref) {
+      // TODO
+      // clear all tokens before ref
+      // set new ref and persist, maybe a new reducer
+    }
+
     return await getData(
       last,
-      { ...tokens, ...rest, data: [...data, ...(tokens?.data || [])] },
+      { ...tokens, data: [...data, ...(tokens?.data || [])] },
       newPosition
     )
   }
 
-  // TODO find a better way then incrementing by 1 also get all ids and then retrieve
-  return position < last.id
-    ? await getData(
-        last,
-        {
-          ...tokens,
-          data: [...tokens.data, await Api().tokenById(position + 1)],
-        },
-        position + 1
-      )
-    : { ...tokens, last }
+  if (position < last.id) {
+    const newToken = await Api().tokenById(position + 1)
+    const updatedTokens = { ...tokens, data: [...tokens.data, newToken] }
+
+    return await getData(last, updatedTokens, position + 1)
+  }
+
+  return { ...tokens, last }
 }
 
 // this is a helper function to temporarly address current setup
@@ -80,7 +84,14 @@ const upsertTokens = (tokens, dispatch) => {
 const fetchTokens = createAsyncThunk('tokens/fetch', async (action, store) => {
   try {
     const { latestToken, last } = await getLatestToken(store)
-    return await getData(latestToken, null, last?.id)
+    const tokens = store.getState().tokens || {}
+    const newData = await getData(latestToken, {}, last?.id, store)
+    // upsert only new tokens
+    upsertTokens(newData.data, store.dispatch)
+    return {
+      ...newData,
+      data: [...(newData?.data || []), ...tokens.data],
+    }
   } catch (e) {
     console.error(e)
   }
@@ -103,7 +114,6 @@ const initTokens = createAsyncThunk('tokens/init', async (action, store) => {
         : res.data,
     }
   } catch (e) {
-    // implement logging <bunyan or smt> // can return error for
     console.error(e)
   }
 })
@@ -112,19 +122,20 @@ const tokens = createSlice({
   name: 'tokens',
   initialState: { isFetching: true, isError: false, data: [] },
   reducers: {
-    add: {
+    addRef: {
       reducer(state, { payload }) {
+        const { id } = payload
+        // TODO add middleware for clearing orders
         return {
           ...state,
           ref: payload,
-          data: [...state.data, payload],
+          data: [...state.data, payload].filter((token) => token.id > id),
         }
       },
     },
     update: {
       reducer(state, { payload }) {
-        console.log('debug: <update reducer> ', { state, payload })
-        return {
+        state = {
           ...state,
           ...payload,
           data: [...state.data, ...(payload.data || [])],
@@ -140,8 +151,8 @@ const tokens = createSlice({
 
 // exports
 const { actions, reducer } = tokens
-const { update, add } = actions
+const { update, addRef } = actions
 
-export { initTokens, fetchTokens, update, add, upsertTokens }
+export { initTokens, fetchTokens, update, addRef, upsertTokens }
 
 export default reducer
