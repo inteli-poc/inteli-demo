@@ -13,11 +13,12 @@ const getLatestToken = async ({ getState }) => {
     .then((res) => res.id)
   const last = getState()?.tokens?.last
 
-  if (id === last?.id)
+  if (id === last?.id) {
     return {
       last,
       latestToken: last,
     }
+  }
 
   return {
     latestToken: await Api().tokenById(id),
@@ -118,7 +119,7 @@ const tokens = createSlice({
     addRef: {
       reducer(state, { payload }) {
         const { id } = payload
-        
+
         return {
           ...state,
           ref: payload,
