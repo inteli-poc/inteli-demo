@@ -10,9 +10,7 @@ import { Typography } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
 import moment from 'moment'
-
 import { orderStatus } from '../../utils/statuses'
-import moment from 'moment'
 import AmendedTimeLineItem from './AmendedTimelineItem'
 
 const useStyles = makeStyles({
