@@ -44,11 +44,12 @@ const VerticalTimeline = ({ order }) => {
 
   const {
     id: orderId,
-    metadata: { deliveryBy, status },
+    metadata: { status },
+    timestamp,
   } = order
 
   const deliveryByFormattedDate = moment(
-    deliveryBy,
+    timestamp,
     DATE_PICKER_DATE_FORMAT
   ).format('DD-MM-YYYY hh:mm')
 
