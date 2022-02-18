@@ -47,8 +47,6 @@ const VerticalTimeline = ({ order }) => {
     timestamp,
   } = order
 
-  console.log('VT timestamp', order)
-
   const tokenTimestampFormattedDate =
     moment(timestamp).format('DD-MM-YYYY hh:mm')
 
