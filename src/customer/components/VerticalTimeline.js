@@ -76,7 +76,7 @@ const statusLabels = [
   'Certification',
   'Dispatched',
   'Delivered',
-  'Order Rejected',
+  'Order Negotiated',
 ]
 
 const VerticalTimeline = ({ order }) => {
