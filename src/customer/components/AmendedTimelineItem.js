@@ -106,9 +106,8 @@ const AmendedTimeLineItem = ({ order }) => {
 
     dispatch(upsertOrder(token))
     navigate({
-      pathname: `/app/my-orders/${order.id}`,
+      pathname: `/app/my-orders/`,
     })
-    //window.location.reload()
   }
 
   return (
