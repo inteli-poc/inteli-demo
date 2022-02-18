@@ -14,6 +14,12 @@ const svgMimeUrl = async (imageUrl) => {
   return URL.createObjectURL(blob)
 }
 
+// so metadata files that are JSON can be used, change from default MIME of 'application/octet-stream'
+const toJSON = async (url) => {
+  const response = await fetch(url)
+  return response.json()
+}
+
 // temporary version of the component that will poll the API
 const BlockchainWatcher = ({ children }) => {
   const dispatch = useDispatch()
@@ -53,6 +59,15 @@ const BlockchainWatcher = ({ children }) => {
             )
           }
 
+          if (
+            token.metadata.type === tokenTypes.order &&
+            token.metadata.requiredCerts
+          ) {
+            token.metadata.requiredCerts = await toJSON(
+              token.metadata.requiredCerts.url
+            )
+          }
+
           // if state has been modified and the effect canceled bail. The re-render will
           // generate the effect again with the correct state context. Note nothing asynchronous
           // should follow this point in the loop
@@ -69,7 +84,7 @@ const BlockchainWatcher = ({ children }) => {
                   original_id: token.original_id,
                   roles: token.roles,
                   metadata: token.metadata,
-                  timeStamp: token.timestamp,
+                  timestamp: token.timestamp,
                 })
               )
               break
