@@ -11,7 +11,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
 import { orderStatus } from '../../utils/statuses'
 import moment from 'moment'
-import Button from '@material-ui/core/Button'
+//import Button from '@material-ui/core/Button'
+import AmendedTimeLineItem from './AmendedTimelineItem'
 
 const useStyles = makeStyles({
   dateTime: {
@@ -83,7 +84,7 @@ const VerticalTimeline = ({ order }) => {
 
   const {
     id: orderId,
-    metadata: { deliveryBy, status, quantity },
+    metadata: { deliveryBy, status },
     timeStamp,
   } = order
 
@@ -201,64 +202,7 @@ const VerticalTimeline = ({ order }) => {
                     </Typography>
                   </Grid>
                   {status === orderStatus.amended && (
-                    <>
-                      <Typography
-                        variant="subtitle2"
-                        className={classes.actionRowWarning}
-                      >
-                        Action Required
-                      </Typography>
-
-                      <Grid container className={classes.rejectedWarningBox}>
-                        <Grid item xs={4} className={classes.proposedQuantity}>
-                          <Typography
-                            variant="subtitle1"
-                            className={classes.proposedTextStyle}
-                          >
-                            Proposed quantity:
-                          </Typography>
-                          <Typography variant="body1">{quantity}</Typography>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={5}
-                          className={classes.proposedDeliveryDate}
-                        >
-                          <Typography
-                            variant="subtitle1"
-                            className={classes.proposedTextStyle}
-                          >
-                            Delivery date of remaining items:
-                          </Typography>
-                          <Typography variant="body1">
-                            {moment(deliveryBy, 'YYYY-MM-DD').format(
-                              'DD - MM - YYYY'
-                            )}
-                          </Typography>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={3}
-                          className={classes.proposedDeliveryDate}
-                        >
-                          <Button
-                            variant="contained"
-                            size="medium"
-                            className={classes.acceptProposedButton}
-                          >
-                            Accept
-                          </Button>
-                          <br />
-                          <Button
-                            variant="contained"
-                            size="medium"
-                            className={classes.rejectProposedButton}
-                          >
-                            Reject
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </>
+                    <AmendedTimeLineItem order={order} />
                   )}
                 </Grid>
               </TimelineContent>
