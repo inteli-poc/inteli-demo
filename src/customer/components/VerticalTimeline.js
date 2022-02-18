@@ -11,7 +11,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
 import { orderStatus } from '../../utils/statuses'
 import moment from 'moment'
-//import Button from '@material-ui/core/Button'
 import AmendedTimeLineItem from './AmendedTimelineItem'
 
 const useStyles = makeStyles({
