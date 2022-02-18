@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import Timeline from '@material-ui/lab/Timeline/Timeline'
 import TimelineItem from '@material-ui/lab/TimelineItem/TimelineItem'
 import TimelineSeparator from '@material-ui/lab/TimelineSeparator/TimelineSeparator'
@@ -50,7 +50,7 @@ const VerticalTimeline = ({ order }) => {
   const deliveryByFormattedDate = moment(
     deliveryBy,
     DATE_PICKER_DATE_FORMAT
-  ).format('DD-MM-YYYY')
+  ).format('DD-MM-YYYY hh:mm')
 
   // Set the current status order. Again will eventually need updating with more states
   let statusIndex = 0
