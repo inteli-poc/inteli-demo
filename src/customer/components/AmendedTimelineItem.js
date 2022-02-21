@@ -3,7 +3,10 @@ import { Typography } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import { Grid } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import moment from 'moment'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { CircularProgress } from '@material-ui/core'
+
 import { upsertOrder } from '../../../src/features/ordersSlice'
 import {
   identities,
@@ -12,9 +15,7 @@ import {
   useApi,
   metadataTypes,
 } from '../../../src/utils'
-import { useDispatch } from 'react-redux'
-import { CircularProgress } from '@material-ui/core'
-import { useNavigate } from 'react-router-dom'
+import { getAmendedDeliveryByFormattedDate } from '../../utils/timeline'
 
 const useStyles = makeStyles({
   actionRowWarning: {
@@ -66,6 +67,9 @@ const AmendedTimeLineItem = ({ order }) => {
 
   const classes = useStyles()
   const [isAccepting, setIsAccepting] = useState(false)
+
+  const amendedDeliveryByFormattedDate =
+    getAmendedDeliveryByFormattedDate(deliveryBy)
 
   const createFormData = (inputs, roles, metadata) => {
     const formData = new FormData()
@@ -128,7 +132,7 @@ const AmendedTimeLineItem = ({ order }) => {
             Delivery date of remaining items:
           </Typography>
           <Typography variant="body1">
-            {moment(deliveryBy, 'YYYY-MM-DD').format('DD - MM - YYYY')}
+            {amendedDeliveryByFormattedDate}
           </Typography>
         </Grid>
         <Grid item xs={3} className={classes.proposedDeliveryDate}>

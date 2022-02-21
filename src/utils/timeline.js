@@ -1,8 +1,8 @@
 import moment from 'moment'
 
 import { orderStatus, statusLabels } from './statuses'
+import { DATE_PICKER_DATE_FORMAT } from './forms'
 
-// Set the current status order. Again will eventually need updating with more states when they are added
 const getTimelineStatusIndex = (status) => {
   switch (status) {
     case orderStatus.submitted:
@@ -25,8 +25,12 @@ const getStatusLabel = (index) => {
 const getTokenTimestampFormattedDate = (timestamp) =>
   moment(timestamp).format('DD-MM-YYYY hh:mm')
 
+const getAmendedDeliveryByFormattedDate = (deliveryBy) =>
+  moment(deliveryBy, DATE_PICKER_DATE_FORMAT).format('DD - MM - YYYY')
+
 export {
   getTimelineStatusIndex,
   getStatusLabel,
   getTokenTimestampFormattedDate,
+  getAmendedDeliveryByFormattedDate,
 }

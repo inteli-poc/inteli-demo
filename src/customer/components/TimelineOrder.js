@@ -1,19 +1,16 @@
-/* eslint-disable */
 import React from 'react'
 import Timeline from '@material-ui/lab/Timeline/Timeline'
 import TimelineItem from '@material-ui/lab/TimelineItem/TimelineItem'
 import TimelineSeparator from '@material-ui/lab/TimelineSeparator/TimelineSeparator'
-import TimelineConnector from '@material-ui/lab/TimelineConnector/TimelineConnector'
 import TimelineContent from '@material-ui/lab/TimelineContent'
 import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent/TimelineOppositeContent'
-//import TimelineDot from '@material-ui/lab/TimelineDot/TimelineDot'
 import { Typography } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
-import moment from 'moment'
-import { orderStatus } from '../../utils/statuses'
-import AmendedTimeLineItem from './AmendedTimelineItem'
-import MyTimelineConnector from './MyTimelineConnector'
+
+// import { orderStatus } from '../../utils/statuses'
+// import AmendedTimeLineItem from './AmendedTimelineItem'
+import TimelineOrderConnector from './TimelineOrderConnector'
 import TimelineOrderDot from './TimelineOrderDot'
 import {
   getStatusLabel,
@@ -75,7 +72,7 @@ const useStyles = makeStyles({
   },
 })
 
-const VerticalTimeline = ({ order }) => {
+const TimelineOrder = ({ order }) => {
   const classes = useStyles()
 
   const {
@@ -88,15 +85,6 @@ const VerticalTimeline = ({ order }) => {
 
   const tokenTimestampFormattedDate = getTokenTimestampFormattedDate(timestamp)
 
-  // Helper function to decide the colour of a timeline segment
-  // const getTimelineColour = (index, value) => {
-  //   if (index >= value) {
-  //     return '#FF9900'
-  //   } else {
-  //     return '#CCCCCC'
-  //   }
-  // }
-
   return (
     <Grid container id={orderId} spacing={0}>
       <Grid item xs>
@@ -104,20 +92,7 @@ const VerticalTimeline = ({ order }) => {
           <TimelineItem>
             <TimelineSeparator>
               <TimelineOrderDot row={1} status={status} />
-              {/*<MyTimelineConnector*/}
-              {/*  lineIndex={statusIndex}*/}
-              {/*  value={1}*/}
-              {/*  status={status}*/}
-              {/*/>*/}
-              {/*<TimelineConnector*/}
-              {/*  style={{*/}
-              {/*    backgroundColor: `${*/}
-              {/*      status === 'amended'*/}
-              {/*        ? '#bdbdbd'*/}
-              {/*        : getTimelineColour(statusIndex, 1)*/}
-              {/*    }`,*/}
-              {/*  }}*/}
-              {/*/>*/}
+              <TimelineOrderConnector row={1} status={status} />
             </TimelineSeparator>
             <Grid item sm={12}>
               <TimelineContent>
@@ -302,4 +277,4 @@ const VerticalTimeline = ({ order }) => {
     </Grid>
   )
 }
-export default VerticalTimeline
+export default TimelineOrder
