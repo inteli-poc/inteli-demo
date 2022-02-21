@@ -17,24 +17,24 @@ const useStyles = makeStyles({
 const MyTimelineConnector = ({ lineIndex, value, status }) => {
   const classes = useStyles()
 
-  const dot = {
-    styling: classes.greyDot,
+  const Dot = {
+    styling: classes.greyLine,
   }
 
   // Check the index status against the label array
   const GetLineColour = (lineIndex, value, status) => {
     if (status === 'amended') {
-      dot.styling = classes.rejectedLine
+      Dot.styling = classes.rejectedLine
     } else if (lineIndex >= value) {
-      return (dot.styling = classes.orangeLine)
+      return (Dot.styling = classes.orangeLine)
     } else {
-      return (dot.styling = classes.greyLine)
+      return (Dot.styling = classes.greyLine)
     }
   }
 
-  return (
-    <TimelineConnector className={GetLineColour(lineIndex, value, status)} />
-  )
+  GetLineColour(lineIndex, value, status)
+
+  return <TimelineConnector className={Dot.styling} />
 }
 
 export default MyTimelineConnector

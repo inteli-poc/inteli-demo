@@ -18,22 +18,23 @@ const useStyles = makeStyles({
 const MyTimelineOrderDot = ({ dotIndex, value, status }) => {
   const classes = useStyles()
 
-  const dot = {
+  const Dot = {
     styling: classes.greyDot,
   }
 
   // Check the index status against the label array
   const GetDotColour = (dotIndex, value, status) => {
     if (status === 'amended') {
-      dot.styling = classes.redDot
+      Dot.styling = classes.redDot
     } else if (dotIndex >= value) {
-      return (dot.styling = classes.orangeDot)
+      return (Dot.styling = classes.orangeDot)
     } else {
-      return (dot.styling = classes.greyDot)
+      return (Dot.styling = classes.greyDot)
     }
   }
 
-  return <TimelineDot className={GetDotColour(dotIndex, value, status)} />
+  GetDotColour(dotIndex, value, status)
+  return <TimelineDot className={Dot.styling} />
 }
 
 export default MyTimelineOrderDot

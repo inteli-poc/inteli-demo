@@ -13,6 +13,7 @@ import moment from 'moment'
 import { orderStatus } from '../../utils/statuses'
 import AmendedTimeLineItem from './AmendedTimelineItem'
 import MyTimelineOrderDot from './MyTimelineOrderDot'
+import MyTimelineConnector from './MyTimelineConnector'
 
 const useStyles = makeStyles({
   dateTime: {
@@ -128,10 +129,10 @@ const VerticalTimeline = ({ order }) => {
                 value={1}
                 status={status}
               />
-              <TimelineConnector
-                style={{
-                  backgroundColor: `${getTimelineColour(statusIndex, 1)}`,
-                }}
+              <MyTimelineConnector
+                lineIndex={statusIndex}
+                value={1}
+                status={status}
               />
             </TimelineSeparator>
             <Grid item sm={12}>
