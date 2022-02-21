@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import Timeline from '@material-ui/lab/Timeline/Timeline'
 import TimelineItem from '@material-ui/lab/TimelineItem/TimelineItem'
@@ -12,8 +13,12 @@ import { Grid } from '@material-ui/core'
 import moment from 'moment'
 import { orderStatus } from '../../utils/statuses'
 import AmendedTimeLineItem from './AmendedTimelineItem'
-import MyTimelineOrderDot from './MyTimelineOrderDot'
 import MyTimelineConnector from './MyTimelineConnector'
+import TimelineOrderDot from './TimelineOrderDot'
+import {
+  getStatusLabel,
+  getTokenTimestampFormattedDate,
+} from '../../utils/timeline'
 
 const useStyles = makeStyles({
   dateTime: {
@@ -70,15 +75,6 @@ const useStyles = makeStyles({
   },
 })
 
-const statusLabels = [
-  'Order placed',
-  'Order accepted',
-  'Certification',
-  'Dispatched',
-  'Delivered',
-  'Order Negotiated',
-]
-
 const VerticalTimeline = ({ order }) => {
   const classes = useStyles()
 
@@ -90,33 +86,16 @@ const VerticalTimeline = ({ order }) => {
 
   console.log(order)
 
-  const tokenTimestampFormattedDate =
-    moment(timestamp).format('DD-MM-YYYY hh:mm')
-
-  // Set the current status order. Again will eventually need updating with more states when they are added
-  let statusIndex = 0
-  if (status === orderStatus.submitted) {
-    statusIndex = 1
-  } else if (status === orderStatus.accepted) {
-    statusIndex = 2
-  } else if (status === orderStatus.manufacturing) {
-    statusIndex = 3
-  } else if (status === orderStatus.manufactured) {
-    statusIndex = 4
-  } else if (status === orderStatus.amended) {
-    statusIndex = 2
-  } else {
-    statusIndex = 0
-  }
+  const tokenTimestampFormattedDate = getTokenTimestampFormattedDate(timestamp)
 
   // Helper function to decide the colour of a timeline segment
-  const getTimelineColour = (index, value) => {
-    if (index >= value) {
-      return '#FF9900'
-    } else {
-      return '#CCCCCC'
-    }
-  }
+  // const getTimelineColour = (index, value) => {
+  //   if (index >= value) {
+  //     return '#FF9900'
+  //   } else {
+  //     return '#CCCCCC'
+  //   }
+  // }
 
   return (
     <Grid container id={orderId} spacing={0}>
@@ -124,22 +103,27 @@ const VerticalTimeline = ({ order }) => {
         <Timeline>
           <TimelineItem>
             <TimelineSeparator>
-              <MyTimelineOrderDot
-                dotIndex={statusIndex}
-                value={1}
-                status={status}
-              />
-              <MyTimelineConnector
-                lineIndex={statusIndex}
-                value={1}
-                status={status}
-              />
+              <TimelineOrderDot row={1} status={status} />
+              {/*<MyTimelineConnector*/}
+              {/*  lineIndex={statusIndex}*/}
+              {/*  value={1}*/}
+              {/*  status={status}*/}
+              {/*/>*/}
+              {/*<TimelineConnector*/}
+              {/*  style={{*/}
+              {/*    backgroundColor: `${*/}
+              {/*      status === 'amended'*/}
+              {/*        ? '#bdbdbd'*/}
+              {/*        : getTimelineColour(statusIndex, 1)*/}
+              {/*    }`,*/}
+              {/*  }}*/}
+              {/*/>*/}
             </TimelineSeparator>
             <Grid item sm={12}>
               <TimelineContent>
                 <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
-                    <Typography variant="h6">{statusLabels[0]}</Typography>
+                    <Typography variant="h6">{getStatusLabel(0)}</Typography>
                   </Grid>
                   <Grid item xs={3}>
                     <Typography
@@ -160,7 +144,7 @@ const VerticalTimeline = ({ order }) => {
               <TimelineOppositeContent />
             </Grid>
           </TimelineItem>
-          <TimelineItem>
+          {/*<TimelineItem>
             <TimelineSeparator className={classes.columnMinHeight}>
               <MyTimelineOrderDot
                 dotIndex={statusIndex}
@@ -312,7 +296,7 @@ const VerticalTimeline = ({ order }) => {
               </TimelineContent>
               <TimelineOppositeContent />
             </Grid>
-          </TimelineItem>
+          </TimelineItem>*/}
         </Timeline>
       </Grid>
     </Grid>
