@@ -23,7 +23,7 @@ const TimelineOrderConnector = ({ row, status }) => {
   const statusIndex = getTimelineStatusIndex(status)
 
   const getTimelineConnectorClassName = (status) => {
-    if (status === orderStatus.amended) {
+    if (status === orderStatus.amended && row === 2) {
       return classes.rejectedLine
     } else if (statusIndex >= row) {
       return classes.orangeLine

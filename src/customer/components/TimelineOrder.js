@@ -8,8 +8,8 @@ import { Typography } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
 
-// import { orderStatus } from '../../utils/statuses'
-// import AmendedTimeLineItem from './AmendedTimelineItem'
+import { orderStatus } from '../../utils/statuses'
+import AmendedTimeLineItem from './AmendedTimelineItem'
 import TimelineOrderConnector from './TimelineOrderConnector'
 import TimelineOrderDot from './TimelineOrderDot'
 import {
@@ -119,22 +119,10 @@ const TimelineOrder = ({ order }) => {
               <TimelineOppositeContent />
             </Grid>
           </TimelineItem>
-          {/*<TimelineItem>
+          <TimelineItem>
             <TimelineSeparator className={classes.columnMinHeight}>
-              <MyTimelineOrderDot
-                dotIndex={statusIndex}
-                value={2}
-                status={status}
-              />
-              <TimelineConnector
-                style={{
-                  backgroundColor: `${
-                    status === 'amended'
-                      ? '#bdbdbd'
-                      : getTimelineColour(statusIndex, 2)
-                  }`,
-                }}
-              />
+              <TimelineOrderDot row={2} status={status} />
+              <TimelineOrderConnector row={2} status={status} />
             </TimelineSeparator>
             <Grid item sm={12}>
               <TimelineContent>
@@ -142,8 +130,8 @@ const TimelineOrder = ({ order }) => {
                   <Grid item xs={9}>
                     <Typography variant="h6">
                       {status === 'amended'
-                        ? statusLabels[statusLabels.length - 1]
-                        : statusLabels[1]}
+                        ? getStatusLabel(5)
+                        : getStatusLabel(1)}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -163,23 +151,15 @@ const TimelineOrder = ({ order }) => {
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
-              <MyTimelineOrderDot
-                dotIndex={statusIndex}
-                value={3}
-                status={status}
-              />
-              <TimelineConnector
-                style={{
-                  backgroundColor: `${getTimelineColour(statusIndex, 3)}`,
-                }}
-              />
+              <TimelineOrderDot row={3} status={status} />
+              <TimelineOrderConnector row={3} status={status} />
             </TimelineSeparator>
             <Grid item sm={12}>
               <TimelineContent>
                 {' '}
                 <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
-                    <Typography variant="h6">{statusLabels[2]}</Typography>
+                    <Typography variant="h6">{getStatusLabel(2)}</Typography>
                   </Grid>
                   <Grid item xs={3}>
                     <Typography
@@ -202,23 +182,15 @@ const TimelineOrder = ({ order }) => {
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
-              <MyTimelineOrderDot
-                dotIndex={statusIndex}
-                value={4}
-                status={status}
-              />
-              <TimelineConnector
-                style={{
-                  backgroundColor: `${getTimelineColour(statusIndex, 4)}`,
-                }}
-              />
+              <TimelineOrderDot row={4} status={status} />
+              <TimelineOrderConnector row={4} status={status} />
             </TimelineSeparator>
             <Grid item sm={12}>
               <TimelineContent>
                 {' '}
                 <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
-                    <Typography variant="h6">{statusLabels[3]}</Typography>
+                    <Typography variant="h6">{getStatusLabel(3)}</Typography>
                   </Grid>
                   <Grid item xs={3}>
                     <Typography
@@ -241,17 +213,13 @@ const TimelineOrder = ({ order }) => {
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
-              <MyTimelineOrderDot
-                dotIndex={statusIndex}
-                value={5}
-                status={status}
-              />
+              <TimelineOrderDot row={5} status={status} />
             </TimelineSeparator>
             <Grid item sm={12}>
               <TimelineContent>
                 <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
-                    <Typography variant="h6">{statusLabels[4]}</Typography>
+                    <Typography variant="h6">{getStatusLabel(4)}</Typography>
                   </Grid>
                   <Grid item xs={3}>
                     <Typography
@@ -271,7 +239,7 @@ const TimelineOrder = ({ order }) => {
               </TimelineContent>
               <TimelineOppositeContent />
             </Grid>
-          </TimelineItem>*/}
+          </TimelineItem>
         </Timeline>
       </Grid>
     </Grid>

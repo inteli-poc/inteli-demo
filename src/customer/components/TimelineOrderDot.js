@@ -23,8 +23,10 @@ const TimelineOrderDot = ({ row, status }) => {
 
   const statusIndex = getTimelineStatusIndex(status)
 
+  console.log(statusIndex, row)
+
   const getTimelineDotClassName = (status) => {
-    if (status === orderStatus.amended) {
+    if (status === orderStatus.amended && row === 2) {
       return classes.redDot
     } else if (statusIndex >= row) {
       return classes.orangeDot
