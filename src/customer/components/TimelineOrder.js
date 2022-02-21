@@ -127,7 +127,7 @@ const TimelineOrder = ({ order }) => {
                 <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
                     <Typography variant="h6">
-                      {status === 'amended'
+                      {status === orderStatus.amended
                         ? getStatusLabel(5)
                         : getStatusLabel(1)}
                     </Typography>
