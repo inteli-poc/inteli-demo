@@ -5,13 +5,14 @@ import TimelineSeparator from '@material-ui/lab/TimelineSeparator/TimelineSepara
 import TimelineConnector from '@material-ui/lab/TimelineConnector/TimelineConnector'
 import TimelineContent from '@material-ui/lab/TimelineContent'
 import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent/TimelineOppositeContent'
-import TimelineDot from '@material-ui/lab/TimelineDot/TimelineDot'
+//import TimelineDot from '@material-ui/lab/TimelineDot/TimelineDot'
 import { Typography } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
 import moment from 'moment'
 import { orderStatus } from '../../utils/statuses'
 import AmendedTimeLineItem from './AmendedTimelineItem'
+import MyTimelineOrderDot from './MyTimelineOrderDot'
 
 const useStyles = makeStyles({
   dateTime: {
@@ -86,10 +87,12 @@ const VerticalTimeline = ({ order }) => {
     timestamp,
   } = order
 
+  console.log(order)
+
   const tokenTimestampFormattedDate =
     moment(timestamp).format('DD-MM-YYYY hh:mm')
 
-  // Set the current status order. Again will eventually need updating with more states
+  // Set the current status order. Again will eventually need updating with more states when they are added
   let statusIndex = 0
   if (status === orderStatus.submitted) {
     statusIndex = 1
@@ -120,10 +123,10 @@ const VerticalTimeline = ({ order }) => {
         <Timeline>
           <TimelineItem>
             <TimelineSeparator>
-              <TimelineDot
-                style={{
-                  backgroundColor: `${getTimelineColour(statusIndex, 1)}`,
-                }}
+              <MyTimelineOrderDot
+                dotIndex={statusIndex}
+                value={1}
+                status={status}
               />
               <TimelineConnector
                 style={{
@@ -158,19 +161,10 @@ const VerticalTimeline = ({ order }) => {
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator className={classes.columnMinHeight}>
-              <TimelineDot
-                style={{
-                  backgroundColor: `${
-                    status === 'amended'
-                      ? '#fff'
-                      : getTimelineColour(statusIndex, 2)
-                  }`,
-                  borderColor: `${
-                    status === 'amended'
-                      ? '#C5052B'
-                      : getTimelineColour(statusIndex, 2)
-                  }`,
-                }}
+              <MyTimelineOrderDot
+                dotIndex={statusIndex}
+                value={2}
+                status={status}
               />
               <TimelineConnector
                 style={{
@@ -209,10 +203,10 @@ const VerticalTimeline = ({ order }) => {
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
-              <TimelineDot
-                style={{
-                  backgroundColor: `${getTimelineColour(statusIndex, 3)}`,
-                }}
+              <MyTimelineOrderDot
+                dotIndex={statusIndex}
+                value={3}
+                status={status}
               />
               <TimelineConnector
                 style={{
@@ -248,10 +242,10 @@ const VerticalTimeline = ({ order }) => {
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
-              <TimelineDot
-                style={{
-                  backgroundColor: `${getTimelineColour(statusIndex, 4)}`,
-                }}
+              <MyTimelineOrderDot
+                dotIndex={statusIndex}
+                value={4}
+                status={status}
               />
               <TimelineConnector
                 style={{
@@ -287,10 +281,10 @@ const VerticalTimeline = ({ order }) => {
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
-              <TimelineDot
-                style={{
-                  backgroundColor: `${getTimelineColour(statusIndex, 5)}`,
-                }}
+              <MyTimelineOrderDot
+                dotIndex={statusIndex}
+                value={5}
+                status={status}
               />
             </TimelineSeparator>
             <Grid item sm={12}>
