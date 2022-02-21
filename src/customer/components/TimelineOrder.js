@@ -9,7 +9,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Grid } from '@material-ui/core'
 
 import { orderStatus } from '../../utils/statuses'
-import AmendedTimeLineItem from './AmendedTimelineItem'
+import TimelineAmendedItem from './TimelineAmendedItem'
 import TimelineOrderConnector from './TimelineOrderConnector'
 import TimelineOrderDot from './TimelineOrderDot'
 import {
@@ -81,8 +81,6 @@ const TimelineOrder = ({ order }) => {
     timestamp,
   } = order
 
-  console.log(order)
-
   const tokenTimestampFormattedDate = getTokenTimestampFormattedDate(timestamp)
 
   return (
@@ -143,7 +141,7 @@ const TimelineOrder = ({ order }) => {
                     </Typography>
                   </Grid>
                   {status === orderStatus.amended && (
-                    <AmendedTimeLineItem order={order} />
+                    <TimelineAmendedItem order={order} />
                   )}
                 </Grid>
               </TimelineContent>
