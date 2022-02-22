@@ -7,14 +7,14 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { CircularProgress } from '@material-ui/core'
 
-import { upsertOrder } from '../../../src/features/ordersSlice'
+import { upsertOrder } from '../../features/ordersSlice'
 import {
   identities,
   tokenTypes,
   orderStatus,
   useApi,
   metadataTypes,
-} from '../../../src/utils'
+} from '../../utils'
 import { getAmendedDeliveryByFormattedDate } from '../../utils/timeline'
 
 const useStyles = makeStyles({
@@ -95,7 +95,7 @@ const AmendedTimeLineItem = ({ order }) => {
     return formData
   }
 
-  const onChange = async () => {
+  const onSubmit = async () => {
     setIsAccepting(true)
 
     const roles = { Owner: identities.am }
@@ -139,7 +139,7 @@ const AmendedTimeLineItem = ({ order }) => {
           <Button
             variant="contained"
             size="medium"
-            onClick={isAccepting ? null : onChange}
+            onClick={isAccepting ? null : onSubmit}
             className={classes.acceptProposedButton}
           >
             {isAccepting ? (

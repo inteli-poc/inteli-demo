@@ -23,7 +23,7 @@ const getStatusLabel = (index) => {
 }
 
 const getTokenTimestampFormattedDate = (timestamp) =>
-  moment(timestamp).format('DD-MM-YYYY hh:mm')
+  moment(timestamp).format('DD-MM-YYYY HH:mm')
 
 const getAmendedDeliveryByFormattedDate = (deliveryBy) =>
   moment(deliveryBy, DATE_PICKER_DATE_FORMAT).format('DD - MM - YYYY')

@@ -28,47 +28,11 @@ const useStyles = makeStyles({
   time: {
     paddingLeft: '20px',
   },
-  columnMinHeight: {
+  timelineSeparator: {
     minHeight: '110px',
   },
   timelineRowContent: {
     padding: '20px 0px 40px 0px',
-  },
-  actionRowWarning: {
-    color: '#C5052B',
-    fontWeight: '700',
-    paddingBottom: '15px',
-    paddingTop: '40px',
-  },
-  rejectedWarningBox: {
-    backgroundColor: '#ff003308',
-    minHeight: '150px',
-    borderLeft: '3px solid #C5052B',
-    marginBottom: '60px',
-  },
-  proposedQuantity: {
-    padding: '32px 40px 8px ',
-  },
-  proposedDeliveryDate: {
-    paddingTop: '32px',
-    paddingLeft: '40px',
-  },
-  proposedTextStyle: {
-    fontWeight: '700',
-    fontSize: '16px',
-    lineHeight: '18.75px',
-    paddingBottom: '8px',
-  },
-  acceptProposedButton: {
-    backgroundColor: '#17AE93',
-    color: '#fff',
-    width: '125px',
-    marginBottom: '15px',
-  },
-  rejectProposedButton: {
-    backgroundColor: '#CCCCCC',
-    color: '#fff',
-    width: '125px',
   },
 })
 
@@ -118,7 +82,7 @@ const TimelineOrder = ({ order }) => {
             </Grid>
           </TimelineItem>
           <TimelineItem>
-            <TimelineSeparator className={classes.columnMinHeight}>
+            <TimelineSeparator className={classes.timelineSeparator}>
               <TimelineOrderDot row={2} status={status} />
               <TimelineOrderConnector row={2} status={status} />
             </TimelineSeparator>
