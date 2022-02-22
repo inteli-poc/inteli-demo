@@ -9,6 +9,12 @@ import LaboratoryApp from './laboratory'
 import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
 
+import { Auth0Provider } from '@auth0/auth0-react'
+
+const AUTH_DOMAIN = process.env.AUTH_DOMAIN || 'inteli.eu.auth0.com'
+const AUTH_CLIENT_ID =
+  process.env.AUTH_CLIENT_ID || 'BvJaBbxOce4Pwi5PZpjBTStvNWwzugPd'
+
 const store = configureStore({
   reducer: rootReducer,
 })
@@ -39,10 +45,16 @@ switch (process.env.REACT_APP_VITALAM_DEMO_PERSONA) {
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-    <BlockchainWatcher>
-      <App {...props} />
-    </BlockchainWatcher>
-  </Provider>,
+  <Auth0Provider
+    domain={AUTH_DOMAIN}
+    clientId={AUTH_CLIENT_ID}
+    redirectUri={window.location.origin}
+  >
+    <Provider store={store}>
+      <BlockchainWatcher>
+        <App {...props} />
+      </BlockchainWatcher>
+    </Provider>
+  </Auth0Provider>,
   document.getElementById('root')
 )

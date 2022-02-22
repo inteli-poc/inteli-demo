@@ -71,7 +71,6 @@ const getSelectedOrder = (orders, paramsId) => {
     return null
   }
 }
-
 const MyOrders = () => {
   const params = useParams()
   const navigate = useNavigate()
