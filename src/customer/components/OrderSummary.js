@@ -1,7 +1,8 @@
 import React from 'react'
 import { Paper, Typography, Grid, Box, CardMedia } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import VerticalTimeline from './VerticalTimeline'
+
+import TimelineOrder from './TimelineOrder'
 
 const useStyles = makeStyles({
   name: {
@@ -209,7 +210,7 @@ const OrderSummary = ({ order }) => {
         </Typography>
         <Grid container>
           <Grid item xs={11}>
-            <VerticalTimeline order={order}></VerticalTimeline>
+            <TimelineOrder order={order} />
           </Grid>
         </Grid>
       </Grid>
