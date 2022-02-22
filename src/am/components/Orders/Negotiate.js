@@ -103,7 +103,7 @@ const Negotiate = ({ order }) => {
   return (
     <Grid
       container
-      justify="space-between"
+      justifyContent="space-between"
       className={classes.rejectAndNegotiateContainer}
     >
       <Grid item>
