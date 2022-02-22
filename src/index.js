@@ -8,7 +8,6 @@ import AdditiveManufacturerApp from './am'
 import LaboratoryApp from './laboratory'
 import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
-
 import { Auth0Provider } from '@auth0/auth0-react'
 
 const AUTH_DOMAIN = process.env.AUTH_DOMAIN || 'inteli.eu.auth0.com'
@@ -44,17 +43,26 @@ switch (process.env.REACT_APP_VITALAM_DEMO_PERSONA) {
     throw new Error('Invalid persona for VitalAM demo')
 }
 
+const onRedirectCallback = (appState) => {
+  history.push(
+    appState && appState.returnTo ? appState.returnTo : window.location.pathname
+  )
+}
+
 ReactDOM.render(
-  <Auth0Provider
-    domain={AUTH_DOMAIN}
-    clientId={AUTH_CLIENT_ID}
-    redirectUri={window.location.origin}
-  >
-    <Provider store={store}>
+  <Provider store={store}>
+    <Auth0Provider
+      domain={AUTH_DOMAIN}
+      clientId={AUTH_CLIENT_ID}
+      redirectUri={window.location.origin}
+      audience={`inteli-dev`}
+      scope=""
+      onRedirectCallback={onRedirectCallback}
+    >
       <BlockchainWatcher>
         <App {...props} />
       </BlockchainWatcher>
-    </Provider>
-  </Auth0Provider>,
+    </Auth0Provider>
+  </Provider>,
   document.getElementById('root')
 )

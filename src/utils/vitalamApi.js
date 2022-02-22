@@ -1,9 +1,7 @@
 import { useDispatch } from 'react-redux'
-import jwtDecode from 'jwt-decode'
+// import jwtDecode from 'jwt-decode'
 import { updateNetworkStatus } from '../features/networkStatusSlice'
-
 import { useAuth0 } from '@auth0/auth0-react'
-const { getAccessTokenSilently } = useAuth0()
 
 const API_HOST = process.env.REACT_APP_API_HOST || 'localhost'
 const API_PORT = process.env.REACT_APP_API_PORT || '3001'
@@ -52,19 +50,20 @@ const useFetchWrapper = () => {
   return wrappedFetch
 }
 
-const checkJwt = (token) => {
-  if (!token) return false
-  try {
-    const decoded = jwtDecode(token)
-    const hasExpired = decoded.exp * 1000 < Date.now()
-    return !hasExpired
-  } catch (err) {
-    return false
-  }
-}
+// const checkJwt = (token) => {
+//   if (!token) return false
+//   try {
+//     const decoded = jwtDecode(token)
+//     const hasExpired = decoded.exp * 1000 < Date.now()
+//     return !hasExpired
+//   } catch (err) {
+//     return false
+//   }
+// }
 
 const useApi = () => {
   const wrappedFetch = useFetchWrapper()
+  const { getAccessTokenSilently } = useAuth0()
 
   const getAuthToken = async () => {
     return await getAccessTokenSilently({

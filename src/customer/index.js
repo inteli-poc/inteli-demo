@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import 'reset-css'
 import { createTheme, ThemeProvider } from '@material-ui/core/styles'
 import { makeStyles, Container } from '@material-ui/core'
@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router-dom'
 
 import Header from './components/Header'
 import Router from './router'
+
+// import { useAuth0 } from '@auth0/auth0-react'
 
 const theme = createTheme({
   palette: {
@@ -23,6 +25,15 @@ const useStyles = makeStyles({
 
 const CustomerApp = () => {
   const classes = useStyles()
+
+  // const { user, isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
+  useEffect(() => {
+    // if (!isLoading) {
+    //   if (!isAuthenticated) {
+    //     loginWithRedirect()
+    //   }
+    // }
+  })
 
   return (
     <BrowserRouter>
