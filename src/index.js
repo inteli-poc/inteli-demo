@@ -12,7 +12,13 @@ import BlockchainWatcher from './shared/BlockchainWatcher.js'
 import { Auth0Provider } from '@auth0/auth0-react'
 import { loadState, saveState } from './utils/localStorage'
 
-import { AUTH_AUDIENCE, AUTH_CLIENT_ID, AUTH_DOMAIN } from './utils/env.js'
+import {
+  AUTH_AUDIENCE,
+  AUTH_CLIENT_ID,
+  AUTH_DOMAIN,
+  API_HOST,
+  API_PORT,
+} from './utils/env.js'
 
 const store = configureStore({
   reducer: rootReducer,
@@ -54,7 +60,7 @@ ReactDOM.render(
   <Auth0Provider
     domain={AUTH_DOMAIN}
     clientId={AUTH_CLIENT_ID}
-    redirectUri={'http://localhost:3000/app/customer-parts'}
+    redirectUri={`http://${API_HOST}:${API_PORT}/app/customer-parts`}
     audience={AUTH_AUDIENCE}
     scope=""
   >

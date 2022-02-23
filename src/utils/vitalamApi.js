@@ -42,8 +42,8 @@ const useNewFetchWrapper = () => {
 }
 
 const useApi = () => {
-  const wrappedFetch = useFetchWrapper()
   const { getAccessTokenSilently } = useAuth0()
+  const newWrappedFetch = useNewFetchWrapper()
 
   const getAuthToken = async () => {
     return await getAccessTokenSilently({
