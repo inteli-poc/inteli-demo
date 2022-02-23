@@ -10,6 +10,7 @@ import LaboratoryApp from './laboratory'
 import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
 import { Auth0Provider } from '@auth0/auth0-react'
+import { loadState, saveState } from './utils/localStorage'
 
 import { AUTH_AUDIENCE, AUTH_CLIENT_ID, AUTH_DOMAIN } from './utils/env.js'
 
@@ -17,7 +18,6 @@ const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',
   preloadedState: loadState(),
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(auth),
 })
 
 store.subscribe(() => {
