@@ -10,6 +10,4 @@ const vars = envalid.cleanEnv(process.env, {
   API_PORT: envalid.port({ devDefault: 3001 }),
 })
 
-export default {
-  ...vars,
-}
+module.exports = { ...vars }

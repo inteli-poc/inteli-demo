@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux'
 import { updateNetworkStatus } from '../features/networkStatusSlice'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { AUTH_AUDIENCE, API_HOST, API_PORT } from './utils/env.js'
+import { AUTH_AUDIENCE, API_HOST, API_PORT } from './env.js'
 
 const useFetchWrapper = () => {
   const dispatch = useDispatch()
