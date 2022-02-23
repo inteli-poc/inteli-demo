@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import 'reset-css'
 import { createTheme, ThemeProvider } from '@material-ui/core/styles'
 import { makeStyles, Container } from '@material-ui/core'
