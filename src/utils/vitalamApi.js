@@ -5,7 +5,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 const API_HOST = process.env.REACT_APP_API_HOST || 'localhost'
 const API_PORT = process.env.REACT_APP_API_PORT || '3001'
-const AUTH_AUDIENCE = process.env.AUTH_AUDIENCE || 'inteli-dev'
+const AUTH_AUDIENCE = process.env.AUTH_DOMAIN || `inteli-dev`
 
 const useFetchWrapper = () => {
   const dispatch = useDispatch()

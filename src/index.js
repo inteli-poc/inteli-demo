@@ -13,6 +13,7 @@ import { Auth0Provider } from '@auth0/auth0-react'
 const AUTH_DOMAIN = process.env.AUTH_DOMAIN || 'inteli.eu.auth0.com'
 const AUTH_CLIENT_ID =
   process.env.AUTH_CLIENT_ID || 'BvJaBbxOce4Pwi5PZpjBTStvNWwzugPd'
+const AUTH_AUDIENCE = process.env.AUTH_AUDIENCE || 'inteli-dev'
 
 const store = configureStore({
   reducer: rootReducer,
@@ -43,26 +44,19 @@ switch (process.env.REACT_APP_VITALAM_DEMO_PERSONA) {
     throw new Error('Invalid persona for VitalAM demo')
 }
 
-const onRedirectCallback = (appState) => {
-  history.push(
-    appState && appState.returnTo ? appState.returnTo : window.location.pathname
-  )
-}
-
 ReactDOM.render(
-  <Provider store={store}>
-    <Auth0Provider
-      domain={AUTH_DOMAIN}
-      clientId={AUTH_CLIENT_ID}
-      redirectUri={window.location.origin}
-      audience={`inteli-dev`}
-      scope=""
-      onRedirectCallback={onRedirectCallback}
-    >
+  <Auth0Provider
+    domain={AUTH_DOMAIN}
+    clientId={AUTH_CLIENT_ID}
+    redirectUri={'http://localhost:3000/app/customer-parts'}
+    audience={AUTH_AUDIENCE}
+    scope=""
+  >
+    <Provider store={store}>
       <BlockchainWatcher>
         <App {...props} />
       </BlockchainWatcher>
-    </Auth0Provider>
-  </Provider>,
+    </Provider>
+  </Auth0Provider>,
   document.getElementById('root')
 )
