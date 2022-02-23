@@ -1,25 +1,18 @@
-import { useDispatch } from 'react-redux'
-import { updateNetworkStatus } from '../features/networkStatusSlice'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import { AUTH_AUDIENCE, API_HOST, API_PORT } from './env.js'
 
-const useFetchWrapper = () => {
-  const dispatch = useDispatch()
+const toJSON = async (url) => {
+  const response = await fetch(url)
+  return response.json()
+}
 
-  const wrappedFetch = async (url, options) => {
-    let response
-    try {
-      response = await fetch(url, options)
-      if (response.ok) {
-        dispatch(updateNetworkStatus(true))
-      } else {
-        dispatch(updateNetworkStatus(false))
-      }
-    } catch (err) {
-      dispatch(updateNetworkStatus(false))
-      throw err
-    }
+const wrappedFetch = (url, options) =>
+  fetch(url, options).then((res) => res.json())
+
+const useNewFetchWrapper = () => {
+  const newWrappedFetch = async (url, options) => {
+    let response = await fetch(url, options)
 
     const contentType = response.headers.get('content-type')
     switch (contentType) {
@@ -45,7 +38,7 @@ const useFetchWrapper = () => {
         return response.json()
     }
   }
-  return wrappedFetch
+  return newWrappedFetch
 }
 
 const useApi = () => {
@@ -65,17 +58,17 @@ const useApi = () => {
       mode: 'cors',
       body,
       headers: {
-        Authorization: `Bearer ${await getAuthToken()}`,
+        Authorization: `Bearer ${getAuthToken()}`,
       },
     })
 
   const latestToken = async () => {
-    return await wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/last-token`, {
+    return wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/last-token`, {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
       headers: {
-        Authorization: `Bearer ${await getAuthToken()}`,
+        Authorization: `Bearer ${getAuthToken()}`,
       },
     })
   }
@@ -87,42 +80,46 @@ const useApi = () => {
         mode: 'cors',
         cache: 'no-cache',
         headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
       }
     )
 
-    return {
+    const metadata = await getMetadata(token)
+    const isOrder = metadata.type === 'ORDER'
+    const enrichedToken = {
       ...token,
-      metadata: await getMetadata(token.id, token.metadata_keys),
+      metadata: {
+        ...metadata,
+        requiredCerts:
+          metadata.requiredCerts && isOrder
+            ? await toJSON(metadata.requiredCerts.url)
+            : undefined,
+      },
     }
+
+    return enrichedToken
   }
 
-  const getMetadata = async (id, metadataKeys) => {
-    return Object.assign(
-      {},
-      ...(await Promise.all(
-        metadataKeys.map(async (metadataKey) => {
-          return {
-            [metadataKey]: await getMetadataValue(id, metadataKey),
+  const getMetadata = async (token) => {
+    // recursive function?
+    const metadata = {}
+    await Promise.all(
+      token.metadata_keys.map(async (metadata_key) => {
+        metadata[metadata_key] = await newWrappedFetch(
+          `http://${API_HOST}:${API_PORT}/v2/item/${token.id}/metadata/${metadata_key}`,
+          {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: {
+              Authorization: `Bearer ${getAuthToken()}`,
+            },
           }
-        })
-      ))
+        )
+      })
     )
-  }
-
-  const getMetadataValue = async (id, metadataKey) => {
-    return await wrappedFetch(
-      `http://${API_HOST}:${API_PORT}/v2/item/${id}/metadata/${metadataKey}`,
-      {
-        method: 'GET',
-        mode: 'cors',
-        cache: 'no-cache',
-        headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
-        },
-      }
-    )
+    return metadata
   }
 
   return { runProcess, latestToken, tokenById }

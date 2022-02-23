@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 
+// this seems a little overkill to render a different app rather than render different components, we should focus on re-useable components
 import CustomerApp from './customer'
 import AdditiveManufacturerApp from './am'
 import LaboratoryApp from './laboratory'
@@ -14,6 +15,14 @@ import { AUTH_AUDIENCE, AUTH_CLIENT_ID, AUTH_DOMAIN } from './utils/env.js'
 
 const store = configureStore({
   reducer: rootReducer,
+  devTools: process.env.NODE_ENV !== 'production',
+  preloadedState: loadState(),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(auth),
+})
+
+store.subscribe(() => {
+  const state = store.getState()
+  saveState(state)
 })
 
 let App = null
