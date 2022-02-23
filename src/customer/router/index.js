@@ -15,7 +15,7 @@ const Routing = () => {
     } else {
       console.log('Authenticated!')
     }
-  }, [isLoading, user, loginWithRedirect])
+  }, [isAuthenticated, isLoading, user, loginWithRedirect])
 
   if (isLoading) {
     return <h1>Loading...</h1>
