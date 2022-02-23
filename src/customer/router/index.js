@@ -6,6 +6,14 @@ import CustomerParts from '../components/CustomerParts'
 import MyOrders from '../components/MyOrders'
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react'
 
+function PrivateRoute({ component }) {
+  const AuthenticatedComponent = withAuthenticationRequired(component, {
+    onRedirecting: () => <h1>Redirecting...</h1>,
+  })
+
+  return <AuthenticatedComponent />
+}
+
 const Routing = () => {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0()
 
@@ -26,27 +34,19 @@ const Routing = () => {
       <Route path="/" element={<Navigate to="/app/customer-parts" />} />
       <Route
         path="/app/my-orders"
-        element={withAuthenticationRequired(MyOrders, {
-          onRedirecting: () => <h1>Redirecting...</h1>,
-        })}
+        element={<PrivateRoute component={MyOrders} />}
       />
       <Route
         path="/app/my-orders/:orderId"
-        element={withAuthenticationRequired(MyOrders, {
-          onRedirecting: () => <h1>Redirecting...</h1>,
-        })}
+        element={<PrivateRoute component={MyOrders} />}
       />
       <Route
         path="/app/customer-part/:partId"
-        element={withAuthenticationRequired(CustomerPart, {
-          onRedirecting: () => <h1>Redirecting...</h1>,
-        })}
+        element={<PrivateRoute component={CustomerPart} />}
       />
       <Route
         path="/app/customer-parts"
-        element={withAuthenticationRequired(CustomerParts, {
-          onRedirecting: () => <h1>Redirecting...</h1>,
-        })}
+        element={<PrivateRoute component={CustomerParts} />}
       />
     </Routes>
   )
