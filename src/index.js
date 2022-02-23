@@ -10,10 +10,7 @@ import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
 import { Auth0Provider } from '@auth0/auth0-react'
 
-const AUTH_DOMAIN = process.env.AUTH_DOMAIN || 'inteli.eu.auth0.com'
-const AUTH_CLIENT_ID =
-  process.env.AUTH_CLIENT_ID || 'BvJaBbxOce4Pwi5PZpjBTStvNWwzugPd'
-const AUTH_AUDIENCE = process.env.AUTH_AUDIENCE || 'inteli-dev'
+import { AUTH_AUDIENCE, AUTH_CLIENT_ID, AUTH_DOMAIN } from './utils/env.js'
 
 const store = configureStore({
   reducer: rootReducer,

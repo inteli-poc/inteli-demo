@@ -2,9 +2,7 @@ import { useDispatch } from 'react-redux'
 import { updateNetworkStatus } from '../features/networkStatusSlice'
 import { useAuth0 } from '@auth0/auth0-react'
 
-const API_HOST = process.env.REACT_APP_API_HOST || 'localhost'
-const API_PORT = process.env.REACT_APP_API_PORT || '3001'
-const AUTH_AUDIENCE = process.env.AUTH_DOMAIN || `inteli-dev`
+import { AUTH_AUDIENCE, API_HOST, API_PORT } from './utils/env.js'
 
 const useFetchWrapper = () => {
   const dispatch = useDispatch()
