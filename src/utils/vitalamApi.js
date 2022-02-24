@@ -1,4 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react'
+import { useDispatch } from 'react-redux'
+import { updateNetworkStatus } from '../features/networkStatusSlice'
 
 import { AUTH_AUDIENCE, API_HOST, API_PORT } from './env.js'
 
@@ -96,23 +98,16 @@ const useApi = () => {
     }
   }
 
-  const getMetadata = async (token) => {
-    // recursive function?
-    const metadata = {}
-    await Promise.all(
-      token.metadata_keys.map(async (metadata_key) => {
-        metadata[metadata_key] = await newWrappedFetch(
-          `http://${API_HOST}:${API_PORT}/v2/item/${token.id}/metadata/${metadata_key}`,
-          {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'no-cache',
-            headers: {
-              Authorization: `Bearer ${getAuthToken()}`,
-            },
+  const getMetadata = async (id, metadataKeys) => {
+    return Object.assign(
+      {},
+      ...(await Promise.all(
+        metadataKeys.map(async (metadataKey) => {
+          return {
+            [metadataKey]: await getMetadataValue(id, metadataKey),
           }
-        )
-      })
+        })
+      ))
     )
   }
 

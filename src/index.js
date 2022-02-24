@@ -47,11 +47,19 @@ switch (process.env.REACT_APP_VITALAM_DEMO_PERSONA) {
     throw new Error('Invalid persona for VitalAM demo')
 }
 
+const getCurrentBaseUrl = () => {
+  const protocol = window.location.protocol
+  const domain = window.location.hostname
+  const port = window.location.port
+
+  return `${protocol}://${domain}:${port ? port : ''}`
+}
+
 ReactDOM.render(
   <Auth0Provider
     domain={AUTH_DOMAIN}
     clientId={AUTH_CLIENT_ID}
-    redirectUri={`http://${API_HOST}:${API_PORT}/app/customer-parts`}
+    redirectUri={`${getCurrentBaseUrl()}/app/customer-parts`}
     audience={AUTH_AUDIENCE}
     scope=""
   >
