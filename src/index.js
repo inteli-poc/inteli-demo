@@ -3,14 +3,12 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 
-// this seems a little overkill to render a different app rather than render different components, we should focus on re-useable components
 import CustomerApp from './customer'
 import AdditiveManufacturerApp from './am'
 import LaboratoryApp from './laboratory'
 import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
 import { Auth0Provider } from '@auth0/auth0-react'
-import { loadState, saveState } from './utils/localStorage'
 
 import {
   AUTH_AUDIENCE,
@@ -22,13 +20,6 @@ import {
 
 const store = configureStore({
   reducer: rootReducer,
-  devTools: process.env.NODE_ENV !== 'production',
-  preloadedState: loadState(),
-})
-
-store.subscribe(() => {
-  const state = store.getState()
-  saveState(state)
 })
 
 let App = null

@@ -2,17 +2,22 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 import { AUTH_AUDIENCE, API_HOST, API_PORT } from './env.js'
 
-const toJSON = async (url) => {
-  const response = await fetch(url)
-  return response.json()
-}
+const useFetchWrapper = () => {
+  const dispatch = useDispatch()
 
-const wrappedFetch = (url, options) =>
-  fetch(url, options).then((res) => res.json())
-
-const useNewFetchWrapper = () => {
-  const newWrappedFetch = async (url, options) => {
-    let response = await fetch(url, options)
+  const wrappedFetch = async (url, options) => {
+    let response
+    try {
+      response = await fetch(url, options)
+      if (response.ok) {
+        dispatch(updateNetworkStatus(true))
+      } else {
+        dispatch(updateNetworkStatus(false))
+      }
+    } catch (err) {
+      dispatch(updateNetworkStatus(false))
+      throw err
+    }
 
     const contentType = response.headers.get('content-type')
     switch (contentType) {
@@ -38,12 +43,11 @@ const useNewFetchWrapper = () => {
         return response.json()
     }
   }
-  return newWrappedFetch
+  return wrappedFetch
 }
 
 const useApi = () => {
   const { getAccessTokenSilently } = useAuth0()
-  const newWrappedFetch = useNewFetchWrapper()
 
   const getAuthToken = async () => {
     return await getAccessTokenSilently({
@@ -51,6 +55,7 @@ const useApi = () => {
       scope: '',
     })
   }
+  const wrappedFetch = useFetchWrapper()
 
   const runProcess = async (body) =>
     wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/run-process`, {
@@ -58,17 +63,17 @@ const useApi = () => {
       mode: 'cors',
       body,
       headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
+        Authorization: `Bearer ${await getAuthToken()}`,
       },
     })
 
   const latestToken = async () => {
-    return wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/last-token`, {
+    return await wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/last-token`, {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
       headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
+        Authorization: `Bearer ${await getAuthToken()}`,
       },
     })
   }
@@ -80,25 +85,15 @@ const useApi = () => {
         mode: 'cors',
         cache: 'no-cache',
         headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
+          Authorization: `Bearer ${await getAuthToken()}`,
         },
       }
     )
 
-    const metadata = await getMetadata(token)
-    const isOrder = metadata.type === 'ORDER'
-    const enrichedToken = {
+    return {
       ...token,
-      metadata: {
-        ...metadata,
-        requiredCerts:
-          metadata.requiredCerts && isOrder
-            ? await toJSON(metadata.requiredCerts.url)
-            : undefined,
-      },
+      metadata: await getMetadata(token.id, token.metadata_keys),
     }
-
-    return enrichedToken
   }
 
   const getMetadata = async (token) => {
@@ -119,7 +114,20 @@ const useApi = () => {
         )
       })
     )
-    return metadata
+  }
+
+  const getMetadataValue = async (id, metadataKey) => {
+    return await wrappedFetch(
+      `http://${API_HOST}:${API_PORT}/v2/item/${id}/metadata/${metadataKey}`,
+      {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache',
+        headers: {
+          Authorization: `Bearer ${await getAuthToken()}`,
+        },
+      }
+    )
   }
 
   return { runProcess, latestToken, tokenById }
