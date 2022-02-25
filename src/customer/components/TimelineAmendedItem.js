@@ -16,8 +16,9 @@ import {
   metadataTypes,
 } from '../../utils'
 import { getAmendedDeliveryByFormattedDate } from '../../utils/timeline'
+import tick from '../../images/tick.svg'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   actionRowWarning: {
     color: '#C5052B',
     fontWeight: '700',
@@ -44,7 +45,7 @@ const useStyles = makeStyles({
     paddingBottom: '8px',
   },
   acceptProposedButton: {
-    backgroundColor: '#17AE93',
+    backgroundColor: theme.palette.accept.main,
     color: '#fff',
     width: '125px',
     marginBottom: '15px',
@@ -54,11 +55,20 @@ const useStyles = makeStyles({
     color: '#fff',
     width: '125px',
   },
-})
+  proposalAcceptedContainer: {
+    margin: '10px 40px',
+  },
+  tick: {
+    padding: '5px 10px',
+  },
+  proposalAcceptedText: {
+    color: theme.palette.accept.main,
+  },
+}))
 
 const AmendedTimeLineItem = ({ order }) => {
   const {
-    metadata: { quantity, deliveryBy },
+    metadata: { quantity, deliveryBy, status },
   } = order
 
   const dispatch = useDispatch()
@@ -106,7 +116,12 @@ const AmendedTimeLineItem = ({ order }) => {
 
     const formData = createFormData([order.id], roles, metadata)
     const response = await api.runProcess(formData)
-    const token = { id: response[0], original_id: order.id, roles, metadata }
+    const token = {
+      id: response[0],
+      original_id: order.original_id,
+      roles,
+      metadata,
+    }
 
     dispatch(upsertOrder(token))
     navigate({
@@ -114,7 +129,7 @@ const AmendedTimeLineItem = ({ order }) => {
     })
   }
 
-  return (
+  return status === orderStatus.amended ? (
     <>
       <Typography variant="subtitle2" className={classes.actionRowWarning}>
         Action Required
@@ -159,6 +174,13 @@ const AmendedTimeLineItem = ({ order }) => {
         </Grid>
       </Grid>
     </>
+  ) : (
+    <Grid container className={classes.proposalAcceptedContainer}>
+      <img src={tick} className={classes.tick} />
+      <Typography variant="subtitle2" className={classes.proposalAcceptedText}>
+        Proposal accepted
+      </Typography>
+    </Grid>
   )
 }
 

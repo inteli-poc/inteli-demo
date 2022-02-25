@@ -12,10 +12,7 @@ import { orderStatus } from '../../utils/statuses'
 import TimelineAmendedItem from './TimelineAmendedItem'
 import TimelineOrderConnector from './TimelineOrderConnector'
 import TimelineOrderDot from './TimelineOrderDot'
-import {
-  getStatusLabel,
-  getTokenTimestampFormattedDate,
-} from '../../utils/timeline'
+import { getStatusLabel, getMetadataTimestamp } from '../../utils/timeline'
 
 const useStyles = makeStyles({
   dateTime: {
@@ -41,11 +38,8 @@ const TimelineOrder = ({ order }) => {
 
   const {
     id: orderId,
-    metadata: { status },
-    timestamp,
+    metadata: { status: latestStatus },
   } = order
-
-  const tokenTimestampFormattedDate = getTokenTimestampFormattedDate(timestamp)
 
   return (
     <Grid container id={orderId} spacing={0}>
@@ -53,47 +47,21 @@ const TimelineOrder = ({ order }) => {
         <Timeline>
           <TimelineItem>
             <TimelineSeparator>
-              <TimelineOrderDot row={1} status={status} />
-              <TimelineOrderConnector row={1} status={status} />
-            </TimelineSeparator>
-            <Grid item sm={12}>
-              <TimelineContent>
-                <Grid container alignItems="flex-start">
-                  <Grid item xs={9}>
-                    <Typography variant="h6">{getStatusLabel(0)}</Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography
-                      variant="subtitle1"
-                      className={`${classes.dateTime} ${classes.time}`}
-                    >
-                      {tokenTimestampFormattedDate}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={10}>
-                    <Typography
-                      className={classes.timelineRowContent}
-                      variant="subtitle1"
-                    ></Typography>
-                  </Grid>
-                </Grid>
-              </TimelineContent>
-              <TimelineOppositeContent />
-            </Grid>
-          </TimelineItem>
-          <TimelineItem>
-            <TimelineSeparator className={classes.timelineSeparator}>
-              <TimelineOrderDot row={2} status={status} />
-              <TimelineOrderConnector row={2} status={status} />
+              <TimelineOrderDot
+                latestStatus={latestStatus}
+                rowStatus={orderStatus.submitted}
+              />
+              <TimelineOrderConnector
+                latestStatus={latestStatus}
+                rowStatus={orderStatus.submitted}
+              />
             </TimelineSeparator>
             <Grid item sm={12}>
               <TimelineContent>
                 <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
                     <Typography variant="h6">
-                      {status === orderStatus.amended
-                        ? getStatusLabel(5)
-                        : getStatusLabel(1)}
+                      {getStatusLabel(orderStatus.submitted)}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -101,34 +69,95 @@ const TimelineOrder = ({ order }) => {
                       variant="subtitle1"
                       className={`${classes.dateTime} ${classes.time}`}
                     >
-                      {tokenTimestampFormattedDate}
+                      {getMetadataTimestamp(
+                        order.history,
+                        'status',
+                        orderStatus.submitted
+                      )}
                     </Typography>
                   </Grid>
-                  {status === orderStatus.amended && (
+                  <Grid item xs={10}>
+                    <Typography
+                      className={classes.timelineRowContent}
+                      variant="subtitle1"
+                    ></Typography>
+                  </Grid>
+                </Grid>
+              </TimelineContent>
+              <TimelineOppositeContent />
+            </Grid>
+          </TimelineItem>
+          {getMetadataTimestamp(
+            order.history,
+            'status',
+            orderStatus.amended
+          ) && (
+            <TimelineItem>
+              <TimelineSeparator className={classes.timelineSeparator}>
+                <TimelineOrderDot
+                  latestStatus={latestStatus}
+                  rowStatus={orderStatus.amended}
+                />
+                <TimelineOrderConnector
+                  latestStatus={latestStatus}
+                  rowStatus={orderStatus.amended}
+                />
+              </TimelineSeparator>
+              <Grid item sm={12}>
+                <TimelineContent>
+                  <Grid container alignItems="flex-start">
+                    <Grid item xs={9}>
+                      <Typography variant="h6">
+                        {getStatusLabel(orderStatus.amended)}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Typography
+                        variant="subtitle1"
+                        className={`${classes.dateTime} ${classes.time}`}
+                      >
+                        {getMetadataTimestamp(
+                          order.history,
+                          'status',
+                          orderStatus.amended
+                        )}
+                      </Typography>
+                    </Grid>
                     <TimelineAmendedItem order={order} />
-                  )}
-                </Grid>
-              </TimelineContent>
-            </Grid>
-          </TimelineItem>
+                  </Grid>
+                </TimelineContent>
+              </Grid>
+            </TimelineItem>
+          )}
           <TimelineItem>
             <TimelineSeparator>
-              <TimelineOrderDot row={3} status={status} />
-              <TimelineOrderConnector row={3} status={status} />
+              <TimelineOrderDot
+                latestStatus={latestStatus}
+                rowStatus={orderStatus.accepted}
+              />
+              <TimelineOrderConnector
+                latestStatus={latestStatus}
+                rowStatus={orderStatus.accepted}
+              />
             </TimelineSeparator>
             <Grid item sm={12}>
               <TimelineContent>
-                {' '}
                 <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
-                    <Typography variant="h6">{getStatusLabel(2)}</Typography>
+                    <Typography variant="h6">
+                      {getStatusLabel(orderStatus.accepted)}
+                    </Typography>
                   </Grid>
                   <Grid item xs={3}>
                     <Typography
                       variant="subtitle1"
                       className={`${classes.dateTime} ${classes.time}`}
                     >
-                      {tokenTimestampFormattedDate}
+                      {getMetadataTimestamp(
+                        order.history,
+                        'status',
+                        orderStatus.accepted
+                      )}
                     </Typography>
                   </Grid>
                   <Grid item xs={10}>
@@ -144,22 +173,33 @@ const TimelineOrder = ({ order }) => {
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
-              <TimelineOrderDot row={4} status={status} />
-              <TimelineOrderConnector row={4} status={status} />
+              <TimelineOrderDot
+                latestStatus={latestStatus}
+                rowStatus={orderStatus.manufacturing}
+              />
+              <TimelineOrderConnector
+                latestStatus={latestStatus}
+                rowStatus={orderStatus.manufacturing}
+              />
             </TimelineSeparator>
             <Grid item sm={12}>
               <TimelineContent>
-                {' '}
                 <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
-                    <Typography variant="h6">{getStatusLabel(3)}</Typography>
+                    <Typography variant="h6">
+                      {getStatusLabel(orderStatus.manufacturing)}
+                    </Typography>
                   </Grid>
                   <Grid item xs={3}>
                     <Typography
                       variant="subtitle1"
                       className={`${classes.dateTime} ${classes.time}`}
                     >
-                      {tokenTimestampFormattedDate}
+                      {getMetadataTimestamp(
+                        order.history,
+                        'status',
+                        orderStatus.manufacturing
+                      )}
                     </Typography>
                   </Grid>
                   <Grid item xs={10}>
@@ -175,20 +215,29 @@ const TimelineOrder = ({ order }) => {
           </TimelineItem>
           <TimelineItem>
             <TimelineSeparator>
-              <TimelineOrderDot row={5} status={status} />
+              <TimelineOrderDot
+                latestStatus={latestStatus}
+                rowStatus={orderStatus.manufactured}
+              />
             </TimelineSeparator>
             <Grid item sm={12}>
               <TimelineContent>
                 <Grid container alignItems="flex-start">
                   <Grid item xs={9}>
-                    <Typography variant="h6">{getStatusLabel(4)}</Typography>
+                    <Typography variant="h6">
+                      {getStatusLabel(orderStatus.manufactured)}
+                    </Typography>
                   </Grid>
                   <Grid item xs={3}>
                     <Typography
                       variant="subtitle1"
                       className={`${classes.dateTime} ${classes.time}`}
                     >
-                      {tokenTimestampFormattedDate}
+                      {getMetadataTimestamp(
+                        order.history,
+                        'status',
+                        orderStatus.manufactured
+                      )}
                     </Typography>
                   </Grid>
                   <Grid item xs={10}>

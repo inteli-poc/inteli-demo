@@ -9,7 +9,7 @@ import pending from '../../../images/pending.svg'
 import cloud from '../../../images/cloud.svg'
 import CertificationDownload from './CertificationDownload'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     padding: '8px 0px',
     width: '100%',
@@ -41,7 +41,10 @@ const useStyles = makeStyles({
   dndText: {
     textDecoration: 'underline',
   },
-})
+  greyText: {
+    color: theme.palette.primary.grey,
+  },
+}))
 
 const CertificationRow = ({
   metadata,
@@ -102,12 +105,19 @@ const CertificationRow = ({
             <img src={pending} className={classes.icon} />
           )}
         </Grid>
-        <Grid item xs={8} className={classes.rowItem}>
+        <Grid
+          item
+          xs={8}
+          className={`${file ? '' : classes.greyText} ${classes.rowItem}`}
+        >
           <Typography>{description}</Typography>
         </Grid>
         <Grid item xs={2} className={classes.rowItem}>
           {file ? (
-            <CertificationDownload name={file.name} downloadData={file.url} />
+            <CertificationDownload
+              name={file.fileName}
+              downloadData={file.url}
+            />
           ) : (
             <Grid
               container
