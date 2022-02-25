@@ -4,15 +4,8 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import CustomerPart from '../components/CustomerPart'
 import CustomerParts from '../components/CustomerParts'
 import MyOrders from '../components/MyOrders'
-import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react'
-
-function PrivateRoute({ component }) {
-  const AuthenticatedComponent = withAuthenticationRequired(component, {
-    onRedirecting: () => <h1>Redirecting...</h1>,
-  })
-
-  return <AuthenticatedComponent />
-}
+import PrivateRoute from '../../shared/PrivateRoute'
+import { useAuth0 } from '@auth0/auth0-react'
 
 const Routing = () => {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0()

@@ -1,11 +1,12 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import { Toolbar, Typography, Box } from '@material-ui/core'
+import { Toolbar, Typography, Box, Button } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 
 import logo from '../../images/maher.png'
 import { orderStatus, powderTestStatus } from '../../utils'
+import { useAuth0 } from '@auth0/auth0-react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,6 +67,7 @@ const Navigation = () => {
       ({ metadata: { status } }) => status === powderTestStatus.result
     )
   )
+  const { isAuthenticated, logout } = useAuth0()
 
   const hasNewOrder = customerOrders.some(
     ({ id: orderId, metadata: { status } }) =>
@@ -125,6 +127,17 @@ const Navigation = () => {
           </Typography>
         </Box>
       </NavLink>
+      {isAuthenticated ? (
+        <Button
+          className={classes.navButton}
+          activeclassname={classes.navActive}
+          onClick={() => logout({ returnTo: window.location.origin })}
+        >
+          LogOut
+        </Button>
+      ) : (
+        ''
+      )}
     </Toolbar>
   )
 }
