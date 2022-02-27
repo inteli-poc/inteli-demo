@@ -6,21 +6,6 @@ import { upsertLabTest } from '../features/labTestsSlice'
 
 import { useApi, tokenTypes } from '../utils'
 
-/*
-  TODO
-  - update logic for rendering orders images (usa static from)
-  - find a solution for expired urls
-
-// TODO gain more understanding on this
-// there might be a better way to changing type rather than maing two async calls
-// so metadata files that are JSON can be used, change from default MIME of 'application/octet-stream'
-const toJSON = async (url) => {
-  const response = await fetch(url)
-  return response.json()
-}
-*/
-
-// temporary version of the component that will poll the API
 const BlockchainWatcher = ({ children }) => {
   const dispatch = useDispatch()
   const lastProcessedId = useRef(0)
@@ -44,10 +29,8 @@ const BlockchainWatcher = ({ children }) => {
           // tokens needs to be fetched in series as currently we have no way to identify the missing tokens
           return pollFn(current + 1)
         }
-        dispatch(updateNetworkStatus(true)) // TODO this should be handled by the vitalamApi hook
         lastProcessedId.current = current
       } catch (e) {
-        dispatch(updateNetworkStatus(false)) // TODO this should be handled by the vitalamApi hook
         console.error('Error occured while fetching tokens: ', e)
       }
     }

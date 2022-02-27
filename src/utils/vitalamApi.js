@@ -5,6 +5,11 @@ import { updateNetworkStatus } from '../features/networkStatusSlice'
 const API_HOST = process.env.REACT_APP_API_HOST || 'localhost'
 const API_PORT = process.env.REACT_APP_API_PORT || '3001'
 
+const toJSON = async (url) => {
+  const response = await fetch(url)
+  return response.json()
+}
+
 const useFetchWrapper = () => {
   const dispatch = useDispatch()
 
@@ -122,10 +127,20 @@ const useApi = () => {
       }
     )
 
-    return {
+    const metadata = await getMetadata(token)
+    const isOrder = metadata.type === 'ORDER'
+    const enrichedToken = {
       ...token,
-      metadata: await getMetadata(token.id, token.metadata_keys),
+      metadata: {
+        ...metadata,
+        requiredCerts:
+          metadata.requiredCerts && isOrder
+            ? await toJSON(metadata.requiredCerts.url)
+            : metadata.requiredCerts,
+      },
     }
+
+    return enrichedToken
   }
 
   const getMetadata = async (id, metadataKeys) => {
