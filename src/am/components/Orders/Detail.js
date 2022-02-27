@@ -3,6 +3,7 @@ import { CardMedia, Box, Grid, Paper, Typography } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useDispatch } from 'react-redux'
 
+import { mapPartIdToImage  } from '../../../features/partsSlice'
 import { markOrderRead } from '../../../features/readOrdersSlice'
 import { orderStatus } from '../../../utils'
 import OrderStatus from './Status'
@@ -97,7 +98,6 @@ const OrderDetail = ({ order }) => {
   const {
     metadata: {
       partId,
-      orderImage,
       name,
       material,
       alloy,
@@ -158,7 +158,7 @@ const OrderDetail = ({ order }) => {
             component="img"
             alt={name}
             width="160"
-            image={orderImage.url}
+            image={mapPartIdToImage[partId]}
             title={name}
           />
         </Grid>

@@ -8,17 +8,8 @@ import { useApi, tokenTypes } from '../utils'
 
 /*
   TODO
-  - update vitalamApi to handle svg and json files
+  - update logic for rendering orders images (usa static from)
   - find a solution for expired urls
-*/
-/*
-// so metadata files that are svg images can be displayed, change from default MIME of 'application/octet-stream'
-const svgMimeUrl = async (imageUrl) => {
-  const response = await fetch(imageUrl)
-  const oldBlob = await response.blob()
-  const blob = new Blob([oldBlob], { type: 'image/svg+xml' })
-  return URL.createObjectURL(blob)
-}
 
 // TODO gain more understanding on this
 // there might be a better way to changing type rather than maing two async calls
