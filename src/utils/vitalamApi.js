@@ -148,6 +148,7 @@ const useApi = () => {
       {},
       ...(await Promise.all(
         metadataKeys.map(async (metadataKey) => {
+          console.log({ id, metadataKey })
           return {
             [metadataKey]: await getMetadataValue(id, metadataKey),
           }

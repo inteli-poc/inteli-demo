@@ -11,7 +11,7 @@ const BlockchainWatcher = ({ children }) => {
   const lastProcessedId = useRef(0)
   const api = useApi()
 
-  const upsertToken = (token, type) => { 
+  const upsertToken = (token, type) => {
     if (tokenTypes.order === type) dispatch(upsertOrder(token))
     if (tokenTypes.powder === type) dispatch(upsertPowder(token))
     if (tokenTypes.labTests === type) dispatch(upsertLabTest(token))

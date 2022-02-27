@@ -114,15 +114,7 @@ const OrderSummary = ({ order }) => {
   const classes = useStyles()
   const {
     id: orderId,
-    metadata: {
-      name,
-      alloy,
-      orderImage,
-      material,
-      partId,
-      price,
-      quantity,
-    },
+    metadata: { name, alloy, orderImage, material, partId, price, quantity },
   } = order
 
   return (
@@ -131,7 +123,7 @@ const OrderSummary = ({ order }) => {
         <Grid item xs={2}>
           <CardMedia
             component="img"
-            alt={image.filename}
+            alt={orderImage.filename}
             width="160"
             height="160px"
             image={mapPartIdToImage[partId]}
