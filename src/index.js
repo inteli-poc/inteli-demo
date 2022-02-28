@@ -8,6 +8,15 @@ import AdditiveManufacturerApp from './am'
 import LaboratoryApp from './laboratory'
 import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
+import { Auth0Provider } from '@auth0/auth0-react'
+import { getCurrentBaseUrl } from './utils/url'
+
+import {
+  AUTH_AUDIENCE,
+  CUST_AUTH_CLIENT_ID,
+  T1_AUTH_CLIENT_ID,
+  AUTH_DOMAIN,
+} from './utils/env.js'
 
 const store = configureStore({
   reducer: rootReducer,
@@ -15,19 +24,27 @@ const store = configureStore({
 
 let App = null
 let props = {}
+let authClientID,
+  redirectPath = ''
 switch (process.env.REACT_APP_VITALAM_DEMO_PERSONA) {
   case 'cust':
     App = CustomerApp
     document.title = 'BAE Systems | Customer'
+    authClientID = CUST_AUTH_CLIENT_ID
+    redirectPath = '/app/customer-parts'
     break
   case 'am':
     App = AdditiveManufacturerApp
     document.title = 'Maher | AM'
+    authClientID = T1_AUTH_CLIENT_ID
+    redirectPath = '/app/orders'
     break
   case 'lab':
     App = LaboratoryApp
     document.title = 'TruFORM | Lab'
     props = { labType: 'lab' }
+    authClientID = T1_AUTH_CLIENT_ID
+    redirectPath = '/app/requests'
     break
   case 'amlab':
     App = LaboratoryApp
@@ -39,10 +56,18 @@ switch (process.env.REACT_APP_VITALAM_DEMO_PERSONA) {
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-    <BlockchainWatcher>
-      <App {...props} />
-    </BlockchainWatcher>
-  </Provider>,
+  <Auth0Provider
+    domain={AUTH_DOMAIN}
+    clientId={authClientID}
+    redirectUri={`${getCurrentBaseUrl()}${redirectPath}`}
+    audience={AUTH_AUDIENCE}
+    scope=""
+  >
+    <Provider store={store}>
+      <BlockchainWatcher>
+        <App {...props} />
+      </BlockchainWatcher>
+    </Provider>
+  </Auth0Provider>,
   document.getElementById('root')
 )

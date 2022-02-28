@@ -1,9 +1,8 @@
+import { useAuth0 } from '@auth0/auth0-react'
 import { useDispatch } from 'react-redux'
-import jwtDecode from 'jwt-decode'
 import { updateNetworkStatus } from '../features/networkStatusSlice'
 
-const API_HOST = process.env.REACT_APP_API_HOST || 'localhost'
-const API_PORT = process.env.REACT_APP_API_PORT || '3001'
+import { AUTH_AUDIENCE, API_HOST, API_PORT } from './env.js'
 
 const toJSON = async (url) => {
   const response = await fetch(url)
@@ -53,46 +52,15 @@ const useFetchWrapper = () => {
   return wrappedFetch
 }
 
-const checkJwt = (token) => {
-  if (!token) return false
-  try {
-    const decoded = jwtDecode(token)
-    const hasExpired = decoded.exp * 1000 < Date.now()
-    return !hasExpired
-  } catch (err) {
-    return false
-  }
-}
-
 const useApi = () => {
-  const wrappedFetch = useFetchWrapper()
+  const { getAccessTokenSilently } = useAuth0()
 
   const getAuthToken = async () => {
-    let token = localStorage.getItem('token')
-
-    if (!checkJwt(token)) {
-      localStorage.clear('token')
-      const response = await wrappedFetch(
-        `http://${API_HOST}:${API_PORT}/v2/auth`,
-        {
-          method: 'POST',
-          mode: 'cors',
-          cache: 'no-cache',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            client_id: process.env.REACT_APP_AUTH_CLIENT_ID,
-            client_secret: process.env.REACT_APP_AUTH_CLIENT_SECRET,
-          }),
-        }
-      )
-
-      token = response.access_token
-      localStorage.setItem('token', token)
-    }
-    return token
+    return await getAccessTokenSilently({
+      audience: AUTH_AUDIENCE,
+    })
   }
+  const wrappedFetch = useFetchWrapper()
 
   const runProcess = async (body) =>
     wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/run-process`, {

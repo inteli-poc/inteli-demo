@@ -6,17 +6,19 @@ import { useSelector } from 'react-redux'
 
 import logo from '../../images/maher.png'
 import { orderStatus, powderTestStatus } from '../../utils'
+import { getCurrentBaseUrl } from '../../utils/url'
+import { useAuth0 } from '@auth0/auth0-react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: '32px',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    height: '40vh',
+    height: '100%',
     minHeight: '300px',
   },
   logo: {
-    marginBottom: 'auto',
+    marginBottom: '5vh',
     height: '50px',
     display: 'grid',
     alignContent: 'center',
@@ -52,6 +54,11 @@ const useStyles = makeStyles((theme) => ({
   dotOther: {
     display: 'hidden',
   },
+  logout: {
+    cursor: 'pointer',
+    marginTop: 'auto',
+    marginBottom: '16px',
+  },
 }))
 
 const Navigation = () => {
@@ -66,6 +73,7 @@ const Navigation = () => {
       ({ metadata: { status } }) => status === powderTestStatus.result
     )
   )
+  const { isAuthenticated, logout } = useAuth0()
 
   const hasNewOrder = customerOrders.some(
     ({ id: orderId, metadata: { status } }) =>
@@ -125,6 +133,16 @@ const Navigation = () => {
           </Typography>
         </Box>
       </NavLink>
+      {isAuthenticated && (
+        <Box
+          className={`${classes.navButtonWrapping} ${classes.logout}`}
+          onClick={() =>
+            logout({ returnTo: `${getCurrentBaseUrl()}/app/orders` })
+          }
+        >
+          <Typography>Log Out</Typography>
+        </Box>
+      )}
     </Toolbar>
   )
 }
