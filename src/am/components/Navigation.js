@@ -133,7 +133,7 @@ const Navigation = () => {
           </Typography>
         </Box>
       </NavLink>
-      {isAuthenticated ? (
+      {isAuthenticated && (
         <Box
           className={`${classes.navButtonWrapping} ${classes.logout}`}
           onClick={() =>
@@ -142,8 +142,6 @@ const Navigation = () => {
         >
           <Typography>Log Out</Typography>
         </Box>
-      ) : (
-        ''
       )}
     </Toolbar>
   )

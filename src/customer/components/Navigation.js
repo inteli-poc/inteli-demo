@@ -109,7 +109,7 @@ const Navigation = () => {
       <Box className={classes.navButton}>
         <NetworkStatusIndicator />
       </Box>
-      {isAuthenticated ? (
+      {isAuthenticated && (
         <Box
           className={`${classes.navButtonWrapping} ${classes.logout}`}
           onClick={() =>
@@ -118,8 +118,6 @@ const Navigation = () => {
         >
           <Typography>Log Out</Typography>
         </Box>
-      ) : (
-        ''
       )}
     </Toolbar>
   )
