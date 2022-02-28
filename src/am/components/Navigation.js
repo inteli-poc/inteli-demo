@@ -14,11 +14,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '32px',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    height: '40vh',
+    height: '100%',
     minHeight: '300px',
   },
   logo: {
-    marginBottom: 'auto',
+    marginBottom: '5vh',
     height: '50px',
     display: 'grid',
     alignContent: 'center',
@@ -53,6 +53,11 @@ const useStyles = makeStyles((theme) => ({
   },
   dotOther: {
     display: 'hidden',
+  },
+  logout: {
+    cursor: 'pointer',
+    marginTop: 'auto',
+    marginBottom: '16px',
   },
 }))
 
@@ -130,7 +135,7 @@ const Navigation = () => {
       </NavLink>
       {isAuthenticated ? (
         <Box
-          className={classes.navButtonWrapping}
+          className={`${classes.navButtonWrapping} ${classes.logout}`}
           onClick={() =>
             logout({ returnTo: `${getCurrentBaseUrl()}/app/orders` })
           }
