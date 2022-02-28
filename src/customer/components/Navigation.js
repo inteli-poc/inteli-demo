@@ -5,8 +5,6 @@ import { Toolbar, Typography, Box } from '@material-ui/core'
 
 import NetworkStatusIndicator from './NetworkStatusIndicator'
 import images from '../../images'
-import { useAuth0 } from '@auth0/auth0-react'
-import LogoutButton from '../../shared/LogOut'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,7 +70,6 @@ const useStyles = makeStyles((theme) => ({
 const Navigation = () => {
   const classes = useStyles()
   const name = 'Stephen Turner'
-  const { isAuthenticated } = useAuth0()
 
   return (
     <Toolbar className={classes.root}>
@@ -102,13 +99,6 @@ const Navigation = () => {
           {name.substring(0, 1)}
         </Typography>
       </NavLink>
-      {isAuthenticated ? (
-        <NavLink to="#">
-          <LogoutButton />
-        </NavLink>
-      ) : (
-        ''
-      )}
       <Box className={classes.navButton}>
         <NetworkStatusIndicator />
       </Box>

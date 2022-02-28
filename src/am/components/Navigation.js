@@ -1,11 +1,12 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import { Toolbar, Typography, Box, Button } from '@material-ui/core'
+import { Toolbar, Typography, Box } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 
 import logo from '../../images/maher.png'
 import { orderStatus, powderTestStatus } from '../../utils'
+import { getCurrentBaseUrl } from '../../utils/url'
 import { useAuth0 } from '@auth0/auth0-react'
 
 const useStyles = makeStyles((theme) => ({
@@ -128,13 +129,14 @@ const Navigation = () => {
         </Box>
       </NavLink>
       {isAuthenticated ? (
-        <Button
-          className={classes.navButton}
-          activeclassname={classes.navActive}
-          onClick={() => logout({ returnTo: window.location.origin })}
+        <Box
+          className={classes.navButtonWrapping}
+          onClick={() =>
+            logout({ returnTo: `${getCurrentBaseUrl()}/app/orders` })
+          }
         >
-          LogOut
-        </Button>
+          <Typography>Log Out</Typography>
+        </Box>
       ) : (
         ''
       )}

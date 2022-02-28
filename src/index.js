@@ -9,6 +9,7 @@ import LaboratoryApp from './laboratory'
 import rootReducer from './reducers'
 import BlockchainWatcher from './shared/BlockchainWatcher.js'
 import { Auth0Provider } from '@auth0/auth0-react'
+import { getCurrentBaseUrl } from './utils/url'
 
 import {
   AUTH_AUDIENCE,
@@ -52,14 +53,6 @@ switch (process.env.REACT_APP_VITALAM_DEMO_PERSONA) {
     break
   default:
     throw new Error('Invalid persona for VitalAM demo')
-}
-
-const getCurrentBaseUrl = () => {
-  const protocol = window.location.protocol
-  const domain = window.location.hostname
-  const port = window.location.port
-
-  return `${protocol}//${domain}:${port ? port : ''}`
 }
 
 ReactDOM.render(
