@@ -13,8 +13,6 @@ const Routing = () => {
   useEffect(() => {
     if (!isAuthenticated && !isLoading && !user) {
       loginWithRedirect()
-    } else {
-      console.log('Authenticated!')
     }
   }, [isAuthenticated, isLoading, user, loginWithRedirect])
 
