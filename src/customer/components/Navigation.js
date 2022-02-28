@@ -111,7 +111,7 @@ const Navigation = () => {
       </Box>
       {isAuthenticated && (
         <Box
-          className={`${classes.navButtonWrapping} ${classes.logout}`}
+          className={`${classes.navButtonWrapping} ${classes.logout} ${classes.navButton} ${classes.navHover}`}
           onClick={() =>
             logout({ returnTo: `${getCurrentBaseUrl()}/app/customer-parts` })
           }
