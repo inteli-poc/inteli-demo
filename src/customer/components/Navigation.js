@@ -67,6 +67,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1.2rem',
     fontWeight: '500',
   },
+  logout: {
+    marginLeft: '20px',
+    cursor: 'pointer',
+  },
 }))
 
 const Navigation = () => {
@@ -107,7 +111,7 @@ const Navigation = () => {
       </Box>
       {isAuthenticated ? (
         <Box
-          className={classes.navButtonWrapping}
+          className={`${classes.navButtonWrapping} ${classes.logout}`}
           onClick={() =>
             logout({ returnTo: `${getCurrentBaseUrl()}/app/customer-parts` })
           }
