@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: '500',
   },
   logout: {
-    marginLeft: '20px',
+    marginLeft: '70px',
     cursor: 'pointer',
   },
 }))
