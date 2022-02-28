@@ -54,7 +54,6 @@ const useApi = () => {
   const getAuthToken = async () => {
     return await getAccessTokenSilently({
       audience: AUTH_AUDIENCE,
-      scope: '',
     })
   }
   const wrappedFetch = useFetchWrapper()
