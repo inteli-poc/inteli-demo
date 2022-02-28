@@ -127,7 +127,7 @@ const useApi = () => {
       }
     )
 
-    const metadata = await getMetadata(token)
+    const metadata = await getMetadata(token.id, token.metadata_keys)
     const isOrder = metadata.type === 'ORDER'
     const enrichedToken = {
       ...token,
