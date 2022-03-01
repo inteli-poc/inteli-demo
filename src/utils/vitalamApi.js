@@ -101,10 +101,9 @@ const useApi = () => {
       ...token,
       metadata: {
         ...metadata,
-        requiredCerts:
-          metadata.requiredCerts && isOrder
-            ? await toJSON(metadata.requiredCerts.url)
-            : metadata.requiredCerts,
+        ...(metadata.requiredCerts && isOrder
+          ? { requiredCerts: await toJSON(metadata.requiredCerts.url) }
+          : {}),
       },
     }
 
@@ -116,7 +115,6 @@ const useApi = () => {
       {},
       ...(await Promise.all(
         metadataKeys.map(async (metadataKey) => {
-          console.log({ id, metadataKey })
           return {
             [metadataKey]: await getMetadataValue(id, metadataKey),
           }

@@ -8,35 +8,56 @@ import { useApi, tokenTypes } from '../utils'
 
 const BlockchainWatcher = ({ children }) => {
   const dispatch = useDispatch()
-  const lastProcessedId = useRef(1)
+  const lastProcessedId = useRef(0)
   const api = useApi()
 
   // This effect manages the polling for new tokens
   useEffect(() => {
+    let timer = undefined
     const upsertToken = (token, type) => {
       if (tokenTypes.order === type) dispatch(upsertOrder(token))
       if (tokenTypes.powder === type) dispatch(upsertPowder(token))
       if (tokenTypes.labTests === type) dispatch(upsertLabTest(token))
     }
-    const pollFn = async (current = 1) => {
-      try {
-        const latestId = await api.latestToken().then((res) => res.id)
-        if (current < latestId) {
-          const token = await api.tokenById(current)
+
+    const pollFunc = async () => {
+      const { id: latestToken } = await api.latestToken()
+
+      if (latestToken > lastProcessedId.current) {
+        for (let i = lastProcessedId.current + 1; i <= latestToken; i++) {
+          const token = await api.tokenById(i)
+
+          if (timer === null) {
+            return null
+          }
+
           upsertToken(token, token.metadata.type)
-          // returning without await because then it will be fetched in parallel'is
-          // tokens needs to be fetched in series as currently we have no way to identify the missing tokens
-          return pollFn(current + 1)
+          lastProcessedId.current = i
         }
-        lastProcessedId.current = current
-      } catch (e) {
-        console.error('Error occured while fetching tokens: ', e)
       }
     }
-    const timer = setTimeout(() => pollFn(lastProcessedId.current), 3323)
+
+    // poll the blockchain. If after the pollFunc the timer has not been set to null
+    // we should continue to loop. This is the general behaviour if there are no new tokens
+    const timerFn = async () => {
+      try {
+        await pollFunc()
+      } catch (err) {
+        console.error(
+          `Error polling for blockchain state. Error was ${
+            `"${err.message}"` || JSON.stringify(err, null, 2)
+          }`
+        )
+      }
+      if (timer !== null) {
+        timer = setTimeout(timerFn, 3000)
+      }
+    }
+    timer = setTimeout(timerFn, 0)
 
     return () => {
       clearTimeout(timer)
+      timer = null
     }
   }, [dispatch, api])
 
