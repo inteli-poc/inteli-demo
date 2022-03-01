@@ -33,22 +33,26 @@ const requiredCerts = [
   },
 ]
 
-export const mapPartIdToImage = {
-  '34-396589-2': images.parts[0],
-  '10-631045-1': images.parts[1],
-  '11-219743-1': images.parts[2],
-  '12-367534-1': images.parts[3],
-  '10-874236-1': images.parts[4],
-  '13-143583-2': images.parts[5],
-  '14-143463-1': images.parts[6],
-  '10-045623-3': images.parts[7],
-}
+const partIds = [
+  '10-631045-1',
+  '11-219743-1',
+  '12-367534-1',
+  '10-874236-1',
+  '13-143583-2',
+  '14-143463-1',
+  '10-045623-3',
+]
+
+export const mappedPartIdsToImages = partIds.reduce((out, next, i) => {
+  out[next] = images.parts[i]
+  return out
+}, {})
 
 export const partsSlice = createSlice({
   name: 'customerParts',
   initialState: [
     {
-      partId: '34-396589-2',
+      partId: partIds[0],
       name: 'Low-pressure compressor',
       image: images.parts[0],
       material: 'Titanium',
@@ -58,7 +62,7 @@ export const partsSlice = createSlice({
       supplier: 'Maher',
     },
     {
-      partId: '10-631045-1',
+      partId: partIds[1],
       name: 'Engine fan blades',
       image: images.parts[1],
       material: 'Aluminium',
@@ -68,7 +72,7 @@ export const partsSlice = createSlice({
       supplier: 'Maher',
     },
     {
-      partId: '11-219743-1',
+      partId: partIds[2],
       name: 'Axial turbine gearing',
       image: images.parts[2],
       material: 'Titanium',
@@ -78,7 +82,7 @@ export const partsSlice = createSlice({
       supplier: 'Maher',
     },
     {
-      partId: '12-367534-1',
+      partId: partIds[3],
       name: 'Impeller',
       image: images.parts[3],
       material: 'Aluminum',
@@ -88,7 +92,7 @@ export const partsSlice = createSlice({
       supplier: 'Maher',
     },
     {
-      partId: '10-874236-1',
+      partId: partIds[4],
       name: 'Combustion chamber',
       image: images.parts[4],
       material: 'Aluminium',
@@ -98,7 +102,7 @@ export const partsSlice = createSlice({
       supplier: 'Maher',
     },
     {
-      partId: '13-143583-2',
+      partId: partIds[5],
       name: 'Turbine disc',
       image: images.parts[5],
       material: 'Nickel',
@@ -108,7 +112,7 @@ export const partsSlice = createSlice({
       supplier: 'Maher',
     },
     {
-      partId: '14-143463-1',
+      partId: partIds[6],
       name: 'Steering axle',
       image: images.parts[6],
       material: 'Steel',
@@ -118,7 +122,7 @@ export const partsSlice = createSlice({
       supplier: 'Maher',
     },
     {
-      partId: '10-045623-3',
+      partId: partIds[7],
       name: 'Wing rib',
       image: images.parts[7],
       material: 'Aluminium',
