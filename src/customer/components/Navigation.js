@@ -5,6 +5,8 @@ import { Toolbar, Typography, Box } from '@material-ui/core'
 
 import NetworkStatusIndicator from './NetworkStatusIndicator'
 import images from '../../images'
+import { getCurrentBaseUrl } from '../../utils/url'
+import { useAuth0 } from '@auth0/auth0-react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,9 +67,14 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1.2rem',
     fontWeight: '500',
   },
+  logout: {
+    marginLeft: '70px',
+    cursor: 'pointer',
+  },
 }))
 
 const Navigation = () => {
+  const { isAuthenticated, logout } = useAuth0()
   const classes = useStyles()
   const name = 'Stephen Turner'
 
@@ -102,6 +109,16 @@ const Navigation = () => {
       <Box className={classes.navButton}>
         <NetworkStatusIndicator />
       </Box>
+      {isAuthenticated && (
+        <Box
+          className={`${classes.navButtonWrapping} ${classes.logout} ${classes.navButton} ${classes.navHover}`}
+          onClick={() =>
+            logout({ returnTo: `${getCurrentBaseUrl()}/app/customer-parts` })
+          }
+        >
+          <Typography>Log Out</Typography>
+        </Box>
+      )}
     </Toolbar>
   )
 }
