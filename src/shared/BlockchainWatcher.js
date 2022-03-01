@@ -50,7 +50,7 @@ const BlockchainWatcher = ({ children }) => {
         )
       }
       if (timer !== null) {
-        timer = setTimeout(timerFn, 3000)
+        timer = setTimeout(timerFn, 1000)
       }
     }
     timer = setTimeout(timerFn, 0)
