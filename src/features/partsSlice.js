@@ -43,11 +43,6 @@ const partIds = [
   '10-045623-3',
 ]
 
-export const mappedPartIdsToImages = partIds.reduce((out, next, i) => {
-  out[next] = images.parts[i]
-  return out
-}, {})
-
 export const partsSlice = createSlice({
   name: 'customerParts',
   initialState: [

@@ -10,6 +10,13 @@ const toJSON = async (url) => {
   return response.json()
 }
 
+const svgMimeUrl = async (imageUrl) => {
+  const response = await fetch(imageUrl)
+  const oldBlob = await response.blob()
+  const blob = new Blob([oldBlob], { type: 'image/svg+xml' })
+  return URL.createObjectURL(blob)
+}
+
 const useFetchWrapper = () => {
   const dispatch = useDispatch()
 
@@ -102,11 +109,21 @@ const useApi = () => {
       ...token,
       metadata: {
         ...metadata,
+        ...(metadata.orderImage && isOrder
+          ? {
+              orderImage: {
+                ...metadata.orderImage,
+                url: await svgMimeUrl(metadata.orderImage.url),
+              },
+            }
+          : undefined),
         ...(metadata.requiredCerts && isOrder
           ? { requiredCerts: await toJSON(metadata.requiredCerts.url) }
           : {}),
       },
     }
+
+    console.log({ enrichedToken })
 
     return enrichedToken
   }
