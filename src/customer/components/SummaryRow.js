@@ -11,7 +11,6 @@ import { Link as RouterLink } from 'react-router-dom'
 import moment from 'moment'
 import { mapPartIdToImage } from '../../features/partsSlice'
 
-
 const useStyles = makeStyles((theme) => ({
   maherStyle: {
     backgroundColor: '#0C74BB',
