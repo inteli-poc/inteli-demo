@@ -123,8 +123,6 @@ const useApi = () => {
       },
     }
 
-    console.log({ enrichedToken })
-
     return enrichedToken
   }
 
