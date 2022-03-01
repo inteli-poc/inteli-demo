@@ -21,11 +21,11 @@ import {
 
 const store = configureStore({
   reducer: rootReducer,
-  preloadedState: loadState('app')
+  preloadedState: loadState('app'),
 })
 
-store.subscribe((state) => {
-  saveState(state, 'app')
+store.subscribe(() => {
+  saveState(store.getState(), 'app')
 })
 
 let App = null
