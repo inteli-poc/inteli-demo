@@ -2,7 +2,6 @@ import React from 'react'
 import { Paper, Typography, Grid, Box, CardMedia } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 
-import { mapPartIdToImage } from '../../features/partsSlice'
 import TimelineOrder from './TimelineOrder'
 
 const useStyles = makeStyles({
@@ -44,10 +43,6 @@ const useStyles = makeStyles({
     borderRadius: '3px',
     marginRight: '20px',
   },
-  leftPadding: {
-    paddingLeft: '60px',
-    marginBottom: '20px',
-  },
   columnTwoPadding: {
     paddingLeft: '40px',
   },
@@ -58,7 +53,7 @@ const useStyles = makeStyles({
     paddingLeft: '10px',
   },
   orderStatus: {
-    paddingTop: '30px',
+    padding: '45px',
   },
   shippingPadding: {
     paddingBottom: '10px',
@@ -126,7 +121,7 @@ const OrderSummary = ({ order }) => {
             alt={orderImage.filename}
             width="160"
             height="160px"
-            image={mapPartIdToImage[partId]}
+            image={orderImage.url}
             title={orderImage.filename}
             className={classes.picturePadding}
           />
@@ -194,11 +189,7 @@ const OrderSummary = ({ order }) => {
       </Grid>
 
       <Grid item>
-        <Typography
-          style={{ color: '#494E56' }}
-          className={`${classes.leftPadding} ${classes.orderStatus}`}
-          variant="h5"
-        >
+        <Typography className={classes.orderStatus} variant="h5">
           Order Status
         </Typography>
         <Grid container>
