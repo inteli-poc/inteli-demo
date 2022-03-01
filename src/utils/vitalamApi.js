@@ -1,6 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useDispatch } from 'react-redux'
 import { updateNetworkStatus } from '../features/networkStatusSlice'
+import { tokenTypes } from '.'
 
 import { AUTH_AUDIENCE, API_HOST, API_PORT } from './env.js'
 
@@ -96,7 +97,7 @@ const useApi = () => {
     )
 
     const metadata = await getMetadata(token.id, token.metadata_keys)
-    const isOrder = metadata.type === 'ORDER'
+    const isOrder = metadata.type === tokenTypes.order
     const enrichedToken = {
       ...token,
       metadata: {
