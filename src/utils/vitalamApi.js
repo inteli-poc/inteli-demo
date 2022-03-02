@@ -71,7 +71,7 @@ const useApi = () => {
   const wrappedFetch = useFetchWrapper()
 
   const runProcess = async (body) =>
-    wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/run-process`, {
+    wrappedFetch(`http://${API_HOST}:${API_PORT}/v3/run-process`, {
       method: 'POST',
       mode: 'cors',
       body,
@@ -81,7 +81,7 @@ const useApi = () => {
     })
 
   const latestToken = async () => {
-    return await wrappedFetch(`http://${API_HOST}:${API_PORT}/v2/last-token`, {
+    return await wrappedFetch(`http://${API_HOST}:${API_PORT}/v3/last-token`, {
       method: 'GET',
       mode: 'cors',
       cache: 'no-cache',
@@ -92,7 +92,7 @@ const useApi = () => {
   }
   const tokenById = async (id) => {
     const token = await wrappedFetch(
-      `http://${API_HOST}:${API_PORT}/v2/item/${id}`,
+      `http://${API_HOST}:${API_PORT}/v3/item/${id}`,
       {
         method: 'GET',
         mode: 'cors',
@@ -141,7 +141,7 @@ const useApi = () => {
 
   const getMetadataValue = async (id, metadataKey) => {
     return await wrappedFetch(
-      `http://${API_HOST}:${API_PORT}/v2/item/${id}/metadata/${metadataKey}`,
+      `http://${API_HOST}:${API_PORT}/v3/item/${id}/metadata/${metadataKey}`,
       {
         method: 'GET',
         mode: 'cors',
