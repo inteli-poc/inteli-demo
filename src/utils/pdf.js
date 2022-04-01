@@ -2,7 +2,7 @@ import jsPDF from 'jspdf'
 import images from '../images'
 
 export default class PDFGenerator {
-  constructor(font, type = 'a4') {
+  constructor(font = 'Roboto', type = 'a4') {
     this.font = font
     this.pageWidth = 495 // A4
     this.pageHeight = 842 // A4
