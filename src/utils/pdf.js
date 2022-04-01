@@ -51,13 +51,11 @@ export default class PDFGenerator {
     // TODO take some options
     const x1 = this.margin
     const x2 = this.pageWidth - 2 * this.margin
-    console.log({ x2, x1 })
     this.doc.line(x1, this.pos.y, x2, this.pos.y)
   }
 
   generateOrderHeader(order) {
     this.doc.setFont(this.font)
-    console.log({ order })
     this.#renderImage(images.logoCustLogin, 40)
     this.#updatePos(0, 275)
     this.#renderSimpleText('Certificates Pack', { fontSize: 34, bold: true })
