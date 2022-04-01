@@ -7,7 +7,6 @@ const useStyles = makeStyles({
   root: {
     minHeight: '60px',
     background: '#ff0033',
-    
   },
 })
 
