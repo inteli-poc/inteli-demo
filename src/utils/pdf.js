@@ -2,7 +2,7 @@ import jsPDF from 'jspdf'
 import images from '../images'
 
 export default class PDFGenerator {
-  constructor(font = 'Roboto', type = 'a4') {
+  constructor(font, type = 'a4') {
     this.font = font
     this.pageWidth = 495 // A4
     this.pageHeight = 842 // A4
@@ -31,7 +31,7 @@ export default class PDFGenerator {
     this.doc.setTextColor('#000') // reset color
   }
 
-  #renderTitleText(title, sub, fontSize = 14) {
+  #renderTitleText(title, sub, fontSize = 14, spacing = 10) {
     this.doc.setFont(this.font, 'bold')
     this.doc.setFontSize(fontSize)
     this.doc.text(title, this.pos.x, this.pos.y)
@@ -39,6 +39,7 @@ export default class PDFGenerator {
     this.doc.setFont(this.font, 'normal')
     this.doc.text(sub, this.pos.x + titleWidth, this.pos.y)
     this.pos.y += fontSize
+    this.#updatePos(0, spacing)
   }
 
   #renderImage(img, height) {
@@ -56,20 +57,19 @@ export default class PDFGenerator {
 
   generateOrderHeader(order) {
     this.doc.setFont(this.font)
-    this.#renderImage(images.logoCustLogin, 40)
+    this.#renderImage(images.logoCustLogin, 45)
     this.#updatePos(0, 275)
-    this.#renderSimpleText('Certificates Pack', { fontSize: 34, bold: true })
-    this.#updatePos(0, 20)
+    this.#renderSimpleText('Certificates Pack', { fontSize: 38, bold: true })
+    this.#updatePos(0, 5)
     this.#renderSimpleText(`Order Number ${order.number}`, {
-      fontSize: 20,
+      fontSize: 24,
       color: '#d3d3d3',
+      bold: true,
     })
     this.#renderLine()
     this.#updatePos(0, 50)
     this.#renderTitleText('Part Name: ', order.name)
-    this.#updatePos(0, 20)
     this.#renderTitleText('Part Number: ', order.number)
-    this.#updatePos(0, 20)
     this.#renderTitleText('Material: ', order.material)
     this.doc.save('testing.pdf')
   }
