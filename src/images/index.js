@@ -12,6 +12,7 @@ import part8 from './parts/part-8.svg'
 import partDefault from './part-default.svg'
 import logoLab from './logo-lab.svg'
 import logoCust from './logo-cust.svg'
+import logoCustLogin from './logo-cust-login.png'
 import logoAM from './logo-am.svg'
 import attachmentClip from './attachmentClip.svg'
 import attachmentDownload from './attachmentDownload.svg'
@@ -30,6 +31,7 @@ export default {
   partDefault,
   logoLab,
   logoCust,
+  logoCustLogin,
   logoAM,
   attachmentClip,
   attachmentDownload,
