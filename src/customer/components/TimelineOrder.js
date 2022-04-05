@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const renderTimelineItems = (order, classes) => {
+const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
   const {
     metadata: { status },
     history,
@@ -43,9 +43,7 @@ const renderTimelineItems = (order, classes) => {
   const renderCertificates =
     getTimelineStatusIndex(status) >= getTimelineStatusIndex(accepted)
   const items = {
-    submitted: {
-      content: null,
-    },
+    submitted: {},
     ammended: renderAmmended 
       ? { content: <TimelineAmendedItem order={order} /> }
       : undefined,
@@ -56,26 +54,26 @@ const renderTimelineItems = (order, classes) => {
     manufactured: {},
   }
 
-  return Object.entries(items).map(([key, { content }]) => (
+  return Object.entries(items).map(([stage, val]) => (
     <>
-      {key && <TimelineItem key={key}>
+      {val && <TimelineItem key={stage}>
         <TimelineSeparator>
-          <TimelineOrderDot latestStatus={status} rowStatus={key} />
-          <TimelineOrderConnector latestStatus={status} rowStatus={key} />
+          <TimelineOrderDot latestStatus={status} rowStatus={stage} />
+          <TimelineOrderConnector latestStatus={status} rowStatus={stage} />
         </TimelineSeparator>
         <Grid item sm={12}>
-          <TimelineContent className={classes.timelineRowContent}>
+          <TimelineContent className={timelineRowContent}>
             <Grid container alignItems="flex-start">
               <Grid item xs={9}>
                 <Typography variant="h6">{getStatusLabel(key)}</Typography>
               </Grid>
               <Grid item xs={3}>
-                <Typography className={classes.timestamp}>
-                  {getMetadataTimestamp(history, 'status', key)}
+                <Typography className={timestamp}>
+                  {getMetadataTimestamp(history, 'status', stage)}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-              {content}
+              {val.content}
               </Grid>
             </Grid>
           </TimelineContent>
