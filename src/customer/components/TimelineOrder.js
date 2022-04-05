@@ -33,191 +33,66 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const renderTimelineItems = (order, classes) => {
+  const {
+    metadata: { status },
+    history,
+  } = order
+  const { ammended, accepted } = orderStatus
+  const renderAmmended = getMetadataTimestamp(history, 'status', ammended)
+  const renderCertificates =
+    getTimelineStatusIndex(status) >= getTimelineStatusIndex(accepted)
+  const items = {
+    submitted: {
+      content: null,
+    },
+    ammended: renderAmmended 
+      ? { content: <TimelineAmendedItem order={order} /> }
+      : undefined,
+    accepted: {
+      content: renderCertificates && <Certification order={order} />,
+    },
+    manufacturing: {},
+    manufactured: {},
+  }
+
+  return Object.entries(items).map(([key, { content }]) => (
+    <>
+      {key && <TimelineItem key={key}>
+        <TimelineSeparator>
+          <TimelineOrderDot latestStatus={status} rowStatus={key} />
+          <TimelineOrderConnector latestStatus={status} rowStatus={key} />
+        </TimelineSeparator>
+        <Grid item sm={12}>
+          <TimelineContent className={classes.timelineRowContent}>
+            <Grid container alignItems="flex-start">
+              <Grid item xs={9}>
+                <Typography variant="h6">{getStatusLabel(key)}</Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography className={classes.timestamp}>
+                  {getMetadataTimestamp(history, 'status', key)}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+              {content}
+              </Grid>
+            </Grid>
+          </TimelineContent>
+          <TimelineOppositeContent />
+        </Grid>
+      </TimelineItem>}
+    </>
+  ))
+}
+
 const TimelineOrder = ({ order }) => {
   const classes = useStyles()
 
-  const {
-    id: orderId,
-    metadata: { status: latestStatus },
-  } = order
-
   return (
-    <Grid container id={orderId} spacing={0}>
+    <Grid container id={order.id} spacing={0}>
       <Grid item xs>
-        <Timeline>
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineOrderDot
-                latestStatus={latestStatus}
-                rowStatus={orderStatus.submitted}
-              />
-              <TimelineOrderConnector
-                latestStatus={latestStatus}
-                rowStatus={orderStatus.submitted}
-              />
-            </TimelineSeparator>
-            <Grid item sm={12}>
-              <TimelineContent className={classes.timelineRowContent}>
-                <Grid container alignItems="flex-start">
-                  <Grid item xs={9}>
-                    <Typography variant="h6">
-                      {getStatusLabel(orderStatus.submitted)}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography className={classes.timestamp}>
-                      {getMetadataTimestamp(
-                        order.history,
-                        'status',
-                        orderStatus.submitted
-                      )}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </TimelineContent>
-              <TimelineOppositeContent />
-            </Grid>
-          </TimelineItem>
-          {getMetadataTimestamp(
-            order.history,
-            'status',
-            orderStatus.amended
-          ) && (
-            <TimelineItem>
-              <TimelineSeparator className={classes.timelineSeparator}>
-                <TimelineOrderDot
-                  latestStatus={latestStatus}
-                  rowStatus={orderStatus.amended}
-                />
-                <TimelineOrderConnector
-                  latestStatus={latestStatus}
-                  rowStatus={orderStatus.amended}
-                />
-              </TimelineSeparator>
-              <Grid item sm={12}>
-                <TimelineContent className={classes.timelineRowContent}>
-                  <Grid container alignItems="flex-start">
-                    <Grid item xs={9}>
-                      <Typography variant="h6">
-                        {getStatusLabel(orderStatus.amended)}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography className={classes.timestamp}>
-                        {getMetadataTimestamp(
-                          order.history,
-                          'status',
-                          orderStatus.amended
-                        )}
-                      </Typography>
-                    </Grid>
-                    <TimelineAmendedItem order={order} />
-                  </Grid>
-                </TimelineContent>
-              </Grid>
-            </TimelineItem>
-          )}
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineOrderDot
-                latestStatus={latestStatus}
-                rowStatus={orderStatus.accepted}
-              />
-              <TimelineOrderConnector
-                latestStatus={latestStatus}
-                rowStatus={orderStatus.accepted}
-              />
-            </TimelineSeparator>
-            <Grid item sm={12}>
-              <TimelineContent className={classes.timelineRowContent}>
-                <Grid container alignItems="flex-start">
-                  <Grid item xs={9}>
-                    <Typography variant="h6">
-                      {getStatusLabel(orderStatus.accepted)}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography className={classes.timestamp}>
-                      {getMetadataTimestamp(
-                        order.history,
-                        'status',
-                        orderStatus.accepted
-                      )}
-                    </Typography>
-                  </Grid>
-
-                  {getTimelineStatusIndex(latestStatus) >=
-                    getTimelineStatusIndex(orderStatus.accepted) && (
-                    <Certification order={order} />
-                  )}
-                </Grid>
-              </TimelineContent>
-              <TimelineOppositeContent />
-            </Grid>
-          </TimelineItem>
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineOrderDot
-                latestStatus={latestStatus}
-                rowStatus={orderStatus.manufacturing}
-              />
-              <TimelineOrderConnector
-                latestStatus={latestStatus}
-                rowStatus={orderStatus.manufacturing}
-              />
-            </TimelineSeparator>
-            <Grid item sm={12}>
-              <TimelineContent className={classes.timelineRowContent}>
-                <Grid container alignItems="flex-start">
-                  <Grid item xs={9}>
-                    <Typography variant="h6">
-                      {getStatusLabel(orderStatus.manufacturing)}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography className={classes.timestamp}>
-                      {getMetadataTimestamp(
-                        order.history,
-                        'status',
-                        orderStatus.manufacturing
-                      )}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </TimelineContent>
-              <TimelineOppositeContent />
-            </Grid>
-          </TimelineItem>
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineOrderDot
-                latestStatus={latestStatus}
-                rowStatus={orderStatus.manufactured}
-              />
-            </TimelineSeparator>
-            <Grid item sm={12}>
-              <TimelineContent className={classes.timelineRowContent}>
-                <Grid container alignItems="flex-start">
-                  <Grid item xs={9}>
-                    <Typography variant="h6">
-                      {getStatusLabel(orderStatus.manufactured)}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography className={classes.timestamp}>
-                      {getMetadataTimestamp(
-                        order.history,
-                        'status',
-                        orderStatus.manufactured
-                      )}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </TimelineContent>
-              <TimelineOppositeContent />
-            </Grid>
-          </TimelineItem>
-        </Timeline>
+        <Timeline>{renderTimelineItems(order, classes)}</Timeline>
       </Grid>
     </Grid>
   )
