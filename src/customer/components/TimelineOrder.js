@@ -38,15 +38,15 @@ const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
     metadata: { status },
     history,
   } = order
-  const { ammended, accepted } = orderStatus
-  const renderAmmended = getMetadataTimestamp(history, 'status', ammended)
+  const { amended, accepted } = orderStatus
+  const renderAmmended = getMetadataTimestamp(history, 'status', amended)
   const renderCertificates =
     getTimelineStatusIndex(status) >= getTimelineStatusIndex(accepted)
   const items = {
     submitted: {},
-    ammended: renderAmmended 
-      ? { content: <TimelineAmendedItem order={order} /> }
-      : undefined,
+    ...(renderAmmended
+      ? { ammended: { content: <TimelineAmendedItem order={order} /> } }
+      : undefined),
     accepted: {
       content: renderCertificates && <Certification order={order} />,
     },
@@ -54,9 +54,11 @@ const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
     manufactured: {},
   }
 
+  console.log(items)
+
   return Object.entries(items).map(([stage, val]) => (
     <>
-      {val && <TimelineItem key={stage}>
+      <TimelineItem key={stage}>
         <TimelineSeparator>
           <TimelineOrderDot latestStatus={status} rowStatus={stage} />
           <TimelineOrderConnector latestStatus={status} rowStatus={stage} />
@@ -65,21 +67,22 @@ const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
           <TimelineContent className={timelineRowContent}>
             <Grid container alignItems="flex-start">
               <Grid item xs={9}>
-                <Typography variant="h6">{getStatusLabel(key)}</Typography>
+                <Typography variant="h6">{getStatusLabel(val)}</Typography>
               </Grid>
               <Grid item xs={3}>
                 <Typography className={timestamp}>
                   {getMetadataTimestamp(history, 'status', stage)}
+                  {console.log(val, !!val)}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-              {val.content}
+                {val.content}
               </Grid>
             </Grid>
           </TimelineContent>
           <TimelineOppositeContent />
         </Grid>
-      </TimelineItem>}
+      </TimelineItem>
     </>
   ))
 }

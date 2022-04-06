@@ -1,14 +1,17 @@
 import jsPDF from 'jspdf'
+import PDFMerger from 'pdf-merger-js/browser'
+
 import images from '../images'
 
 export default class PDFGenerator {
   constructor(font, type = 'a4') {
+    this.merger = new PDFMerger()
+    this.doc = new jsPDF('p', 'px', type) // A4
     this.font = font
     this.pageWidth = 495 // A4
     this.pageHeight = 842 // A4
     this.lineSpacing = 2
     this.margin = 40
-    this.doc = new jsPDF('p', 'px', type) // A4
     this.pos = {
       x: this.margin,
       y: 70,
@@ -72,5 +75,14 @@ export default class PDFGenerator {
     this.#renderTitleText('Part Number: ', order.number)
     this.#renderTitleText('Material: ', order.material)
     this.doc.save('testing.pdf')
+  }
+
+  async mergePDFs(files) {
+    for (const file of files) {
+      await this.merger.add(file)
+    }
+
+    const mergedPdf = await this.merger.saveAsBlob()
+    return URL.createObjectURL(mergedPdf)
   }
 }

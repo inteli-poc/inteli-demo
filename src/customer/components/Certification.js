@@ -2,8 +2,10 @@ import React from 'react'
 import { Button, Grid } from '@material-ui/core'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 
+import PDF from '../../utils/pdf'
 import CertificationRow from './CertificationRow'
 
+const pdfKit = new PDF()
 const useStyles = makeStyles({
   container: {
     padding: '24px 0px',
@@ -16,19 +18,31 @@ const Certification = ({ order }) => {
 
   const downloadAllHandler = (e) => {
     e.preventDefault()
-    console.log('downloadAllHandler')
-    console.log(files)
-  } 
+    pdfKit.mergePDFs(files).then((url) => {
+      console.log({ url })
+      return url
+      // include header file here
+    })
+  }
+
+  React.useEffect(() => {
+    const { requiredCerts } = order.metadata
+    addFile(
+      requiredCerts
+        .map((cert) => {
+          const { metadataKey } = cert
+          const file = order.metadata[metadataKey]
+          if (file) return file.url
+          return null
+        })
+        .filter(Boolean)
+    )
+  }, [order.metadata])
 
   return (
     <Grid container className={classes.container}>
       <Grid container direction="row">
         {order.metadata.requiredCerts.map((cert) => {
-          const { metadataKey } = cert
-          addFile([
-            ...files,
-            order.metadata[metadataKey].url,
-          ])
           return (
             <CertificationRow
               key={cert.metadataKey}
@@ -40,11 +54,8 @@ const Certification = ({ order }) => {
       </Grid>
       <Grid justifyContent="flex-end" container direction="row">
         <Grid item sx={3}>
-          <Button onClick={downloadAllHandler}>Download All</Button>
+          <Button onClick={(e) => downloadAllHandler(e)}>Download All</Button>
         </Grid>
-        <Grid item sx={3}>
-          <hi>Testing....</hi>
-        </Grid> 
       </Grid>
     </Grid>
   )
