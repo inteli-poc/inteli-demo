@@ -34,7 +34,7 @@ const MyOrders = () => {
   return (
     <Grid container>
       <Spacer height={5} />
-      <Grid item sm={12} md="auto">
+      <Grid item sm={12} md={3}>
         {[...customerOrders].reverse().map((order) => (
           <SummaryRow
             key={order.id}
@@ -43,7 +43,7 @@ const MyOrders = () => {
           />
         ))}
       </Grid>
-      <Grid item sm={12} md="auto">
+      <Grid item sm={12} md={9}>
         {selectedOrder && <OrderSummary order={selectedOrder} />}
       </Grid>
     </Grid>
