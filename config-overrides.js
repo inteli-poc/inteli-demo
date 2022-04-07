@@ -1,4 +1,4 @@
-const webpack = require('webpack');
+const webpack = require('webpack')
 
 module.exports = function override(config) {
   const fallback = config.resolve.fallback || {}
@@ -24,5 +24,5 @@ module.exports = function override(config) {
       Buffer: ['buffer', 'Buffer']
     })
   ])
-  return config;
+  return config
 }
