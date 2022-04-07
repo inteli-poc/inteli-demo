@@ -34,6 +34,10 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.0",
+    "react-app-rewired": "^2.2.1",
+    "buffer": "^6.0.3",
+    "process": "^0.11.10",
+    "pdf-merger-js": "^3.4.0",
     "redux": "^4.1.2",
     "reset-css": "^5.0.1",
     "styled-components": "^5.3.3"
@@ -41,8 +45,6 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-react": "^7.16.7",
-    "pdf-merger-js": "^3.4.0",
-    "buffer": "^6.0.3",
     "depcheck": "^1.4.3",
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
@@ -50,8 +52,6 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "prettier": "^2.5.1",
-    "process": "^0.11.10",
-    "react-app-rewired": "^2.2.1",
     "react-is": "^17.0.2"
   },
   "browserslist": {
