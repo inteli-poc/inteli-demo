@@ -28,13 +28,19 @@ const Certification = ({ order }) => {
     e.preventDefault()
     setLoading(true)
     const header = pdfKit.generateOrderHeader(order)
-    pdfKit.mergePDFs([header, ...files]).then((url) => {
-      const a = document.createElement('a')
-      a.href = url
-      a.setAttribute('download', `${Date.now()}.pdf`)
-      a.click()
-      setLoading(false)
-    })
+    pdfKit
+      .mergePDFs([header, ...files])
+      .then((url) => {
+        const a = document.createElement('a')
+        a.href = url
+        a.setAttribute('download', `${Date.now()}.pdf`)
+        a.click()
+        setLoading(false)
+      })
+      .catch((err) => {
+        setLoading(false)
+        console.warn(err) // ideally it should render a modal/dialog
+      })
   }
 
   React.useEffect(() => {

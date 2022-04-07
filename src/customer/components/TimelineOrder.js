@@ -57,8 +57,8 @@ const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
   }
 
   return Object.entries(items).map(([stage, val]) => (
-    <>
-      <TimelineItem key={stage}>
+    <React.Fragment key={stage}>
+      <TimelineItem>
         <TimelineSeparator>
           <TimelineOrderDot latestStatus={status} rowStatus={stage} />
           {!val?.last && (
@@ -84,7 +84,7 @@ const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
           <TimelineOppositeContent />
         </Grid>
       </TimelineItem>
-    </>
+    </React.Fragment>
   ))
 }
 
