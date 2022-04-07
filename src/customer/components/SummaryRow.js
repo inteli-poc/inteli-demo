@@ -59,7 +59,7 @@ const SummaryRow = ({ order, activeItem }) => {
     forecastDate,
   } = order
   const tokenTimestampFormattedDate = moment(timestamp).format('DD MMM YYYY')
-  const isForecastLate = moment(forecastDate).diff(timestamp, 'days') > 5
+  const isForecastLate = moment(forecastDate).diff(timestamp, 'days') > 7
 
   return (
     <Paper

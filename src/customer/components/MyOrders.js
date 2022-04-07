@@ -20,7 +20,7 @@ const getSelectedOrder = (orders, paramsId) => {
 
 // A temporary solution for generating a seeded pseudo random
 // with min and max values, max = max - min (which is not handled)
-const getForecastDate = (timestamp, max = 20, min = 3) => {
+const getForecastDate = (timestamp, max = 12, min = 3) => {
   let unix = moment(timestamp).unix()
   const n = Math.sin(unix++) * 10000
 
