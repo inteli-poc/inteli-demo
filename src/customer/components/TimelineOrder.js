@@ -51,7 +51,9 @@ const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
       content: renderCertificates && <Certification order={order} />,
     },
     manufacturing: {},
-    manufactured: {},
+    manufactured: {
+      last: true,
+    },
   }
 
   return Object.entries(items).map(([stage, val]) => (
@@ -59,7 +61,9 @@ const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
       <TimelineItem key={stage}>
         <TimelineSeparator>
           <TimelineOrderDot latestStatus={status} rowStatus={stage} />
-          <TimelineOrderConnector latestStatus={status} rowStatus={stage} />
+          {!val?.last && (
+            <TimelineOrderConnector latestStatus={status} rowStatus={stage} />
+          )}
         </TimelineSeparator>
         <Grid item sm={12}>
           <TimelineContent className={timelineRowContent}>
