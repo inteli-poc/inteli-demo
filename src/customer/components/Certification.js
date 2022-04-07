@@ -10,18 +10,30 @@ const useStyles = makeStyles({
   container: {
     padding: '24px 0px',
   },
+  button: {
+    backgroundColor: '#FAC473',
+    borderRadius: '4px',
+    textAlign: 'center',
+    textDecoration: 'underline',
+    textTransform: 'none',
+  },
 })
 
 const Certification = ({ order }) => {
   const classes = useStyles()
   const [files, addFile] = React.useState([])
+  const [loading, setLoading] = React.useState(false)
 
   const downloadAllHandler = (e) => {
     e.preventDefault()
-    pdfKit.mergePDFs(files).then((url) => {
-      console.log({ url })
-      return url
-      // include header file here
+    setLoading(true)
+    const header = pdfKit.generateOrderHeader(order)
+    pdfKit.mergePDFs([header, ...files]).then((url) => {
+      const a = document.createElement('a')
+      a.href = url
+      a.setAttribute('download', `${Date.now()}.pdf`)
+      a.click()
+      setLoading(false)
     })
   }
 
@@ -52,11 +64,19 @@ const Certification = ({ order }) => {
           )
         })}
       </Grid>
-      <Grid justifyContent="flex-end" container direction="row">
-        <Grid item sx={3}>
-          <Button onClick={(e) => downloadAllHandler(e)}>Download All</Button>
+      {files.length > 1 && (
+        <Grid justifyContent="flex-end" container direction="row">
+          <Grid item sx={3}>
+            <Button
+              disabled={loading}
+              className={classes.button}
+              onClick={(e) => downloadAllHandler(e)}
+            >
+              Download All
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Grid>
   )
 }

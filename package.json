@@ -16,8 +16,8 @@
   "scripts": {
     "lint": "eslint --ext .js .",
     "depcheck": "depcheck",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "eject": "react-scripts eject"
   },
@@ -28,7 +28,6 @@
     "@reduxjs/toolkit": "^1.7.1",
     "jspdf": "^2.5.1",
     "moment": "^2.29.1",
-    "pdf-merger-js": "^3.4.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.5.1",
@@ -42,6 +41,8 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-react": "^7.16.7",
+    "pdf-merger-js": "^3.4.0",
+    "buffer": "^6.0.3",
     "depcheck": "^1.4.3",
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
@@ -49,6 +50,8 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "prettier": "^2.5.1",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
     "react-is": "^17.0.2"
   },
   "browserslist": {

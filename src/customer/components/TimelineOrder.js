@@ -54,8 +54,6 @@ const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
     manufactured: {},
   }
 
-  console.log(items)
-
   return Object.entries(items).map(([stage, val]) => (
     <>
       <TimelineItem key={stage}>
@@ -67,12 +65,11 @@ const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
           <TimelineContent className={timelineRowContent}>
             <Grid container alignItems="flex-start">
               <Grid item xs={9}>
-                <Typography variant="h6">{getStatusLabel(val)}</Typography>
+                <Typography variant="h6">{getStatusLabel(stage)}</Typography>
               </Grid>
               <Grid item xs={3}>
                 <Typography className={timestamp}>
                   {getMetadataTimestamp(history, 'status', stage)}
-                  {console.log(val, !!val)}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
