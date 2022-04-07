@@ -5,7 +5,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 const useStyles = makeStyles({
   deliveryByContainer: {
     padding: '0px',
-    display: 'grid',
     gridTemplateColumns: '4fr',
   },
   deliveryByLabel: {

@@ -6,7 +6,6 @@ const useStyles = makeStyles({
   quantityContainer: {
     margin: '0px 0px',
     padding: '0px',
-    display: 'grid',
     gridTemplateColumns: '1fr',
   },
   quantityLabel: {
