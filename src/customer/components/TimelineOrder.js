@@ -72,7 +72,7 @@ const renderTimelineItems = (order, { timestamp, timelineRowContent }) => {
                 <Typography variant="h6">{getStatusLabel(stage)}</Typography>
               </Grid>
               <Grid item xs={3}>
-                <Typography className={timestamp}>
+                <Typography variant="subtitle2" className={timestamp}>
                   {getMetadataTimestamp(history, 'status', stage)}
                 </Typography>
               </Grid>
