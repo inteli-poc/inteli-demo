@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { updateNetworkStatus } from '../features/networkStatusSlice'
 import { tokenTypes } from '.'
 
-import { AUTH_AUDIENCE, API_HOST, API_PORT } from './env.js'
+import { AUTH_AUDIENCE, API_HOST, API_PORT, API_SCHEME } from './env.js'
 
 const toJSON = async (url) => {
   const response = await fetch(url)
@@ -71,7 +71,7 @@ const useApi = () => {
   const wrappedFetch = useFetchWrapper()
 
   const runProcess = async (body) =>
-    wrappedFetch(`http://${API_HOST}:${API_PORT}/v3/run-process`, {
+    wrappedFetch(`${API_SCHEME}://${API_HOST}:${API_PORT}/v3/run-process`, {
       method: 'POST',
       mode: 'cors',
       body,
@@ -81,18 +81,21 @@ const useApi = () => {
     })
 
   const latestToken = async () => {
-    return await wrappedFetch(`http://${API_HOST}:${API_PORT}/v3/last-token`, {
-      method: 'GET',
-      mode: 'cors',
-      cache: 'no-cache',
-      headers: {
-        Authorization: `Bearer ${await getAuthToken()}`,
-      },
-    })
+    return await wrappedFetch(
+      `${API_SCHEME}://${API_HOST}:${API_PORT}/v3/last-token`,
+      {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache',
+        headers: {
+          Authorization: `Bearer ${await getAuthToken()}`,
+        },
+      }
+    )
   }
   const tokenById = async (id) => {
     const token = await wrappedFetch(
-      `http://${API_HOST}:${API_PORT}/v3/item/${id}`,
+      `${API_SCHEME}://${API_HOST}:${API_PORT}/v3/item/${id}`,
       {
         method: 'GET',
         mode: 'cors',
@@ -141,7 +144,7 @@ const useApi = () => {
 
   const getMetadataValue = async (id, metadataKey) => {
     return await wrappedFetch(
-      `http://${API_HOST}:${API_PORT}/v3/item/${id}/metadata/${metadataKey}`,
+      `${API_SCHEME}://${API_HOST}:${API_PORT}/v3/item/${id}/metadata/${metadataKey}`,
       {
         method: 'GET',
         mode: 'cors',

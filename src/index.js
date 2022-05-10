@@ -13,8 +13,7 @@ import { saveState, loadState } from './utils/localStorage'
 
 import {
   AUTH_AUDIENCE,
-  CUST_AUTH_CLIENT_ID,
-  T1_AUTH_CLIENT_ID,
+  AUTH_CLIENT_ID,
   AUTH_DOMAIN,
   INTELI_DEMO_PERSONA,
 } from './utils/env.js'
@@ -36,13 +35,13 @@ switch (INTELI_DEMO_PERSONA) {
   case 'cust':
     App = CustomerApp
     document.title = 'BAE Systems | Customer'
-    authClientID = CUST_AUTH_CLIENT_ID
+    authClientID = AUTH_CLIENT_ID
     redirectPath = '/app/customer-parts'
     break
   case 'am':
     App = AdditiveManufacturerApp
     document.title = 'Maher | AM'
-    authClientID = T1_AUTH_CLIENT_ID
+    authClientID = AUTH_CLIENT_ID
     redirectPath = '/app/orders'
     break
   default:

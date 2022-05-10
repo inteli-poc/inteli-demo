@@ -4,6 +4,7 @@ let config = {
   custAuthClientID: 'BvJaBbxOce4Pwi5PZpjBTStvNWwzugPd',
   t1AuthClientID: '6NfUcA48JdhKXYCc9yGTwM2m1gzcjOTU',
   authAudience: 'inteli-dev',
+  apiScheme: 'https',
   apiHost: 'localhost',
   apiPort: '3000',
   substrateHost: 'localhost',
